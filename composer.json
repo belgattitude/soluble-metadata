@@ -1,0 +1,30 @@
+{
+    "name": "soluble/sqlmeta",
+    "description": "Extract metadata from database queries",
+    "license": "MIT",
+    "keywords": [
+        "metadata",
+        "sql",
+        "query"
+    ],
+    "homepage": "https://github.com/belgattitude/soluble-sqlmeta",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Sébastien Vanvelthem",
+            "homepage": "http://www.nuvolia.com/",
+            "role": "Lead developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Soluble\\SqlMeta\\": "src/Soluble/SqlMeta"
+        }
+    },
+    "require": {
+        "php": ">=5.4.4"
+    },
+    "archive": {
+        "exclude": ["test", "doc", ".travis.yml", ".codeclimate.yml", ".coveralls.yml", ".scrutinizer.yml", ".php_cs", ".gitignore"]
+    }
+}
