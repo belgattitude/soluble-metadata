@@ -2,8 +2,7 @@ docs_dir: doc
 site_dir: build/doc
 pages:
     - index.md
-    - { 'Contributing': CONTRIBUTING.md }
-site_name: soluble-schema
+site_name: soluble-sqlmeta
 site_description: "soluble-sqlmeta"
 theme: readthedocs
 #theme: bootstrap

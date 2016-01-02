@@ -22,6 +22,10 @@ Metadata from database queries
 - PHP engine 5.4+, 7.0+ or HHVM >= 3.2.
 - PHP extensions pfo, pdo_mysql or  mysqli.
 
+## Documentation
+
+ - [Manual](http://docs.soluble.io/soluble-sqlmeta/manual/) in progress and [API documentation](http://docs.soluble.io/soluble-sqlmeta/api/) available.
+
 ## Installation
 
 Instant installation via [composer](http://getcomposer.org/).
