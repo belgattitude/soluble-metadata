@@ -23,8 +23,8 @@
     </php>
 
     <testsuites>
-        <testsuite name="soluble/sqlmeta">
-            <directory>./test/src/SolubleTest/SqlMeta</directory>
+        <testsuite name="soluble/metadata">
+            <directory>./test/src/SolubleTest/Metadata</directory>
         </testsuite>
     </testsuites>
     
