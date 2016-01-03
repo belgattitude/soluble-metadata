@@ -1,6 +1,6 @@
 <?php
 
-namespace Soluble\FlexStore\Metadata\Reader;
+namespace Soluble\Metadata\Reader;
 
 use Soluble\FlexStore\Column\ColumnModel;
 use Soluble\Db\Metadata\Column\Exception\UnsupportedDatatypeException;

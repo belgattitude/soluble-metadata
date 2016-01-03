@@ -2,12 +2,12 @@ docs_dir: doc
 site_dir: build/doc
 pages:
     - index.md
-site_name: soluble-sqlmeta
-site_description: "soluble-sqlmeta"
+site_name: soluble-metadata
+site_description: "soluble-metadata"
 theme: readthedocs
 #theme: bootstrap
 #theme: united
-repo_url: 'https://github.com/belgattitude/soluble-sqlmeta'
+repo_url: 'https://github.com/belgattitude/soluble-metadata'
 markdown_extensions:
     - toc:
         permalink: True

@@ -1,5 +1,5 @@
 {
-    "name": "soluble/sqlmeta",
+    "name": "soluble/metadata",
     "description": "Extract metadata from database queries",
     "license": "MIT",
     "keywords": [
@@ -7,7 +7,7 @@
         "sql",
         "query"
     ],
-    "homepage": "https://github.com/belgattitude/soluble-sqlmeta",
+    "homepage": "https://github.com/belgattitude/soluble-metadata",
     "type": "library",
     "authors": [
         {
@@ -18,7 +18,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Soluble\\SqlMeta\\": "src/Soluble/SqlMeta"
+            "Soluble\\Metadata\\": "src/Soluble/Metadata"
         }
     },
     "require": {

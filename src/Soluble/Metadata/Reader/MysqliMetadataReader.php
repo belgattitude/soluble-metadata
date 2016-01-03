@@ -1,5 +1,6 @@
 <?php
-namespace Soluble\FlexStore\Metadata\Reader;
+
+namespace Soluble\Metadata\Reader;
 
 use Soluble\FlexStore\Metadata\Exception;
 use Soluble\Db\Metadata\Column;

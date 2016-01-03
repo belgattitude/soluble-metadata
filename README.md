@@ -1,13 +1,13 @@
-# soluble/sqlmeta
+# soluble/metadata
 
-[![PHP Version](http://img.shields.io/badge/php-5.3+-ff69b4.svg)](https://packagist.org/packages/soluble/sqlmeta)
-[![HHVM Status](http://hhvm.h4cc.de/badge/soluble/sqlmeta.png?style=flat)](http://hhvm.h4cc.de/package/soluble/sqlmeta)
-[![Build Status](https://travis-ci.org/belgattitude/soluble-sqlmeta.png?branch=master)](https://travis-ci.org/belgattitude/soluble-sqlmeta)
-[![Code Coverage](https://scrutinizer-ci.com/g/belgattitude/soluble-sqlmeta/badges/coverage.png?s=aaa552f6313a3a50145f0e87b252c84677c22aa9)](https://scrutinizer-ci.com/g/belgattitude/soluble-sqlmeta)
-[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/belgattitude/soluble-sqlmeta/badges/quality-score.png?s=6f3ab91f916bf642f248e82c29857f94cb50bb33)](https://scrutinizer-ci.com/g/belgattitude/soluble-sqlmeta)
-[![Latest Stable Version](https://poser.pugx.org/soluble/sqlmeta/v/stable.svg)](https://packagist.org/packages/soluble/sqlmeta)
-[![Total Downloads](https://poser.pugx.org/soluble/sqlmeta/downloads.png)](https://packagist.org/packages/soluble/sqlmeta)
-[![License](https://poser.pugx.org/soluble/sqlmeta/license.png)](https://packagist.org/packages/soluble/sqlmeta)
+[![PHP Version](http://img.shields.io/badge/php-5.3+-ff69b4.svg)](https://packagist.org/packages/soluble/metadata)
+[![HHVM Status](http://hhvm.h4cc.de/badge/soluble/metadata.png?style=flat)](http://hhvm.h4cc.de/package/soluble/metadata)
+[![Build Status](https://travis-ci.org/belgattitude/soluble-metadata.png?branch=master)](https://travis-ci.org/belgattitude/soluble-metadata)
+[![Code Coverage](https://scrutinizer-ci.com/g/belgattitude/soluble-metadata/badges/coverage.png?s=aaa552f6313a3a50145f0e87b252c84677c22aa9)](https://scrutinizer-ci.com/g/belgattitude/soluble-metadata)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/belgattitude/soluble-metadata/badges/quality-score.png?s=6f3ab91f916bf642f248e82c29857f94cb50bb33)](https://scrutinizer-ci.com/g/belgattitude/soluble-metadata)
+[![Latest Stable Version](https://poser.pugx.org/soluble/metadata/v/stable.svg)](https://packagist.org/packages/soluble/metadata)
+[![Total Downloads](https://poser.pugx.org/soluble/metadata/downloads.png)](https://packagist.org/packages/soluble/metadata)
+[![License](https://poser.pugx.org/soluble/metadata/license.png)](https://packagist.org/packages/soluble/metadata)
 
 ## Introduction
 
@@ -24,14 +24,14 @@ Metadata from database queries
 
 ## Documentation
 
- - [Manual](http://docs.soluble.io/soluble-sqlmeta/manual/) in progress and [API documentation](http://docs.soluble.io/soluble-sqlmeta/api/) available.
+ - [Manual](http://docs.soluble.io/soluble-metadata/manual/) in progress and [API documentation](http://docs.soluble.io/soluble-metadata/api/) available.
 
 ## Installation
 
 Instant installation via [composer](http://getcomposer.org/).
 
 ```console
-php composer require soluble/sqlmeta:0.*
+php composer require soluble/metadata:0.*
 ```
 Most modern frameworks will include Composer out of the box, but ensure the following file is included:
 

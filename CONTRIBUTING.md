@@ -10,7 +10,7 @@ read/subscribe to the following resources:
 * [PSR 1 Coding Standards](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
 * [PSR 0 Autoloading standards](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md)
 
-If you are working on new features or refactoring [create a proposal](https://github.com/belgattitude/soluble-sqlmeta/issues/new).
+If you are working on new features or refactoring [create a proposal](https://github.com/belgattitude/soluble-metadata/issues/new).
 
 ## Reporting Issues
 
@@ -43,8 +43,8 @@ To run tests:
 - Clone the repository:
 
   ```console
-  $ git clone git@github.com:belgattitude/soluble-sqlmeta.git
-  $ cd solubl-sqlmeta
+  $ git clone git@github.com:belgattitude/soluble-metadata.git
+  $ cd solubl-metadata
   ```
 
 - Install dependencies via composer:
@@ -131,19 +131,19 @@ pull your work into the master repository. We recommend using
 [GitHub](https://github.com), as that is where the component is already hosted.
 
 1. Setup a [GitHub account](http://github.com/), if you haven't yet
-2. Fork the repository (http://github.com/belgattitude/soluble-sqlmeta)
+2. Fork the repository (http://github.com/belgattitude/soluble-metadata)
 3. Clone the canonical repository locally and enter it.
 
    ```console
-   $ git clone git://github.com:belgattitude/soluble-sqlmeta.git
-   $ cd soluble-sqlmeta
+   $ git clone git://github.com:belgattitude/soluble-metadata.git
+   $ cd soluble-metadata
    ```
 
 4. Add a remote to your fork; substitute your GitHub username in the command
    below.
 
    ```console
-   $ git remote add {username} git@github.com:{username}/soluble-sqlmeta.git
+   $ git remote add {username} git@github.com:{username}/soluble-metadata.git
    $ git fetch {username}
    ```
 
@@ -206,7 +206,7 @@ Delta compression using up to 2 threads.
 Compression objects: 100% (18/18), done.
 Writing objects: 100% (20/20), 8.19KiB, done.
 Total 20 (delta 12), reused 0 (delta 0)
-To ssh://git@github.com/{username}/soluble-sqlmeta.git
+To ssh://git@github.com/{username}/soluble-metadata.git
    b5583aa..4f51698  HEAD -> master
 ```
 
