@@ -2,7 +2,8 @@
 
 namespace Soluble\Metadata\Reader;
 
-use Soluble\FlexStore\Column\ColumnModel;
+use Soluble\Datatype\Column\ColumnModel;
+//use Soluble\FlexStore\Column\ColumnModel;
 use Soluble\Db\Metadata\Column\Exception\UnsupportedDatatypeException;
 
 abstract class AbstractMetadataReader
