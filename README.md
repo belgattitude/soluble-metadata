@@ -20,7 +20,8 @@ The ultimate database metadata reader
 
 ## Requirements
 
-- PHP engine 5.4+, 7.0+ or HHVM >= 3.2.
+- PHP engine 5.4+, 7.0+
+- HHVM does not work :(
 - PDO or Mysqli extension enabled
 
 ## Documentation
