@@ -2,7 +2,7 @@
 
 ## RESOURCES
 
-If you wish to contribute to soluble-sqlschema, please be sure to
+If you wish to contribute to soluble-metadata, please be sure to
 read/subscribe to the following resources:
 
 * [PSR 4 Autoloader](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader.md)

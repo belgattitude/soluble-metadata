@@ -75,7 +75,6 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
         $md = $this->metadata->getColumnsMetadata($sql);
 
 
-
         $this->assertEquals($md['id']->isPrimary(), true);
         $this->assertEquals($md['id']->getDatatype(), Column\Type::TYPE_INTEGER);
         $this->assertEquals($md['id']->getTableName(), 'test_table_types');
