@@ -1,20 +1,20 @@
 <?php
+
 namespace Soluble\Metadata\Reader;
 
-use Soluble\FlexStore\Metadata\Exception;
-use Soluble\Db\Metadata\Column;
-use Soluble\Db\Metadata\Column\Types;
+use Soluble\Metadata\Exception;
+use Soluble\Datatype\Column;
 use Soluble\Db\Metadata\Column\Exception\UnsupportedDatatypeException;
 use ArrayObject;
 use PDO;
 
-class PDOMysqlMetadataReader extends AbstractMetadataReader
+class PdoMysqlMetadataReader extends AbstractMetadataReader
 {
+
     /**
      * @var PDO
      */
     protected $pdo;
-
 
     /**
      *
@@ -50,9 +50,6 @@ class PDOMysqlMetadataReader extends AbstractMetadataReader
 
         $this->pdo = $pdo;
     }
-
-
-
 
     /**
      *
@@ -99,15 +96,15 @@ class PDOMysqlMetadataReader extends AbstractMetadataReader
             //$column->setColumnDefault($field->def);
             $column->setNativeDataType($datatype['native']);
 
-/*
-            if ($column instanceof Column\Definition\NumericColumnInterface) {
-                $column->setNumericUnsigned(($field->flags & MYSQLI_UNSIGNED_FLAG) > 0);
-            }
+            /*
+              if ($column instanceof Column\Definition\NumericColumnInterface) {
+              $column->setNumericUnsigned(($field->flags & MYSQLI_UNSIGNED_FLAG) > 0);
+              }
 
-            if ($column instanceof Column\Definition\IntegerColumn) {
-                $column->setIsAutoIncrement(($field->flags & MYSQLI_AUTO_INCREMENT_FLAG) > 0);
-            }
-*/
+              if ($column instanceof Column\Definition\IntegerColumn) {
+              $column->setIsAutoIncrement(($field->flags & MYSQLI_AUTO_INCREMENT_FLAG) > 0);
+              }
+             */
             if ($column instanceof Column\Definition\DecimalColumn) {
                 // salary DECIMAL(5,2)
                 // In this example, 5 is the precision and 2 is the scale.
@@ -132,8 +129,7 @@ class PDOMysqlMetadataReader extends AbstractMetadataReader
                 $prev_column = $metadata->offsetGet($alias);
                 $prev_def = $prev_column->toArray();
                 $curr_def = $column->toArray();
-                if ($prev_def['dataType'] != $curr_def['dataType']
-                    ||  $prev_def['nativeDataType'] != $curr_def['nativeDataType']) {
+                if ($prev_def['dataType'] != $curr_def['dataType'] || $prev_def['nativeDataType'] != $curr_def['nativeDataType']) {
                     throw new Exception\AmbiguousColumnException("Cannot get column metadata, non unique column found '$alias' in query with different definitions.");
                 }
 
@@ -148,9 +144,6 @@ class PDOMysqlMetadataReader extends AbstractMetadataReader
         return $metadata;
     }
 
-
-
-
     /**
      *
      * @param string $sql
@@ -164,11 +157,11 @@ class PDOMysqlMetadataReader extends AbstractMetadataReader
 
         $sql = $this->makeQueryEmpty($sql);
         /*
-        if ($this->mysqli->connect_error) {
-            $errno = $this->mysqli->connect_errno;
-            $message = $this->mysqli->connect_error;
-            throw new Exception\ConnectionException("Connection error: $message ($errno)");
-        }
+          if ($this->mysqli->connect_error) {
+          $errno = $this->mysqli->connect_errno;
+          $message = $this->mysqli->connect_error;
+          throw new Exception\ConnectionException("Connection error: $message ($errno)");
+          }
          *
          */
 
@@ -186,9 +179,6 @@ class PDOMysqlMetadataReader extends AbstractMetadataReader
         return $metaFields;
     }
 
-
-
-
     /**
      *
      * @return ArrayObject
@@ -196,50 +186,34 @@ class PDOMysqlMetadataReader extends AbstractMetadataReader
     protected function getDatatypeMapping()
     {
         $mapping = new ArrayObject(array(
-            'STRING'        => array('type' => Column\Type::TYPE_STRING, 'native' => 'CHAR'),
-            'VAR_STRING'    => array('type' => Column\Type::TYPE_STRING, 'native' => 'VARCHAR'),
-
-
-
+            'STRING' => array('type' => Column\Type::TYPE_STRING, 'native' => 'CHAR'),
+            'VAR_STRING' => array('type' => Column\Type::TYPE_STRING, 'native' => 'VARCHAR'),
             // BLOBS ARE CURRENTLY SENT AS TEXT
             // I DIDN'T FIND THE WAY TO MAKE THE DIFFERENCE !!!
-
             'BLOB' => array('type' => Column\Type::TYPE_BLOB, 'native' => 'BLOB'),
-
             // integer
             'TINY' => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'TINYINT'),
-
             'SHORT' => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'SMALLINT'),
             'INT24' => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'MEDIUMINT'),
             'LONG' => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'INTEGER'),
             'LONGLONG' => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'BIGINT'),
-
             // timestamps
             'TIMESTAMP' => array('type' => Column\Type::TYPE_DATETIME, 'native' => 'TIMESTAMP'),
             'DATETIME' => array('type' => Column\Type::TYPE_DATETIME, 'native' => 'DATETIME'),
-
             // dates
             'DATE' => array('type' => Column\Type::TYPE_DATE, 'native' => 'DATE'),
             'NEWDATE' => array('type' => Column\Type::TYPE_DATE, 'native' => 'DATE'),
-
             // time
             'TIME' => array('type' => Column\Type::TYPE_TIME, 'native' => 'TIME'),
-
             // decimals
             'DECIMAL' => array('type' => Column\Type::TYPE_DECIMAL, 'native' => 'DECIMAL'),
             'NEWDECIMAL' => array('type' => Column\Type::TYPE_DECIMAL, 'native' => 'DECIMAL'),
-
             'FLOAT' => array('type' => Column\Type::TYPE_FLOAT, 'native' => 'FLOAT'),
             'DOUBLE' => array('type' => Column\Type::TYPE_FLOAT, 'native' => 'DOUBLE'),
-
-
-
             // boolean
-
             'BIT' => array('type' => Column\Type::TYPE_BIT, 'native' => 'BIT'),
             'BOOLEAN' => array('type' => Column\Type::TYPE_BOOLEAN, 'native' => 'BOOLEAN'),
             'GEOMETRY' => array('type' => Column\Type::TYPE_SPATIAL_GEOMETRY, 'native' => null)
-
         ));
 
 

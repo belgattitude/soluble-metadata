@@ -2,18 +2,18 @@
 
 namespace Soluble\Metadata\Reader;
 
-use Soluble\Datatype\Column\ColumnModel;
+//use Soluble\Datatype\Column\ColumnModel;
 //use Soluble\FlexStore\Column\ColumnModel;
 use Soluble\Db\Metadata\Column\Exception\UnsupportedDatatypeException;
 
 abstract class AbstractMetadataReader
 {
+
     /**
      * Keep static cache in memory
      * @var boolean
      */
     protected $cache_active = true;
-
 
     /**
      *
@@ -25,8 +25,6 @@ abstract class AbstractMetadataReader
         $this->cache_active = $active;
         return $this;
     }
-
-
 
     /**
      * Return
@@ -50,7 +48,6 @@ abstract class AbstractMetadataReader
         }
     }
 
-
     /**
      *
      * @param string $sql
@@ -59,8 +56,6 @@ abstract class AbstractMetadataReader
      * @throws Exception\AmbiguousColumnException
      */
     abstract protected function readColumnsMetadata($sql);
-
-
 
     /**
      * Optimization, will add false condition to the query

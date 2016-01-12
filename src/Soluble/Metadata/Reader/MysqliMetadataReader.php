@@ -2,19 +2,18 @@
 
 namespace Soluble\Metadata\Reader;
 
-use Soluble\FlexStore\Metadata\Exception;
-use Soluble\Db\Metadata\Column;
-use Soluble\Db\Metadata\Column\Types;
-use Soluble\Db\Metadata\Column\Exception\UnsupportedDatatypeException;
+use Soluble\Metadata\Exception;
+use Soluble\Datatype\Column;
+use Soluble\Datatype\Column\Exception\UnsupportedDatatypeException;
 use ArrayObject;
 
 class MysqliMetadataReader extends AbstractMetadataReader
 {
+
     /**
      * @var \Mysqli
      */
     protected $mysqli;
-
 
     /**
      *
@@ -37,15 +36,15 @@ class MysqliMetadataReader extends AbstractMetadataReader
         $this->mysqli = $mysqli;
     }
 
-
-
     /**
      *
      * @param string $sql
-     * @return \ArrayObject
+
      * @throws UnsupportedDatatypeException
      * @throws Exception\AmbiguousColumnException
      * @throws Exception\ConnectionException
+     *
+     * @return \ArrayObject
      */
     protected function readColumnsMetadata($sql)
     {
@@ -71,22 +70,22 @@ class MysqliMetadataReader extends AbstractMetadataReader
 
             $column = Column\Type::createColumnDefinition($datatype['type'], $name, $tableName, $schemaName);
             /*
-            if ($field->name == 'min_time') {
-                var_dump($field);
-            //	var_dump($field->flags & MYSQLI_BLOB_FLAG);
-            //	var_dump($field->flags & MYSQLI_ENUM_FLAG);
-                die();
-            }*/
-/*
-    MYSQLI_BINARY_FLAG
-    MYSQLI_BLOB_FLAG
-    MYSQLI_ENUM_FLAG
-    MYSQLI_MULTIPLE_KEY_FLAG
-    MYSQLI_GROUP_FLAG
-    MYSQLI_SET_FLAG
-    MYSQLI_UNIQUE_KEY_FLAG
-    MYSQLI_ZEROFILL_FLAG
-*/
+              if ($field->name == 'min_time') {
+              var_dump($field);
+              //	var_dump($field->flags & MYSQLI_BLOB_FLAG);
+              //	var_dump($field->flags & MYSQLI_ENUM_FLAG);
+              die();
+              } */
+            /*
+              MYSQLI_BINARY_FLAG
+              MYSQLI_BLOB_FLAG
+              MYSQLI_ENUM_FLAG
+              MYSQLI_MULTIPLE_KEY_FLAG
+              MYSQLI_GROUP_FLAG
+              MYSQLI_SET_FLAG
+              MYSQLI_UNIQUE_KEY_FLAG
+              MYSQLI_ZEROFILL_FLAG
+             */
 
             $column->setAlias($field->name);
             $column->setTableAlias($field->table);
@@ -143,8 +142,7 @@ class MysqliMetadataReader extends AbstractMetadataReader
                 $prev_column = $metadata->offsetGet($alias);
                 $prev_def = $prev_column->toArray();
                 $curr_def = $column->toArray();
-                if ($prev_def['dataType'] != $curr_def['dataType']
-                    ||  $prev_def['nativeDataType'] != $curr_def['nativeDataType']) {
+                if ($prev_def['dataType'] != $curr_def['dataType'] || $prev_def['nativeDataType'] != $curr_def['nativeDataType']) {
                     throw new Exception\AmbiguousColumnException("Cannot get column metadata, non unique column found '$alias' in query with different definitions.");
                 }
 
@@ -160,9 +158,6 @@ class MysqliMetadataReader extends AbstractMetadataReader
 
         return $metadata;
     }
-
-
-
 
     /**
      *
@@ -188,9 +183,9 @@ class MysqliMetadataReader extends AbstractMetadataReader
 
         // to check if query is empty
         /*
-            $stmt->store_result();
-            var_dump($stmt->num_rows);
-            var_dump(
+          $stmt->store_result();
+          var_dump($stmt->num_rows);
+          var_dump(
          */
 
         $result = $stmt->result_metadata();
@@ -199,10 +194,6 @@ class MysqliMetadataReader extends AbstractMetadataReader
         $stmt->close();
         return $metaFields;
     }
-
-
-
-
 
     /**
      *
@@ -222,24 +213,16 @@ class MysqliMetadataReader extends AbstractMetadataReader
          */
 
         $mapping = new ArrayObject(array(
-            MYSQLI_TYPE_STRING      => array('type' => Column\Type::TYPE_STRING, 'native' => 'VARCHAR'),
-            MYSQLI_TYPE_CHAR        => array('type' => Column\Type::TYPE_STRING, 'native' => 'CHAR'),
-            MYSQLI_TYPE_VAR_STRING  => array('type' => Column\Type::TYPE_STRING, 'native' => 'VARCHAR'),
-
+            MYSQLI_TYPE_STRING => array('type' => Column\Type::TYPE_STRING, 'native' => 'VARCHAR'),
+            MYSQLI_TYPE_CHAR => array('type' => Column\Type::TYPE_STRING, 'native' => 'CHAR'),
+            MYSQLI_TYPE_VAR_STRING => array('type' => Column\Type::TYPE_STRING, 'native' => 'VARCHAR'),
             MYSQLI_TYPE_ENUM => array('type' => Column\Type::TYPE_STRING, 'native' => 'ENUM'),
-
             // BLOBS ARE CURRENTLY SENT AS TEXT
             // I DIDN'T FIND THE WAY TO MAKE THE DIFFERENCE !!!
-
-
             MYSQLI_TYPE_TINY_BLOB => array('type' => Column\Type::TYPE_BLOB, 'native' => 'TINYBLOB'),
             MYSQLI_TYPE_MEDIUM_BLOB => array('type' => Column\Type::TYPE_BLOB, 'native' => 'MEDIUMBLOB'),
             MYSQLI_TYPE_LONG_BLOB => array('type' => Column\Type::TYPE_BLOB, 'native' => 'LONGBLOB'),
             MYSQLI_TYPE_BLOB => array('type' => Column\Type::TYPE_BLOB, 'native' => 'BLOB'),
-
-
-
-
             // integer
             MYSQLI_TYPE_TINY => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'TINYINT'),
             MYSQLI_TYPE_YEAR => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'YEAR'),
@@ -247,35 +230,22 @@ class MysqliMetadataReader extends AbstractMetadataReader
             MYSQLI_TYPE_INT24 => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'MEDIUMINT'),
             MYSQLI_TYPE_LONG => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'INTEGER'),
             MYSQLI_TYPE_LONGLONG => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'BIGINT'),
-
             // timestamps
             MYSQLI_TYPE_TIMESTAMP => array('type' => Column\Type::TYPE_DATETIME, 'native' => 'TIMESTAMP'),
             MYSQLI_TYPE_DATETIME => array('type' => Column\Type::TYPE_DATETIME, 'native' => 'DATETIME'),
-
             // dates
             MYSQLI_TYPE_DATE => array('type' => Column\Type::TYPE_DATE, 'native' => 'DATE'),
             MYSQLI_TYPE_NEWDATE => array('type' => Column\Type::TYPE_DATE, 'native' => 'DATE'),
-
             // time
             MYSQLI_TYPE_TIME => array('type' => Column\Type::TYPE_TIME, 'native' => 'TIME'),
-
             // decimals
             MYSQLI_TYPE_DECIMAL => array('type' => Column\Type::TYPE_DECIMAL, 'native' => 'DECIMAL'),
             MYSQLI_TYPE_NEWDECIMAL => array('type' => Column\Type::TYPE_DECIMAL, 'native' => 'DECIMAL'),
-
             MYSQLI_TYPE_FLOAT => array('type' => Column\Type::TYPE_FLOAT, 'native' => 'FLOAT'),
             MYSQLI_TYPE_DOUBLE => array('type' => Column\Type::TYPE_FLOAT, 'native' => 'DOUBLE'),
-
-
-
-
-
             MYSQLI_TYPE_BIT => array('type' => Column\Type::TYPE_BIT, 'native' => 'BIT'),
             //MYSQLI_TYPE_BOOLEAN => array('type' => Column\Type::TYPE_BOOLEAN, 'native' => 'BOOLEAN'),
-
             MYSQLI_TYPE_GEOMETRY => array('type' => Column\Type::TYPE_SPATIAL_GEOMETRY, 'native' => null),
-
-
         ));
 
 

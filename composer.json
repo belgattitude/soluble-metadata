@@ -7,12 +7,12 @@
         "sql",
         "query"
     ],
-    "homepage": "https://github.com/belgattitude/soluble-metadata",
+    "homepage": "http://soluble.io",
     "type": "library",
     "authors": [
         {
             "name": "Sébastien Vanvelthem",
-            "homepage": "http://www.nuvolia.com/",
+            "homepage": "https://github.com/belgattitude",
             "role": "Lead developer"
         }
     ],
@@ -23,9 +23,10 @@
     },
     "require": {
         "php": ">=5.4.4",
-        "soluble/dbwrapper": "1.*"
+        "soluble/dbwrapper": "1.*",
+        "soluble/datatype": "0.10.*"
     },
     "archive": {
-        "exclude": ["test", "doc", ".travis.yml", ".codeclimate.yml", ".coveralls.yml", ".scrutinizer.yml", ".php_cs", ".gitignore"]
+        "exclude": ["test", "doc", ".travis.yml", ".codeclimate.yml", ".coveralls.yml", ".scrutinizer.yml", ".php_cs", ".gitignore", "phpcs.xml"]
     }
 }
