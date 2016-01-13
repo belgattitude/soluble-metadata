@@ -77,6 +77,7 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $metadata = $this->getReader($conn);
 
             $md = $metadata->getColumnsMetadata($sql);
+            $this->assertInstanceOf('Soluble\Metadata\ColumnsMetadata', $md);
 
             $this->assertTrue($md['id']->isPrimary());
             $this->assertEquals(Column\Type::TYPE_INTEGER, $md['id']->getDatatype());

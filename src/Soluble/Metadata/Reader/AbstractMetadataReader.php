@@ -2,8 +2,7 @@
 
 namespace Soluble\Metadata\Reader;
 
-//use Soluble\Datatype\Column\ColumnModel;
-//use Soluble\FlexStore\Column\ColumnModel;
+use Soluble\Metadata\ColumnsMetadata;
 use Soluble\Db\Metadata\Column\Exception\UnsupportedDatatypeException;
 
 abstract class AbstractMetadataReader
@@ -30,9 +29,10 @@ abstract class AbstractMetadataReader
      * Return
      *
      * @param string $sql
-     * @return \ArrayObject
+
      * @throws UnsupportedDatatypeException
      * @throws Exception\AmbiguousColumnException
+     * @return ColumnsMetadata
      */
     public function getColumnsMetadata($sql)
     {
@@ -51,7 +51,7 @@ abstract class AbstractMetadataReader
     /**
      *
      * @param string $sql
-     * @return \ArrayObject
+     * @return ColumnsMetadata
      * @throws UnsupportedDatatypeException
      * @throws Exception\AmbiguousColumnException
      */

@@ -2,6 +2,7 @@
 
 namespace Soluble\Metadata\Reader;
 
+use Soluble\Metadata\ColumnsMetadata;
 use Soluble\Metadata\Exception;
 use Soluble\Datatype\Column;
 use Soluble\Db\Metadata\Column\Exception\UnsupportedDatatypeException;
@@ -54,14 +55,14 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
     /**
      *
      * @param string $sql
-     * @return \ArrayObject
+     * @return ColumnsMetadata
      * @throws UnsupportedDatatypeException
      * @throws Exception\AmbiguousColumnException
      * @throws Exception\ConnectionException
      */
     protected function readColumnsMetadata($sql)
     {
-        $metadata = new ArrayObject();
+        $metadata = new ColumnsMetadata();
         $fields = $this->readFields($sql);
 
         $type_map = $this->getDatatypeMapping();

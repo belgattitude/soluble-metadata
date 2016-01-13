@@ -2,6 +2,7 @@
 
 namespace Soluble\Metadata\Reader;
 
+use Soluble\Metadata\ColumnsMetadata;
 use Soluble\Metadata\Exception;
 use Soluble\Datatype\Column;
 use Soluble\Datatype\Column\Exception\UnsupportedDatatypeException;
@@ -44,11 +45,11 @@ class MysqliMetadataReader extends AbstractMetadataReader
      * @throws Exception\AmbiguousColumnException
      * @throws Exception\ConnectionException
      *
-     * @return \ArrayObject
+     * @return ColumnsMetadata
      */
     protected function readColumnsMetadata($sql)
     {
-        $metadata = new ArrayObject();
+        $metadata = new ColumnsMetadata();
         $fields = $this->readFields($sql);
         $type_map = $this->getDatatypeMapping();
 
@@ -60,32 +61,15 @@ class MysqliMetadataReader extends AbstractMetadataReader
 
             $datatype = $field->type;
 
-            //@codeCoverageIgnoreStart
+
             if (!$type_map->offsetExists($datatype)) {
                 throw new UnsupportedDatatypeException("Datatype '$datatype' not yet supported by " . __CLASS__);
             }
-            //@codeCoverageIgnoreEnd
+
 
             $datatype = $type_map->offsetGet($datatype);
 
             $column = Column\Type::createColumnDefinition($datatype['type'], $name, $tableName, $schemaName);
-            /*
-              if ($field->name == 'min_time') {
-              var_dump($field);
-              //	var_dump($field->flags & MYSQLI_BLOB_FLAG);
-              //	var_dump($field->flags & MYSQLI_ENUM_FLAG);
-              die();
-              } */
-            /*
-              MYSQLI_BINARY_FLAG
-              MYSQLI_BLOB_FLAG
-              MYSQLI_ENUM_FLAG
-              MYSQLI_MULTIPLE_KEY_FLAG
-              MYSQLI_GROUP_FLAG
-              MYSQLI_SET_FLAG
-              MYSQLI_UNIQUE_KEY_FLAG
-              MYSQLI_ZEROFILL_FLAG
-             */
 
             $column->setAlias($field->name);
             $column->setTableAlias($field->table);

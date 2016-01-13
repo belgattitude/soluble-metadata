@@ -48,9 +48,6 @@ require 'vendor/autoload.php';
 ### Connection
 
 
-
-
-
 ```php
 <?php
 
@@ -88,7 +85,7 @@ The `Soluble\Metadata\Reader\AbstractMetadataReader` offers
 
 | Methods                      | Return        | Description                                         |
 |------------------------------|---------------|-----------------------------------------------------|
-| `getColumnsMetadata($sql)`   | `ArrayObject` | Metadata information indexed by column name/alias   |
+| `getColumnsMetadata($sql)`   | `ColumnsMetadata` | Metadata information indexed by column name/alias   |
 
 ### AbstractColumnDefinition
 
