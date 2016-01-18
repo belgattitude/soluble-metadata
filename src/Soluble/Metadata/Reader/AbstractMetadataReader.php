@@ -50,7 +50,7 @@ abstract class AbstractMetadataReader
 
     /**
      * Read metadata information from source
-     * 
+     *
      * @throws UnsupportedDatatypeException
      * @throws Exception\AmbiguousColumnException
      *

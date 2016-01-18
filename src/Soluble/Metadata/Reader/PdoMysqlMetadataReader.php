@@ -135,7 +135,7 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
 
     /**
      * Read fields from pdo source
-     * 
+     *
      * @throws Exception\ConnectionException
      * @param string $sql
      * @return array

@@ -22,11 +22,11 @@
         }
     },
     "require": {
-        "php": ">=5.4.4",
-        "soluble/datatype": "0.10.*"
+        "php": "^5.4 || ^7.0",
+        "soluble/datatype": "^0.10"
     },
     "require-dev": {
-        "soluble/dbwrapper": "1.*"
+        "soluble/dbwrapper": "^1.0"
     },
     "archive": {
         "exclude": ["test", "doc", ".travis.yml", ".codeclimate.yml", ".coveralls.yml", ".scrutinizer.yml", ".php_cs", ".gitignore", "phpcs.xml"]
