@@ -26,12 +26,12 @@ abstract class AbstractMetadataReader
     }
 
     /**
-     * Return
+     * Return columns metadata from query
      *
-     * @param string $sql
-
      * @throws UnsupportedDatatypeException
      * @throws Exception\AmbiguousColumnException
+     *
+     * @param string $sql
      * @return ColumnsMetadata
      */
     public function getColumnsMetadata($sql)
@@ -49,11 +49,13 @@ abstract class AbstractMetadataReader
     }
 
     /**
+     * Read metadata information from source
+     * 
+     * @throws UnsupportedDatatypeException
+     * @throws Exception\AmbiguousColumnException
      *
      * @param string $sql
      * @return ColumnsMetadata
-     * @throws UnsupportedDatatypeException
-     * @throws Exception\AmbiguousColumnException
      */
     abstract protected function readColumnsMetadata($sql);
 

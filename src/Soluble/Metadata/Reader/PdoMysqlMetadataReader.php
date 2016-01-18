@@ -37,28 +37,16 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
      */
     public function __construct(PDO $pdo)
     {
-        //@codeCoverageIgnoreStart
-        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
-            $msg = "PDOMysqlMetadataSource only supported on PHP 5.4+, try to use MysqliMetadatSource instead.";
-            throw new Exception\UnsupportedFeatureException($msg);
-        };
-        //@codeCoverageIgnoreEnd
-
         $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
         if (strtolower($driver) != 'mysql') {
             throw new Exception\UnsupportedDriverException(__CLASS__ . " supports only pdo_mysql driver, '$driver' given.");
         }
-
         $this->pdo = $pdo;
     }
 
     /**
      *
-     * @param string $sql
-     * @return ColumnsMetadata
-     * @throws UnsupportedDatatypeException
-     * @throws Exception\AmbiguousColumnException
-     * @throws Exception\ConnectionException
+     * {@inheritdoc}
      */
     protected function readColumnsMetadata($sql)
     {
@@ -146,9 +134,11 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
     }
 
     /**
-     *
-     * @param string $sql
+     * Read fields from pdo source
+     * 
      * @throws Exception\ConnectionException
+     * @param string $sql
+     * @return array
      */
     protected function readFields($sql)
     {
@@ -157,14 +147,6 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
         }
 
         $sql = $this->makeQueryEmpty($sql);
-        /*
-          if ($this->mysqli->connect_error) {
-          $errno = $this->mysqli->connect_errno;
-          $message = $this->mysqli->connect_error;
-          throw new Exception\ConnectionException("Connection error: $message ($errno)");
-          }
-         *
-         */
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();

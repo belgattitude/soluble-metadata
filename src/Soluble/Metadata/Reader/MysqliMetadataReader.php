@@ -39,13 +39,7 @@ class MysqliMetadataReader extends AbstractMetadataReader
 
     /**
      *
-     * @param string $sql
-
-     * @throws UnsupportedDatatypeException
-     * @throws Exception\AmbiguousColumnException
-     * @throws Exception\ConnectionException
-     *
-     * @return ColumnsMetadata
+     * {@inheritdoc}
      */
     protected function readColumnsMetadata($sql)
     {
@@ -147,6 +141,7 @@ class MysqliMetadataReader extends AbstractMetadataReader
      *
      * @param string $sql
      * @throws Exception\ConnectionException
+     * @return array
      */
     protected function readFields($sql)
     {
@@ -156,7 +151,6 @@ class MysqliMetadataReader extends AbstractMetadataReader
 
         $sql = $this->makeQueryEmpty($sql);
 
-
         $stmt = $this->mysqli->prepare($sql);
 
         if (!$stmt) {
@@ -164,13 +158,6 @@ class MysqliMetadataReader extends AbstractMetadataReader
             throw new Exception\InvalidQueryException(__METHOD__ . ": Error sql is not correct : $message");
         }
         $stmt->execute();
-
-        // to check if query is empty
-        /*
-          $stmt->store_result();
-          var_dump($stmt->num_rows);
-          var_dump(
-         */
 
         $result = $stmt->result_metadata();
         $metaFields = $result->fetch_fields();
