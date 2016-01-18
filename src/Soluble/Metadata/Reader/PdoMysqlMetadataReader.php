@@ -6,7 +6,7 @@ use Soluble\Metadata\ColumnsMetadata;
 use Soluble\Metadata\Exception;
 use Soluble\Datatype\Column;
 use Soluble\Db\Metadata\Column\Exception\UnsupportedDatatypeException;
-use ArrayObject;
+use Soluble\Metadata\Reader\Mapping\PdoMysqlMapping;
 use PDO;
 
 class PdoMysqlMetadataReader extends AbstractMetadataReader
@@ -53,7 +53,7 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
         $metadata = new ColumnsMetadata();
         $fields = $this->readFields($sql);
 
-        $type_map = $this->getDatatypeMapping();
+        $type_map = PdoMysqlMapping::getDatatypeMapping();
 
 
         foreach ($fields as $idx => $field) {
@@ -160,48 +160,5 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
         $stmt->closeCursor();
         unset($stmt);
         return $metaFields;
-    }
-
-    /**
-     *
-     * @return ArrayObject
-     */
-    protected function getDatatypeMapping()
-    {
-        $mapping = new ArrayObject([
-            'STRING' => ['type' => Column\Type::TYPE_STRING, 'native' => 'CHAR'],
-            'VAR_STRING' => ['type' => Column\Type::TYPE_STRING, 'native' => 'VARCHAR'],
-            // BLOBS ARE CURRENTLY SENT AS TEXT
-            // I DIDN'T FIND THE WAY TO MAKE THE DIFFERENCE !!!
-            'BLOB' => ['type' => Column\Type::TYPE_BLOB, 'native' => 'BLOB'],
-            // integer
-            'TINY' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'TINYINT'],
-            'SHORT' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'SMALLINT'],
-            'INT24' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'MEDIUMINT'],
-            'LONG' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'INTEGER'],
-            'LONGLONG' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'BIGINT'],
-            // timestamps
-            'TIMESTAMP' => ['type' => Column\Type::TYPE_DATETIME, 'native' => 'TIMESTAMP'],
-            'DATETIME' => ['type' => Column\Type::TYPE_DATETIME, 'native' => 'DATETIME'],
-            // dates
-            'DATE' => ['type' => Column\Type::TYPE_DATE, 'native' => 'DATE'],
-            'NEWDATE' => ['type' => Column\Type::TYPE_DATE, 'native' => 'DATE'],
-            // time
-            'TIME' => ['type' => Column\Type::TYPE_TIME, 'native' => 'TIME'],
-            // decimals
-            'DECIMAL' => ['type' => Column\Type::TYPE_DECIMAL, 'native' => 'DECIMAL'],
-            'NEWDECIMAL' => ['type' => Column\Type::TYPE_DECIMAL, 'native' => 'DECIMAL'],
-            'FLOAT' => ['type' => Column\Type::TYPE_FLOAT, 'native' => 'FLOAT'],
-            'DOUBLE' => ['type' => Column\Type::TYPE_FLOAT, 'native' => 'DOUBLE'],
-            // boolean
-            'BIT' => ['type' => Column\Type::TYPE_BIT, 'native' => 'BIT'],
-            'BOOLEAN' => ['type' => Column\Type::TYPE_BOOLEAN, 'native' => 'BOOLEAN'],
-            'GEOMETRY' => ['type' => Column\Type::TYPE_SPATIAL_GEOMETRY, 'native' => null]
-        ]);
-
-
-        // enum
-
-        return $mapping;
     }
 }
