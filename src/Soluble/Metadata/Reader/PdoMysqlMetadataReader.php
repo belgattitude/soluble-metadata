@@ -27,7 +27,7 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
      *
      * @var Array
      */
-    protected static $metadata_cache = array();
+    protected static $metadata_cache = [];
 
     /**
      *
@@ -151,7 +151,7 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         $column_count = $stmt->columnCount();
-        $metaFields = array();
+        $metaFields = [];
         for ($i = 0; $i < $column_count; $i++) {
             $meta = $stmt->getColumnMeta($i);
             $metaFields[$i] = $meta;
@@ -168,36 +168,36 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
      */
     protected function getDatatypeMapping()
     {
-        $mapping = new ArrayObject(array(
-            'STRING' => array('type' => Column\Type::TYPE_STRING, 'native' => 'CHAR'),
-            'VAR_STRING' => array('type' => Column\Type::TYPE_STRING, 'native' => 'VARCHAR'),
+        $mapping = new ArrayObject([
+            'STRING' => ['type' => Column\Type::TYPE_STRING, 'native' => 'CHAR'],
+            'VAR_STRING' => ['type' => Column\Type::TYPE_STRING, 'native' => 'VARCHAR'],
             // BLOBS ARE CURRENTLY SENT AS TEXT
             // I DIDN'T FIND THE WAY TO MAKE THE DIFFERENCE !!!
-            'BLOB' => array('type' => Column\Type::TYPE_BLOB, 'native' => 'BLOB'),
+            'BLOB' => ['type' => Column\Type::TYPE_BLOB, 'native' => 'BLOB'],
             // integer
-            'TINY' => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'TINYINT'),
-            'SHORT' => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'SMALLINT'),
-            'INT24' => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'MEDIUMINT'),
-            'LONG' => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'INTEGER'),
-            'LONGLONG' => array('type' => Column\Type::TYPE_INTEGER, 'native' => 'BIGINT'),
+            'TINY' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'TINYINT'],
+            'SHORT' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'SMALLINT'],
+            'INT24' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'MEDIUMINT'],
+            'LONG' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'INTEGER'],
+            'LONGLONG' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'BIGINT'],
             // timestamps
-            'TIMESTAMP' => array('type' => Column\Type::TYPE_DATETIME, 'native' => 'TIMESTAMP'),
-            'DATETIME' => array('type' => Column\Type::TYPE_DATETIME, 'native' => 'DATETIME'),
+            'TIMESTAMP' => ['type' => Column\Type::TYPE_DATETIME, 'native' => 'TIMESTAMP'],
+            'DATETIME' => ['type' => Column\Type::TYPE_DATETIME, 'native' => 'DATETIME'],
             // dates
-            'DATE' => array('type' => Column\Type::TYPE_DATE, 'native' => 'DATE'),
-            'NEWDATE' => array('type' => Column\Type::TYPE_DATE, 'native' => 'DATE'),
+            'DATE' => ['type' => Column\Type::TYPE_DATE, 'native' => 'DATE'],
+            'NEWDATE' => ['type' => Column\Type::TYPE_DATE, 'native' => 'DATE'],
             // time
-            'TIME' => array('type' => Column\Type::TYPE_TIME, 'native' => 'TIME'),
+            'TIME' => ['type' => Column\Type::TYPE_TIME, 'native' => 'TIME'],
             // decimals
-            'DECIMAL' => array('type' => Column\Type::TYPE_DECIMAL, 'native' => 'DECIMAL'),
-            'NEWDECIMAL' => array('type' => Column\Type::TYPE_DECIMAL, 'native' => 'DECIMAL'),
-            'FLOAT' => array('type' => Column\Type::TYPE_FLOAT, 'native' => 'FLOAT'),
-            'DOUBLE' => array('type' => Column\Type::TYPE_FLOAT, 'native' => 'DOUBLE'),
+            'DECIMAL' => ['type' => Column\Type::TYPE_DECIMAL, 'native' => 'DECIMAL'],
+            'NEWDECIMAL' => ['type' => Column\Type::TYPE_DECIMAL, 'native' => 'DECIMAL'],
+            'FLOAT' => ['type' => Column\Type::TYPE_FLOAT, 'native' => 'FLOAT'],
+            'DOUBLE' => ['type' => Column\Type::TYPE_FLOAT, 'native' => 'DOUBLE'],
             // boolean
-            'BIT' => array('type' => Column\Type::TYPE_BIT, 'native' => 'BIT'),
-            'BOOLEAN' => array('type' => Column\Type::TYPE_BOOLEAN, 'native' => 'BOOLEAN'),
-            'GEOMETRY' => array('type' => Column\Type::TYPE_SPATIAL_GEOMETRY, 'native' => null)
-        ));
+            'BIT' => ['type' => Column\Type::TYPE_BIT, 'native' => 'BIT'],
+            'BOOLEAN' => ['type' => Column\Type::TYPE_BOOLEAN, 'native' => 'BOOLEAN'],
+            'GEOMETRY' => ['type' => Column\Type::TYPE_SPATIAL_GEOMETRY, 'native' => null]
+        ]);
 
 
         // enum

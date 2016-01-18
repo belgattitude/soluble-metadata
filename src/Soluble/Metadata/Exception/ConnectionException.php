@@ -8,5 +8,4 @@ namespace Soluble\Metadata\Exception;
 
 class ConnectionException extends \RuntimeException
 {
-
 }
