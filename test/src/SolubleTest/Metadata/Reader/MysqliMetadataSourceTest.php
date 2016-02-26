@@ -394,7 +394,7 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
 
         $mysqli = $this->adapter->getConnection()->getResource();
 
-        foreach ($queries as $query) {
+        foreach ($queries as $idx => $query) {
             $sql = $this->invokeMethod($this->metadata, 'getEmptyQuery', array($query));
 
             $stmt = $mysqli->prepare($sql);
@@ -407,8 +407,9 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $stmt->execute();
             $stmt->store_result();
             $num_rows = $stmt->num_rows;
-            //var_dump($sql);
+            
             $this->assertTrue(is_int($num_rows));
+            $this->assertEquals(0, $num_rows, "Emptied query $idx : $sql ");
             $stmt->close();
         }
     }

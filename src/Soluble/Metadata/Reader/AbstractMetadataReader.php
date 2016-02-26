@@ -71,15 +71,25 @@ abstract class AbstractMetadataReader
         // see the reason why in Vision_Store_Adapter_ZendDbSelect::getMetatData
         //$sql = str_replace("('__innerselect'='__innerselect')", '(1=0)', $sql);
 
-        
+
         $sql = preg_replace('/(\r\n|\r|\n|\t)+/', " ", strtolower($sql));
         $sql = trim($sql);
         $sql = preg_replace('/\s+/', ' ', $sql);
-        
-        if (!preg_match("/LIMIT [\d]+(([\s]+OFFSET|[\s]+,) [\d]+){0,1}/i", $sql)) {
+
+
+
+        $replace_regexp = "LIMIT[\s]+[\d]+((\s*,\s*\d+)|(\s+OFFSET\s+\d+)){0,1}";
+
+        $search_regexp = "$replace_regexp";
+        if (!preg_match("/$search_regexp/i", $sql)) {
             // Limit is not already present
             $sql .= " LIMIT 0";
-            
+        } else {
+            // replace first if offset exists, then if not
+            //preg_match_all("/($search_regexp)/i", $sql, $matches, PREG_PATTERN_ORDER);
+            //var_dump($matches);
+
+            $sql = preg_replace("/($replace_regexp)/i", "LIMIT 0", $sql);
         }
         return $sql;
     }
