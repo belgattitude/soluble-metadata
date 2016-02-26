@@ -149,8 +149,7 @@ class MysqliMetadataReader extends AbstractMetadataReader
             throw new Exception\EmptyQueryException(__METHOD__ . ": Error cannot handle empty queries");
         }
 
-        $sql = $this->makeQueryEmpty($sql);
-
+        $sql = $this->getEmptyQuery($sql);
         $stmt = $this->mysqli->prepare($sql);
 
         if (!$stmt) {

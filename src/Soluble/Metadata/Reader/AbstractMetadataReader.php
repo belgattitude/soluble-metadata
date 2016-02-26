@@ -63,18 +63,24 @@ abstract class AbstractMetadataReader
      * Optimization, will add false condition to the query
      * so the metadata loading will be faster
      *
-     *
      * @param string $sql query string
      * @return string
      */
-    protected function makeQueryEmpty($sql)
+    protected function getEmptyQuery($sql)
     {
         // see the reason why in Vision_Store_Adapter_ZendDbSelect::getMetatData
         //$sql = str_replace("('__innerselect'='__innerselect')", '(1=0)', $sql);
 
+        
         $sql = preg_replace('/(\r\n|\r|\n|\t)+/', " ", strtolower($sql));
+        $sql = trim($sql);
         $sql = preg_replace('/\s+/', ' ', $sql);
-
+        
+        if (!preg_match("/LIMIT [\d]+(([\s]+OFFSET|[\s]+,) [\d]+){0,1}/i", $sql)) {
+            // Limit is not already present
+            $sql .= " LIMIT 0";
+            
+        }
         return $sql;
     }
 }

@@ -370,6 +370,7 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Only valid for PHP 5.4+ version');
         }
     }
+    
 
     /**
      * Tears down the fixture, for example, closes a network connection.

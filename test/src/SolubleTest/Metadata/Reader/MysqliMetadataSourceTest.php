@@ -377,37 +377,38 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
         $this->markTestIncomplete("Warning, test was made on client '$mysqli_client', may differs when using mysqlnd, libmariadb, libmysql");
     }
 
-    public function testMakeQueryEmpty()
+    public function testGetEmptyQuery()
     {
         $queries = array(
             'select 1, 2',
-            'select 1 limit 10',
+            
             'select media_id from media',
             'select media_id from media limit 1 offset 2',
+            "SELECT * from product limit 10",
+            "select * from product limit 0  offset 10",
+            "select * from product limit 0, 10",
+            'select 1 limit 10',
             'select media_id from media
                  LimiT   10',
-            '(select media_id from media
-                 LimiT   10 )',
         );
 
         $mysqli = $this->adapter->getConnection()->getResource();
 
         foreach ($queries as $query) {
-            $sql = $this->invokeMethod($this->metadata, 'makeQueryEmpty', array($query));
-
+            $sql = $this->invokeMethod($this->metadata, 'getEmptyQuery', array($query));
 
             $stmt = $mysqli->prepare($sql);
 
             if (!$stmt) {
                 $message = $mysqli->error;
-                throw new \Exception("Sql is not correct : $message");
+                throw new \Exception("Sql is not correct : $message, ($sql)");
             }
 
             $stmt->execute();
             $stmt->store_result();
             $num_rows = $stmt->num_rows;
-            var_dump($sql);
-            var_dump($num_rows);
+            //var_dump($sql);
+            $this->assertTrue(is_int($num_rows));
             $stmt->close();
         }
     }
