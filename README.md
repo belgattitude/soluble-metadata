@@ -17,7 +17,7 @@ The ultimate SQL query metadata reader.
 
 - Retrieve metadata information from an SQL query (datatypes,...)
 - Rely on native database driver information (does not parse the query)
-- Fast, lightweight and thoroughly tested.
+- Provides an unified API, Fast, lightweight and thoroughly tested.
 
 ## Requirements
 
@@ -152,6 +152,7 @@ Metadata information is stored as an `Soluble\Datatype\Column\Definition\Abstrac
 | `getAlias()`                 | `string`      | Return column alias                                 |
 | `getTableName()`             | `string`      | Return origin table                                 |
 | `getSchemaName()`            | `string`      | Originating schema for the column/table             |
+| `getOrdinalPosition()`       | `integer`     | Return position in the select                       |
 
 | Type related methods         | Return        | Description                                         |
 |------------------------------|---------------|-----------------------------------------------------|
@@ -161,23 +162,54 @@ Metadata information is stored as an `Soluble\Datatype\Column\Definition\Abstrac
 | `isNumeric()`                | `boolean`     | Whether the column is numeric (decimal, int...)     |
 | `isDate()`                   | `boolean`     | Is a date type                                      |
 
+| Flags information            | Return        | Description                                         |
+|------------------------------|---------------|-----------------------------------------------------|
+| `isPrimary()`                | `boolean`     | Whether the column is (part of) primary key         |
+| `isAutoIncrement()`          | `boolean`     | If it's an autoincrement column                     |
+| `isNullable()`               | `boolean`     | Whether the column is nullable                      |
+| `getColumnDefault()`         | `string`      | Return default value for column                     |
+
+
 | Extra information methods    | Return        | Description                                         |
 |------------------------------|---------------|-----------------------------------------------------|
 | `isComputed()`               | `boolean`     | Whether the column is computed, i.e. '1+1, sum()    |
 | `isGroup()`                  | `boolean`     | Grouped operation sum(), min(), max()               |
 
-
-| Source infos                 | Return        | Description                                         |
+| Numeric type specific        | Return        | Description                                         |
 |------------------------------|---------------|-----------------------------------------------------|
-| `isPrimary()`                | `boolean`     | Whether the column is (part of) primary key         |
-| `isNullable()`               | `boolean`     | Whether the column is nullable                      |
-| `getColumnDefault()`         | `string`      | Return default value for column                     |
-| `getOrdinalPosition()`       | `integer`     | Return position in the select                       |
+| `getNumericScale()`          | `integer`     | Scale for numbers, i.e DECIMAL(10,2) -> 10          |
+| `getNumericPrecision()`      | `integer`     | Precision, i.e. DECIMAL(10,2) -> 2                  |
+| `isNumericUnsigned()`        | `boolean`     | Whether signed or unsigned                          |
+
+| Character type specific       | Return        | Description                                                |
+|-------------------------------|---------------|------------------------------------------------------------|
+| `getCharacterMaximumLength()` | `integer`     | Max string length for chars (unicode sensitive)            |
+| `getCharacterOctetLength()`   | `integer`     | Max octet length for chars, blobs... (binary, no unicode)  |
 
 
-Concrete implementations of `Soluble\Datatype\Column\Definition\AbstractColumnDefinition` are
 
-| Drivers              | Interface                 | Description                   |
+### AbstractColumnDefinition implementations
+
+Here's the list of concrete implementations for `Soluble\Datatype\Column\Definition\AbstractColumnDefinition`.
+
+They can be used as an alternative way to check datatypes. For example
+
+```php
+use Soluble\Datatype\Column\Definition;
+
+if ($coldef instanceof Definition\DateColumnInterface) {
+
+    // equivalent to
+    // if ($coldef->isDate()) {
+
+    $date = new \DateTime($value);
+    echo $value->format('Y');
+} elseif ($coldef instanceof Definition\NumericColumnInterface) {
+    echo number_format($value, $coldef->getNumericPrecision);
+}
+```
+
+| Definition Type      | Interface                 | Description                   |
 |----------------------|---------------------------|-------------------------------|
 | `BitColumn`          |                           |                               |
 | `BlobColumn`         |                           |                               |
@@ -192,16 +224,20 @@ Concrete implementations of `Soluble\Datatype\Column\Definition\AbstractColumnDe
 | `TimeColumn`         |                           |                               |
 
 
-
-## Supported drivers
+## Supported readers
 
 Currently only pdo_mysql and mysqli drivers  are supported. 
 
-| Drivers            | Adapter interface implementation                     |
+| Drivers            | Reader implementation                                |
 |--------------------|------------------------------------------------------|
-| pdo_mysql          | `Soluble\DbAdapter\Adapter\MysqlAdapter`             |
-| mysqli             | `Soluble\DbAdapter\Adapter\MysqlAdapter`             |
+| pdo_mysql          | `Soluble\Metadata\Reader\PdoMysqlMetadataReader`     |
+| mysqli             | `Soluble\Metadata\Reader\MysqliMetadataReader`       |
 
+
+## Future ideas
+
+- Implement more drivers (pgsql...)
+- Implement a pure php reader (on top of [phpmyadmin sql-parser](https://github.com/phpmyadmin/sql-parser))
 
 ## Contributing
 
