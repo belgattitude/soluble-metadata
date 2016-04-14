@@ -123,7 +123,24 @@ foreach($meta as $column => $definition) {
 
 ### AbstractMetadataReader
 
-The `Soluble\Metadata\Reader\AbstractMetadataReader` offers
+Use the `Reader\AbstractMetadataReader::getColumnsMetadata($sql)` to extract query metadata.
+
+```php
+<?php
+
+use Soluble\Metadata\Reader;
+
+$conn = new \PDO("mysql:host=$hostname", $username, $password, [
+            \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+]);
+
+$reader = new Reader\PdoMysqlMetadataReader($conn);
+
+$sql = "select id, name from my_table";
+
+$columnsMeta = $reader->getColumnsMetadata($sql);
+
+```
 
 | Methods                      | Return        | Description                                         |
 |------------------------------|---------------|-----------------------------------------------------|
@@ -135,6 +152,23 @@ The `Soluble\Metadata\Reader\AbstractMetadataReader` offers
 The `Soluble\Metadata\ColumnsMetadata` allows to iterate over column information or return a specific column as
 an `Soluble\Datatype\Column\Definition\AbstractColumnDefinition`.
 
+```php
+<?php
+
+$reader = new Reader\PdoMysqlMetadataReader($conn);
+
+$sql = "select id, name from my_table";
+
+$columnsMeta = $reader->getColumnsMetadata($sql);
+
+foreach ($columnsMeta as $col_name => $col_def) {
+    echo $coldev->getDatatype() . PHP_EOL; 
+}
+
+$col = $columnsMeta->getColumn('id');
+echo $col->getDatatype();
+
+```
 
 | Methods                      | Return        | Description                                         |
 |------------------------------|---------------|-----------------------------------------------------|
