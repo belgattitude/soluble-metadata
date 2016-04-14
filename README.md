@@ -119,18 +119,6 @@ foreach($meta as $column => $definition) {
 
 ```
 
-
-## Optimizations
-
-soluble/metadata allows you
-
-## Limitations 
-
-### Driver limitation
-- Mysqli
-
-
-
 ## API
 
 ### AbstractMetadataReader
