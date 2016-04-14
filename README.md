@@ -1,6 +1,6 @@
 # soluble/metadata
 
-[![PHP Version](http://img.shields.io/badge/php-5.3+-ff69b4.svg)](https://packagist.org/packages/soluble/metadata)
+[![PHP Version](http://img.shields.io/badge/php-5.4+-ff69b4.svg)](https://packagist.org/packages/soluble/metadata)
 [![HHVM Status](http://hhvm.h4cc.de/badge/soluble/metadata.png?style=flat)](http://hhvm.h4cc.de/package/soluble/metadata)
 [![Build Status](https://travis-ci.org/belgattitude/soluble-metadata.png?branch=master)](https://travis-ci.org/belgattitude/soluble-metadata)
 [![Code Coverage](https://scrutinizer-ci.com/g/belgattitude/soluble-metadata/badges/coverage.png?s=aaa552f6313a3a50145f0e87b252c84677c22aa9)](https://scrutinizer-ci.com/g/belgattitude/soluble-metadata)
@@ -11,17 +11,18 @@
 
 ## Introduction
 
-The ultimate database metadata reader
+The ultimate SQL query metadata reader.
 
 ## Features
 
-- Get metadata information from your queries
-- Currently support Mysqli and PDO_mysql drivers
+- Retrieve metadata information from an SQL query (datatypes,...)
+- Rely on native database driver information (does not parse the query)
+- Fast, lightweight and thoroughly tested.
 
 ## Requirements
 
 - PHP engine 5.4+, 7.0+
-- HHVM does not work :(
+- HHVM does not work yet :(
 - PDO or Mysqli extension enabled
 
 ## Documentation
@@ -33,7 +34,7 @@ The ultimate database metadata reader
 Instant installation via [composer](http://getcomposer.org/).
 
 ```console
-php composer require soluble/metadata:0.*
+$ php composer require soluble/metadata:^0.9
 ```
 Most modern frameworks will include Composer out of the box, but ensure the following file is included:
 
@@ -45,8 +46,7 @@ require 'vendor/autoload.php';
 
 ## Quick start
 
-### Connection
-
+### Getting metadata from an SQL query
 
 ```php
 <?php
@@ -67,15 +67,27 @@ $sql = "select id, name from my_table";
 
 $meta = $reader->getColumnsMetadata($sql);
 
-// The resulting ArrayObject look like
+// The resulting ColumnsMetadata object look like
 
-// The resulting array looks like
 [
  ["id"] => <Column\Definition\IntegerColumn>
  ["name"] => <Column\Definition\StringColumn>
 ]
 
+$col = $meta->getColumn('name');
+
+echo $col->getOrdinalPosition();
+echo $col->getTableName();
+echo $col->getDatatype();
+echo $col->getNativeDatatype();
+echo $col->isPrimary() ? 'PK' : ''; 
+echo $col->isNullable() ? 'nullable' : 'not null';
+echo $col->getCharacterMaximumLength();
+//...
+
 ```
+
+## 
 
 ## API
 
@@ -85,7 +97,7 @@ The `Soluble\Metadata\Reader\AbstractMetadataReader` offers
 
 | Methods                      | Return        | Description                                         |
 |------------------------------|---------------|-----------------------------------------------------|
-| `getColumnsMetadata($sql)`   | `ColumnsMetadata` | Metadata information indexed by column name/alias   |
+| `getColumnsMetadata($sql)`   | `ColumnsMetadata` | Metadata information: ArrayObject with column name/alias   |
 
 ### AbstractColumnDefinition
 

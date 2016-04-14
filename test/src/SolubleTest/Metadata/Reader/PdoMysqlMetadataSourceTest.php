@@ -29,7 +29,6 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-
         $this->adapter = new PdoMysqlAdapter(\SolubleTestFactories::getDbConnection('pdo:mysql'));
         $this->metadata = new PdoMysqlMetadataReader($this->adapter->getConnection()->getResource());
     }
@@ -370,7 +369,7 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Only valid for PHP 5.4+ version');
         }
     }
-    
+
 
     /**
      * Tears down the fixture, for example, closes a network connection.
@@ -378,6 +377,5 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-
     }
 }

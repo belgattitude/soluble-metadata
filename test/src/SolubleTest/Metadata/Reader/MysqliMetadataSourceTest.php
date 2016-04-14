@@ -26,7 +26,6 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
      */
     protected function setUp()
     {
-
         $this->adapter = new MysqliAdapter(\SolubleTestFactories::getDbConnection('mysqli'));
         $this->metadata = new MysqliMetadataReader($this->adapter->getConnection()->getResource());
     }
@@ -37,7 +36,6 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
      */
     protected function tearDown()
     {
-
     }
 
     public function testGetColumnsMetadataThrowsEmptyQueryException()
@@ -379,9 +377,9 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetEmptyQuery()
     {
-        $queries = array(
+        $queries = [
             'select 1, 2',
-            
+
             'select media_id from media',
             'select media_id from media limit 1 offset 2',
             "SELECT * from product limit 10",
@@ -390,12 +388,12 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
             'select 1 limit 10',
             'select media_id from media
                  LimiT   10',
-        );
+        ];
 
         $mysqli = $this->adapter->getConnection()->getResource();
 
         foreach ($queries as $idx => $query) {
-            $sql = $this->invokeMethod($this->metadata, 'getEmptyQuery', array($query));
+            $sql = $this->invokeMethod($this->metadata, 'getEmptyQuery', [$query]);
 
             $stmt = $mysqli->prepare($sql);
 
@@ -407,7 +405,7 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $stmt->execute();
             $stmt->store_result();
             $num_rows = $stmt->num_rows;
-            
+
             $this->assertTrue(is_int($num_rows));
             $this->assertEquals(0, $num_rows, "Emptied query $idx : $sql ");
             $stmt->close();
@@ -423,7 +421,7 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
      *
      * @return mixed Method return.
      */
-    public function invokeMethod($object, $methodName, array $parameters = array())
+    public function invokeMethod($object, $methodName, array $parameters = [])
     {
         $reflection = new \ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
