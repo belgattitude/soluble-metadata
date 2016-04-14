@@ -13,6 +13,12 @@
 
 The ultimate SQL query metadata reader.
 
+## Use cases
+
+You can take advantage of soluble/metadata to format/render resulting query data 
+according to their type (when displaying an html table for example), 
+for basic validation (max lengths, decimals)...
+
 ## Features
 
 - Retrieve metadata information from an SQL query (datatypes,...)
@@ -23,13 +29,6 @@ The ultimate SQL query metadata reader.
 
 - PHP engine 5.4+, 7.0+ (HHVM does not work yet)
 - Mysqli or PDO_mysql extension enabled (Mysqli highly recommended)
-
-## Use cases
-
-You can take advantage of soluble/metadata to format/render resulting query data 
-according to their type (when displaying an html table for example), 
-for basic validation (max lengths, decimals)...
-
 
 ## Notes
 
