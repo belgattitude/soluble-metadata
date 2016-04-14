@@ -85,6 +85,10 @@ echo $col->isNullable() ? 'nullable' : 'not null';
 echo $col->getCharacterMaximumLength();
 //...
 
+foreach($meta as $column => $definition) {
+    echo $definition->getName() . ', ' . $definition->getDatatype() . PHP_EOL;
+}
+
 ```
 
 ## 
@@ -98,6 +102,18 @@ The `Soluble\Metadata\Reader\AbstractMetadataReader` offers
 | Methods                      | Return        | Description                                         |
 |------------------------------|---------------|-----------------------------------------------------|
 | `getColumnsMetadata($sql)`   | `ColumnsMetadata` | Metadata information: ArrayObject with column name/alias   |
+
+
+### ColumnsMetadata
+
+The `Soluble\Metadata\ColumnsMetadata` allows to iterate over column information or return a specific column as
+an `Soluble\Datatype\Column\Definition\AbstractColumnDefinition`.
+
+
+| Methods                      | Return        | Description                                         |
+|------------------------------|---------------|-----------------------------------------------------|
+| `getColumn($name)`           | `AbstractColumnDefinition` | Information about a column             |
+
 
 ### AbstractColumnDefinition
 
