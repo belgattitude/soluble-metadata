@@ -27,9 +27,31 @@ The ultimate SQL query metadata reader.
 ## Use cases
 
 You can take advantage of soluble/metadata to format/render resulting query data 
-according to their type (when displaying an html table for example), for basic validation...
+according to their type (when displaying an html table for example), 
+for basic validation (max lengths, decimals)...
 
 
+## Notes
+
+Currently metadata are read from the underlying database driver by executing a query 
+with a limit 0 (almost no performance penalty). This ensure your query is always 
+correctly parsed (even crazy ones) with almost no effort. 
+
+The underlying driver methods `mysqli_stmt::result_metadata()`, `PDO::getColumnMeta()` 
+used respectively by the metadata readers Mysql and PdoMysql are marked as experimental 
+and subject to change on the PHP website. In practice, they haven't changed since 5.4 and
+are stable. In case of a change in the php driver, it should be very easy to add a 
+specific driver. No big deal.
+
+Sadly there is some differences between PDO_mysql and mysqli in term of features. 
+Generally the best is to use mysqli instead of pdo. PDO lacks some features like 
+detection of autoincrement, enum, set, unsigned, grouped column and does not 
+distinguish between table/column aliases and their original names. If you are
+relying on those advanced features and willing to be portable between mysql extensions, 
+have a look to alternatives like [phpmyadmin sql-parser](https://github.com/phpmyadmin/sql-parser).
+
+Also if you are looking for a more advanced metadata reader (but limited to table - not a query),
+have a look to the [soluble-schema](https://github.com/belgattitude/soluble-schema) project.
 
 ## Documentation
 
