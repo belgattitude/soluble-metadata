@@ -21,9 +21,15 @@ The ultimate SQL query metadata reader.
 
 ## Requirements
 
-- PHP engine 5.4+, 7.0+
-- HHVM does not work yet :(
-- PDO or Mysqli extension enabled
+- PHP engine 5.4+, 7.0+ (HHVM does not work yet)
+- Mysqli or PDO_mysql extension enabled (Mysqli highly recommended)
+
+## Use cases
+
+You can take advantage of soluble/metadata to format/render resulting query data 
+according to their type (when displaying an html table for example), for basic validation...
+
+
 
 ## Documentation
 
@@ -34,7 +40,7 @@ The ultimate SQL query metadata reader.
 Instant installation via [composer](http://getcomposer.org/).
 
 ```console
-$ php composer require soluble/metadata:^0.9
+$ php composer require soluble/metadata:^0.10
 ```
 Most modern frameworks will include Composer out of the box, but ensure the following file is included:
 
@@ -91,7 +97,17 @@ foreach($meta as $column => $definition) {
 
 ```
 
-## 
+
+## Optimizations
+
+soluble/metadata allows you
+
+## Limitations 
+
+### Driver limitation
+- Mysqli
+
+
 
 ## API
 
@@ -164,7 +180,6 @@ Concrete implementations of `Soluble\Datatype\Column\Definition\AbstractColumnDe
 | `IntegerColumn`      | `NumericColumnInterface`  |                               |
 | `StringColumn`       | `TextColumnInterface`     |                               |
 | `TimeColumn`         |                           |                               |
-
 
 
 
