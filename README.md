@@ -15,7 +15,8 @@
 
 *Under the hood, the metadata extraction relies on the driver methods `mysqli_stmt::result_metadata()` and `PDO::getColumnMeta()`.
 Although the `soluble-metadata` API unify their usage and type detection, differences still exists for more advanced features. 
-A specific effort has been made in the documentation to distinguish possible portability issues when switching from one driver to another.*
+A specific effort has been made in the documentation to distinguish possible portability issues when switching from one driver to another.
+Keep that in mind when using it.*
 
 ## Use cases
 
