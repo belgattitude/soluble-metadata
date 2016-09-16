@@ -70,6 +70,7 @@ $conn->set_charset($charset);
   $conn = new \PDO("mysql:host=$hostname", $username, $password, [
             \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
   ]);
+  and replace the reader by Reader\PdoMysqlMetadataReader($conn)
 */
 
 // Step 2. Initiate the corresponding MetadataReader
@@ -125,8 +126,11 @@ $meta = $reader->getColumnsMetadata($sql);
 $col = $meta->getColumn('post_title');
 
 
-// Step 6: Ask the normalized datatype
-// -----------------------------------
+// Step 6: Type detection
+// ----------------------
+
+// 6.1: Option 1, type detection by datatype name
+// -----------------------------------------------
 
 echo $col->getDatatype(); // -> 'string' (Soluble\Datatype\Column\Type::TYPE_STRING)  
 
@@ -136,6 +140,33 @@ echo $col->getDatatype(); // -> 'string' (Soluble\Datatype\Column\Type::TYPE_STR
    'string', 'integer', 'decimal', 'float', 'boolean', 
    'datetime', 'date', 'time', 'bit', 'spatial_geometry'
 */
+
+
+// 6.2 Option 2, type detection by classname
+// -----------------------------------------
+
+if ($col instanceof \Soluble\Datatype\Column\IntegerColumn) {
+    // ... could be also BitColumn, BlobColumn, BooleanColumn
+    // ... DateColumn, DateTimeColumn, DecimalColumn, FloatColumn
+    // ... GometryColumn, IntegerColumn, StringColumn, TimeColumns
+}
+
+// 6.3 Option 3, type detection by interface (more generic)
+// --------------------------------------------------------
+
+if ($col instanceof \Soluble\Datatype\Column\NumericColumnInterface) {
+   // ... for example NumericColumnInterface 
+   // ... includes DecimalColumn, FloatColumn, IntegerColumn
+}
+
+// 6.4 Option 4, type detection by helper functions
+// -------------------------------------------------
+
+$col->isText();     // Whether the column contains text (CHAR, VARCHAR, ENUM...)
+$col->isNumeric();  // Whether the column is numeric (INT, DECIMAL, FLOAT...)
+$col->isDatetime(); // Whether the column is a datetime (DATETIME)
+$col->isDate();     // Whther the column is a date (DATE)
+
 
 // Step 7: Retrieve datatype information
 // -------------------------------------
@@ -147,36 +178,19 @@ echo $col->isPrimary() ? 'PK' : '';
 echo $col->isNullable() ? 'nullable' : 'not null';
 echo $col->getOrdinalPosition(); // -> 2 (column position)
 
-// Step 7.2: For character based types
-// -----------------------------------
-
-echo $col->getCharacterMaximumLength();  // Length taking care of multibyte charsets (utf8...)
-
-// Step 7.3: For integer based types
-// ---------------------------------
-
-
-// Step 7.4 For decimal based types
+// Step 7.2: For decimal based types
 // --------------------------------
 
 echo $col->getNumericPrecision(); // For DECIMAL(5,2) -> 5 is the precision
 echo $col->getNumericScale();     // For DECIMAL(5,2) -> 2 is the scale
 echo $col->isNumericUnsigned();   // Whether the numeric value is unsigned.
 
-// Step 7.5: For binary content (BLOB)
-// -----------------------------------
+// Step 7.3: For character/blob based types
+// ----------------------------------------
 
-echo $col->getCharacterOctetLength();    // Length in bytes
-
-// Step 8: Helper functions 
-// ------------------------
-
-$col->isText();     // Whether the column contains text (CHAR, VARCHAR, ENUM...)
-$col->isNumeric();  // Whether the column is numeric (INT, DECIMAL, FLOAT...)
-$col->isDatetime(); // Whether the column is a datetime (DATETIME)
-$col->isDate();     // Whther the column is a date (DATE)
+echo $col->getCharacterOctetLength();  // Octet length (in multibyte context length might differs)
  
-// Step 9: Ask for extended information 
+// Step 8: Ask for extended information 
 // ------------------------------------
 
 // #############################################################
@@ -188,7 +202,7 @@ $col->isDate();     // Whther the column is a date (DATE)
 // #  See also differences between mysqli and pdo_mysql.       #
 // #############################################################
   
-// Step 9.1: Extra column information
+// Step 8.1: Extra column information
 // ----------------------------------
 
 echo $col->getAlias(); // Column alias name -> "post_title" (or column name if not aliased)
@@ -202,7 +216,7 @@ echo $col->getNativeType(); // Return the column definition native type
                             //        - ENUM, SET and VARCHAR as CHAR
                             
 
-echo $col->isAutoIncrement();   // Only availble for primary keys.
+echo $col->isAutoIncrement();   // Only make sense for primary keys.
                                 // (*) Unsupported with PDO_mysql
 
 echo $col->isNumericUnsigned(); // Whether the numeric value is unsigned.
@@ -222,7 +236,7 @@ echo $col->isGroup(); // Whenever the column is part of a group (MIN, MAX, AVG,.
                       //          - COUNT, MIN, MAX, AVG, GROUP_CONCAT and growing    
 
 
-// Step 9.2: Extra table information
+// Step 8.2: Extra table information
 // ---------------------------------
 
 echo $col->getTableAlias(); // Originating table alias -> "p" (or table name if not aliased)
@@ -232,10 +246,12 @@ echo $col->getTableName();  // Originating table -> "post"
                             // (*) PDO_mysql always return the table alias 
 
 
-// Step 9.3: Unsupported both with mysqli / pdo_mysql
+// Step 8.3: Unsupported both with mysqli / pdo_mysql
 // --------------------------------------------------
 
 echo $col->getColumnDefault(); // Always return null
+echo $col->getCharacterMaximumLength();  // Returns $col->getCharacterOctetLength()
+                                         // and does not (yet) handle multibyte aspect.
 
 ```
 
