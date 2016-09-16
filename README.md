@@ -23,7 +23,9 @@ for basic validation (max lengths, decimals)...
 
 - Retrieve metadata information from an SQL query (datatypes,...)
 - Rely on native database driver information (does not parse the query)
-- Provides an unified API, Fast, lightweight and thoroughly tested.
+- Provides an unified API, fast, lightweight and thoroughly tested.
+- Attempt to be portable (at least to the internal driver possibilities)
+- MIT opensource license
 
 ## Requirements
 
@@ -256,7 +258,6 @@ echo $col->getCharacterMaximumLength();  // Returns $col->getCharacterOctetLengt
 ```
 
 
-
 ## API
 
 ### AbstractMetadataReader
@@ -432,13 +433,13 @@ specific driver. No big deal.
 Sadly there is some differences between PDO_mysql and mysqli in term of features. 
 Generally the best is to use mysqli instead of pdo. PDO lacks some features like 
 detection of autoincrement, enum, set, unsigned, grouped column and does not 
-distinguish between table/column aliases and their original names. If you are
-relying on those advanced features and willing to be portable between mysql extensions, 
-have a look to alternatives like [phpmyadmin sql-parser](https://github.com/phpmyadmin/sql-parser).
+distinguish between table/column aliases and their original table/column names. 
+
+If you want to rely on this specific feature (aliases) have a look to alternatives like [phpmyadmin sql-parser](https://github.com/phpmyadmin/sql-parser).
 
 Also if you are looking for a more advanced metadata reader (but limited to table - not a query),
-have a look to the [soluble-schema](https://github.com/belgattitude/soluble-schema) project.
-
+have a look to the [soluble-schema](https://github.com/belgattitude/soluble-schema) project which share
+the same datatypes structure with more informations.
 
 ## Coding standards
 
