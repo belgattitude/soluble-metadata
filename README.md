@@ -144,7 +144,7 @@ $meta = $reader->getColumnsMetadata($sql);
 
 ```
 
-### Step 3: Getting column type
+### Step 3: Getting column type (4 options)
 
 
 ```php
@@ -182,7 +182,7 @@ echo $col->getDatatype(); // -> 'string' (Soluble\Datatype\Column\Type::TYPE_STR
 if ($col instanceof \Soluble\Datatype\Column\IntegerColumn) {
     // ... could be also BitColumn, BlobColumn, BooleanColumn
     // ... DateColumn, DateTimeColumn, DecimalColumn, FloatColumn
-    // ... GometryColumn, IntegerColumn, StringColumn, TimeColumns
+    // ... GometryColumn, IntegerColumn, StringColumn, TimeColumn
 }
 
 // Option 3, type detection by interface (more generic)
