@@ -16,7 +16,7 @@
 ## Use cases
 
 You can take advantage of soluble/metadata to format/render resulting query data 
-according to their type (when displaying an html table for example), 
+according to their type (when displaying an html table or an excel sheet for example), 
 for basic validation (max lengths, decimals)...
 
 ## Features
