@@ -11,7 +11,7 @@
 
 ## Introduction
 
-`soluble-metadata` is a low level library allowing to parse metadata from an sql query with extensibility, speed and portability in mind.
+`soluble-metadata` is a *low level* library which extracts metadata from an sql query with extensibility, speed and portability in mind.
 
 ## Use cases
 
@@ -22,19 +22,19 @@ for basic validation (max lengths, decimals)...
 ## Features
 
 - Retrieve metadata information from an SQL query (datatypes,...)
-- Rely on native database driver information (does not parse the query)
-- Provides an unified API, fast, lightweight and thoroughly tested.
+- Rely on native database driver information (does not parse the query in PHP)
 - Attempt to be portable (at least to the internal driver possibilities)
+- Thoroughly tested with different implementations (libmariadb, mysqlnd, libmysql, pdo).
 - MIT opensource license
 
 ## Requirements
 
 - PHP engine 5.4+, 7.0+ (HHVM does not work yet)
-- Mysqli or PDO_mysql extension enabled (Mysqli highly recommended)
+- Mysqli or PDO_mysql extension enabled (Mysqli recommended as it exposes more features)
 
 ## Documentation
 
- - [Manual](http://docs.soluble.io/soluble-metadata/manual/) in progress and [API documentation](http://docs.soluble.io/soluble-metadata/api/) available.
+ - This README and [API documentation](http://docs.soluble.io/soluble-metadata/api/) available.
 
 ## Installation
 
@@ -52,36 +52,65 @@ Most modern frameworks will include Composer out of the box, but ensure the foll
 require 'vendor/autoload.php';
 ```
 
-## Quick start
-
-### Getting metadata from an SQL query
+## Basic example
 
 ```php
-<?php
 
 use Soluble\Metadata\Reader;
-
-// Step 1. Get the connection object
-// ---------------------------------
 
 $conn = new \mysqli($hostname,$username,$password,$database);
 $conn->set_charset($charset);
 
-/* 
-  Alternatively you can create a PDO_mysql connection
-  $conn = new \PDO("mysql:host=$hostname", $username, $password, [
-            \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
-  ]);
-  and replace the reader by Reader\PdoMysqlMetadataReader($conn)
-*/
+$reader = new Reader\MysqliMetadataReader($conn);
 
-// Step 2. Initiate the corresponding MetadataReader
-// -------------------------------------------------
+$sql = "select * from `my_table`";
+
+$meta = $reader->getColumnsMetadata($sql);
+
+foreach($meta as $column => $definition) {
+   echo $definition->getName() . ', ' . $definition->getDatatype() . PHP_EOL;
+}  
+
+```
+
+## Usage
+
+### Step 1. Initiate a metadata reader
+
+For Mysqli
+
+```php
+
+use Soluble\Metadata\Reader;
+
+$conn = new \mysqli($hostname,$username,$password,$database);
+$conn->set_charset($charset);
 
 $reader = new Reader\MysqliMetadataReader($conn);
 
-// Step 3. Write a query
-// ---------------------
+``` 
+
+For Pdo_mysql
+
+```php
+
+use Soluble\Metadata\Reader;
+
+$conn = new \PDO("mysql:host=$hostname", $username, $password, [
+            \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+]);
+
+$reader = new Reader\PDOMysqlMetadataReader($conn);
+
+```
+
+### Step 2. Query metadata extraction
+
+```php
+
+//....
+
+$reader = new Reader\MysqliMetadataReader($conn);
 
 $sql = "
          SELECT `p`.`post_id`,
@@ -97,9 +126,6 @@ $sql = "
        ";
 
 
-// Step 4: Read the metadata
-// -------------------------
-
 $meta = $reader->getColumnsMetadata($sql);
 
 /*
@@ -113,26 +139,29 @@ $meta = $reader->getColumnsMetadata($sql);
      "computed_col" => '<Soluble\Datatype\Column\Definition\IntegerColumn>',
      "nb_comments"  => '<Soluble\Datatype\Column\Definition\IntegerColumn>'
   ]
-  
-  You can iterate it :
-  
-  foreach($meta as $column => $definition) {
-        echo $definition->getName() . ', ' . $definition->getDatatype() . PHP_EOL;
-  }  
-  
+    
 */  
 
-// Step 5: Retrieve a specific column (i.e. 'post_title')
-// ------------------------------------------------------
+```
 
-$col = $meta->getColumn('post_title');
+### Step 3: Getting column type
 
 
-// Step 6: Type detection
+```php
+
+$meta = $reader->getColumnsMetadata($sql);
+
+// Retrieve a specific column (i.e. 'post_title')
+// Note the parameter is the column alias if defined 
+
+$col = $meta->getColumn('post_title'); 
+
+                                       
+// Type detection
 // ----------------------
 
-// 6.1: Option 1, type detection by datatype name
-// -----------------------------------------------
+// Option 1, type detection by datatype name
+// ------------------------------------------
 
 echo $col->getDatatype(); // -> 'string' (Soluble\Datatype\Column\Type::TYPE_STRING)  
 
@@ -144,8 +173,8 @@ echo $col->getDatatype(); // -> 'string' (Soluble\Datatype\Column\Type::TYPE_STR
 */
 
 
-// 6.2 Option 2, type detection by classname
-// -----------------------------------------
+// Option 2, type detection by classname
+// --------------------------------------
 
 if ($col instanceof \Soluble\Datatype\Column\IntegerColumn) {
     // ... could be also BitColumn, BlobColumn, BooleanColumn
@@ -161,7 +190,7 @@ if ($col instanceof \Soluble\Datatype\Column\NumericColumnInterface) {
    // ... includes DecimalColumn, FloatColumn, IntegerColumn
 }
 
-// 6.4 Option 4, type detection by helper functions
+// 6.4 Option 4, type detection by helper functions (more generic)
 // -------------------------------------------------
 
 $col->isText();     // Whether the column contains text (CHAR, VARCHAR, ENUM...)
@@ -169,48 +198,76 @@ $col->isNumeric();  // Whether the column is numeric (INT, DECIMAL, FLOAT...)
 $col->isDatetime(); // Whether the column is a datetime (DATETIME)
 $col->isDate();     // Whther the column is a date (DATE)
 
+```
 
-// Step 7: Retrieve datatype information
-// -------------------------------------
 
-// Step 7.1: For all types
-// -----------------------
+### Step 4: Getting datatype extra information  
 
-echo $col->getOrdinalPosition(); // -> 2 (column position)
+The following methods are supported on both mysqli and PDO_mysql drivers :
+
+```php
+
+// For all types
+// -------------
+
+echo $col->getOrdinalPosition(); // -> 2 (column position in the query)
 echo $col->isNullable() ? 'nullable' : 'not null';
 echo $col->isPrimary() ? 'PK' : '';  // Many columns may have the primary flag
                                      // The meaning of it depends on your query
 
-
-// Step 7.2: For decimal based types
-// --------------------------------
+// For decimal based types
+// -----------------------
 
 echo $col->getNumericPrecision(); // For DECIMAL(5,2) -> 5 is the precision
 echo $col->getNumericScale();     // For DECIMAL(5,2) -> 2 is the scale
 echo $col->isNumericUnsigned();   // Whether the numeric value is unsigned.
 
-// Step 7.3: For character/blob based types
-// ----------------------------------------
+// For character/blob based types
+// ------------------------------
 
 echo $col->getCharacterOctetLength();  // Octet length (in multibyte context length might differs)
  
-// Step 8: Ask for extended information 
-// ------------------------------------
+```
 
-// #############################################################
-// # WARNING !!!                                               #
-// #  Methods with an asterisk shows differences between       #
-// #  PDO_mysql and mysqli implementations.                    #
-// #                                                           #
-// #  If portability is required, avoid relying on them        # 
-// #  See also differences between mysqli and pdo_mysql.       #
-// #############################################################
+The following methods shows differences between Mysqli and PDO_mysql drivers. Please use with care, 
+complete portability is not guaranteed !!!
   
-// Step 8.1: Extra column information
-// ----------------------------------
+```php 
+
+// For numeric types
+// -----------------
+
+echo $col->isAutoIncrement();   // Only make sense for primary keys.
+                                // (*) Unsupported with PDO_mysql
+
+echo $col->isNumericUnsigned(); // Whether the numeric value is unsigned.
+                                // (*) Unsupported with PDO_mysql
+
+``` 
+
+### Getting column specifications.
+
+The following methods are portable  
+ 
+ 
+```php 
 
 echo $col->getAlias(); // Column alias name -> "post_title" (or column name if not aliased)
- 
+
+echo $col->isComputed(); // Whenever there's no table linked (for GROUP, constants, expression...)
+
+echo $col->getTableAlias(); // Originating table alias -> "p" (or table name if not aliased)
+                            // If empty, the column is computed (constant, group,...)
+```
+
+The following methods shows differencs between pdo_mysq and mysqli, use with
+care if portability is required !!!
+
+```php
+
+echo $col->getTableName();  // Originating table -> "post"
+                            // (*) PDO_mysql always return the table alias if aliased 
+
 echo $col->getName();  // Column original name -> "title". 
                        // (*) PDO_mysql always return the alias if aliased
 
@@ -219,15 +276,6 @@ echo $col->getNativeType(); // Return the column definition native type
                             // (*) PDO_mysql consider 
                             //        - ENUM, SET and VARCHAR as CHAR
                             
-
-echo $col->isAutoIncrement();   // Only make sense for primary keys.
-                                // (*) Unsupported with PDO_mysql
-
-echo $col->isNumericUnsigned(); // Whether the numeric value is unsigned.
-                                // (*) Unsupported with PDO_mysql
-
-echo $col->isComputed(); // Whenever there's no table linked (for GROUP, constants, expression...)
-
 echo $col->isGroup(); // Whenever the column is part of a group (MIN, MAX, AVG,...)
                       // (*) PDO_mysql is not able to retrieve group information
                       // (*) Mysqli: detection of group is linked to the internal driver
@@ -240,18 +288,14 @@ echo $col->isGroup(); // Whenever the column is part of a group (MIN, MAX, AVG,.
                       //          - COUNT, MIN, MAX, AVG, GROUP_CONCAT and growing    
 
 
-// Step 8.2: Extra table information
-// ---------------------------------
 
-echo $col->getTableAlias(); // Originating table alias -> "p" (or table name if not aliased)
-                            // If empty, the column is computed (constant, group,...)
-                            
-echo $col->getTableName();  // Originating table -> "post"
-                            // (*) PDO_mysql always return the table alias if aliased 
+```
 
+### Unsupported methods
 
-// Step 8.3: Unsupported both with mysqli / pdo_mysql
-// --------------------------------------------------
+Those methods are still unsupported on both mysqli and PDO_mysql implementations but kept as reference
+
+```php
 
 echo $col->getColumnDefault(); // Always return null
 echo $col->getCharacterMaximumLength();  // Returns $col->getCharacterOctetLength()
