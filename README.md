@@ -84,7 +84,8 @@ $sql = '
          SELECT `p`.`post_id`,
                 `p`.`title` AS `post_title` 
                 `p`.`created_at`,
-                'constant' AS `constant_column`, 
+                'constant' AS `constant_col`,
+                1 + 2 AS `computed_col`, 
                 COUNT(`c`.*) as `nb_comments`
                  
             FROM `post` AS `p`
@@ -101,10 +102,12 @@ $meta = $reader->getColumnsMetadata($sql);
 // The resulting ColumnsMetadata will contains
 
 [
-  "post_id"     => <Soluble\Datatype\Column\Definition\IntegerColumn>,
-  "post_title"  => <Soluble\Datatype\Column\Definition\StringColumn>,
-  "created_at"  => <Soluble\Datatype\Column\Definition\DatetimeColumn>,
-  "nb_comments" => <Soluble\Datatype\Column\Definition\IntegerColumn>
+  "post_id"      => <Soluble\Datatype\Column\Definition\IntegerColumn>,
+  "post_title"   => <Soluble\Datatype\Column\Definition\StringColumn>,
+  "created_at"   => <Soluble\Datatype\Column\Definition\DatetimeColumn>,
+  "constant_col" => <Soluble\Datatype\Column\Definition\StringColumn>,
+  "computed_col" => <Soluble\Datatype\Column\Definition\IntegerColumn>,
+  "nb_comments"  => <Soluble\Datatype\Column\Definition\IntegerColumn>
 ]
 
 // Step 5: Retrieve a specific column (i.e. 'post_title')
@@ -143,28 +146,29 @@ echo $col->getCharacterMaximumLength();  // Length taking care of multibyte char
 // Step 7.3: For integer based types
 // ---------------------------------
 
-echo $col->isAutoIncrement();
-echo $col->isNumericUnsigned();
 
 // Step 7.4 For decimal based types
 // --------------------------------
 
 echo $col->getNumericPrecision(); // For DECIMAL(5,2) -> 5 is the precision
-echo $col->getNumericScale(); // For DECIMAL(5,2) -> 2 is the scale
-echo $col->isNumericUnsigned();
+echo $col->getNumericScale();     // For DECIMAL(5,2) -> 2 is the scale
+echo $col->isNumericUnsigned();   // Whether the numeric value is unsigned.
 
 // Step 7.5: For binary content (BLOB)
 // -----------------------------------
 
 echo $col->getCharacterOctetLength();    // Length in bytes
 
+// Step 8: Helper functions 
+// ------------------------
 
-// Step 8: Ask for extended information 
+$col->isText();     // Whether the column contains text (CHAR, VARCHAR, ENUM...)
+$col->isNumeric();  // Whether the column is numeric (INT, DECIMAL, FLOAT...)
+$col->isDatetime(); // Whether the column is a datetime (DATETIME)
+$col->isDate();     // Whther the column is a date (DATE)
+ 
+// Step 9: Ask for extended information 
 // ------------------------------------
- 
- 
-// Step 8.1: Extra column information
-// ----------------------------------
 
 // #############################################################
 // # WARNING !!!                                               #
@@ -174,17 +178,26 @@ echo $col->getCharacterOctetLength();    // Length in bytes
 // #  If portability is required, avoid relying on them        # 
 // #  See also differences between mysqli and pdo_mysql.       #
 // #############################################################
+  
+// Step 9.1: Extra column information
+// ----------------------------------
 
 echo $col->getAlias(); // Column alias name -> "post_title" (or column name if not aliased)
  
 echo $col->getName();  // Column original name -> "title". 
                        // (*) PDO_mysql always return the alias
 
-echo $col->getTableAlias(); // Originating table alias -> "p" (or table name if not aliased)
-                            // If empty, the column is computed (constant, group,...)
+echo $col->getNativeType(); // Return the column definition native type
+                            // i.e: BIGINT, SMALLINT, VARCHAR, ENUM
+                            // (*) PDO_mysql consider 
+                            //        - ENUM, SET and VARCHAR as CHAR
                             
-echo $col->getTableName();  // Originating table -> "post"
-                            // (*) PDO_mysql always return the table alias 
+
+echo $col->isAutoIncrement();   // Only availble for primary keys.
+                                // (*) Unsupported with PDO_mysql
+
+echo $col->isNumericUnsigned(); // Whether the numeric value is unsigned.
+                                // (*) Unsupported with PDO_mysql
 
 echo $col->isComputed(); // Whenever there's no table linked (for GROUP, constants, expression...)
 
@@ -197,16 +210,36 @@ echo $col->isGroup(); // Whenever the column is part of a group (MIN, MAX, AVG,.
                       //       - libmysql detects:
                       //          - COUNT, MIN, MAX, AVG, GROUP_CONCAT
                       //       - libmariadb detects:
-                      //          - COUNT, MIN, MAX, AVG, GROUP_CONCAT,    
+                      //          - COUNT, MIN, MAX, AVG, GROUP_CONCAT and growing    
 
 
+// Step 9.2: Extra table information
+// ---------------------------------
+
+echo $col->getTableAlias(); // Originating table alias -> "p" (or table name if not aliased)
+                            // If empty, the column is computed (constant, group,...)
+                            
+echo $col->getTableName();  // Originating table -> "post"
+                            // (*) PDO_mysql always return the table alias 
+
+
+// Step 9.3: Unsupported both with mysqli / pdo_mysql
+// --------------------------------------------------
+
+echo $col->getColumnDefault(); // Always return null
+
+
+//
 // Note also that the ColumnsMetadata can be iterated
+//
 
 foreach($meta as $column => $definition) {
     echo $definition->getName() . ', ' . $definition->getDatatype() . PHP_EOL;
 }
 
 ```
+
+
 
 ## API
 
@@ -284,14 +317,15 @@ Metadata information is stored as an `Soluble\Datatype\Column\Definition\Abstrac
 | `getNativeDataType()`        | `string`      | Return native datatype (VARCHAR, BIGINT...)         |
 | `isText()`                   | `boolean`     | Whether the column is textual (string, blog...)     |
 | `isNumeric()`                | `boolean`     | Whether the column is numeric (decimal, int...)     |
+| `isDatetime()`               | `boolean`     | Is a datetime type                                  |
 | `isDate()`                   | `boolean`     | Is a date type                                      |
 
 | Flags information            | Return        | Description                                         |
 |------------------------------|---------------|-----------------------------------------------------|
 | `isPrimary()`                | `boolean`     | Whether the column is (part of) primary key         |
-| `isAutoIncrement()`          | `boolean`     | If it's an autoincrement column                     |
+| `isAutoIncrement()`          | `boolean`     | If it's an autoincrement column (only mysqli)       |
 | `isNullable()`               | `boolean`     | Whether the column is nullable                      |
-| `getColumnDefault()`         | `string`      | Return default value for column                     |
+| `getColumnDefault()`         | `string`      | Return default value for column (not working yet)   |
 
 
 | Extra information methods    | Return        | Description                                         |
