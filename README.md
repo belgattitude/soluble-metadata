@@ -40,7 +40,7 @@ for basic validation (max lengths, decimals)...
 Instant installation via [composer](http://getcomposer.org/).
 
 ```console
-$ php composer require soluble/metadata
+$ composer require soluble/metadata
 ```
 
 Most modern frameworks will include Composer out of the box, but ensure the following file is included:
