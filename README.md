@@ -212,7 +212,7 @@ echo $col->getCharacterOctetLength();  // Octet length (in multibyte context len
 echo $col->getAlias(); // Column alias name -> "post_title" (or column name if not aliased)
  
 echo $col->getName();  // Column original name -> "title". 
-                       // (*) PDO_mysql always return the alias
+                       // (*) PDO_mysql always return the alias if aliased
 
 echo $col->getNativeType(); // Return the column definition native type
                             // i.e: BIGINT, SMALLINT, VARCHAR, ENUM
@@ -247,7 +247,7 @@ echo $col->getTableAlias(); // Originating table alias -> "p" (or table name if 
                             // If empty, the column is computed (constant, group,...)
                             
 echo $col->getTableName();  // Originating table -> "post"
-                            // (*) PDO_mysql always return the table alias 
+                            // (*) PDO_mysql always return the table alias if aliased 
 
 
 // Step 8.3: Unsupported both with mysqli / pdo_mysql
