@@ -80,7 +80,7 @@ $reader = new Reader\MysqliMetadataReader($conn);
 // Step 3. Write a query
 // ---------------------
 
-$sql = '
+$sql = "
          SELECT `p`.`post_id`,
                 `p`.`title` AS `post_title` 
                 `p`.`created_at`,
@@ -91,7 +91,7 @@ $sql = '
             FROM `post` AS `p`
             LEFT OUTER JOIN `comment` as `c`  
                  ON `c`.`post_id` = `p`.`post_id`
-       ';
+       ";
 
 
 // Step 4: Read the metadata
@@ -99,16 +99,25 @@ $sql = '
 
 $meta = $reader->getColumnsMetadata($sql);
 
-// The resulting ColumnsMetadata will contains
+/*
+  The resulting ColumnsMetadata will contain something like:
 
-[
-  "post_id"      => <Soluble\Datatype\Column\Definition\IntegerColumn>,
-  "post_title"   => <Soluble\Datatype\Column\Definition\StringColumn>,
-  "created_at"   => <Soluble\Datatype\Column\Definition\DatetimeColumn>,
-  "constant_col" => <Soluble\Datatype\Column\Definition\StringColumn>,
-  "computed_col" => <Soluble\Datatype\Column\Definition\IntegerColumn>,
-  "nb_comments"  => <Soluble\Datatype\Column\Definition\IntegerColumn>
-]
+  [
+     "post_id"      => '<Soluble\Datatype\Column\Definition\IntegerColumn>',
+     "post_title"   => '<Soluble\Datatype\Column\Definition\StringColumn>',
+     "created_at"   => '<Soluble\Datatype\Column\Definition\DatetimeColumn>',
+     "constant_col" => '<Soluble\Datatype\Column\Definition\StringColumn>',
+     "computed_col" => '<Soluble\Datatype\Column\Definition\IntegerColumn>',
+     "nb_comments"  => '<Soluble\Datatype\Column\Definition\IntegerColumn>'
+  ]
+  
+  You can iterate it :
+  
+  foreach($meta as $column => $definition) {
+        echo $definition->getName() . ', ' . $definition->getDatatype() . PHP_EOL;
+  }  
+  
+*/  
 
 // Step 5: Retrieve a specific column (i.e. 'post_title')
 // ------------------------------------------------------
@@ -119,7 +128,7 @@ $col = $meta->getColumn('post_title');
 // Step 6: Ask the normalized datatype
 // -----------------------------------
 
-echo $col->getDatatype(); // -> 'string'  
+echo $col->getDatatype(); // -> 'string' (Soluble\Datatype\Column\Type::TYPE_STRING)  
 
 /* 
    The normalized datatypes are defined in the 
@@ -227,15 +236,6 @@ echo $col->getTableName();  // Originating table -> "post"
 // --------------------------------------------------
 
 echo $col->getColumnDefault(); // Always return null
-
-
-//
-// Note also that the ColumnsMetadata can be iterated
-//
-
-foreach($meta as $column => $definition) {
-    echo $definition->getName() . ', ' . $definition->getDatatype() . PHP_EOL;
-}
 
 ```
 
