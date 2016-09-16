@@ -185,16 +185,16 @@ if ($col instanceof \Soluble\Datatype\Column\IntegerColumn) {
     // ... GometryColumn, IntegerColumn, StringColumn, TimeColumns
 }
 
-// 6.3 Option 3, type detection by interface (more generic)
-// --------------------------------------------------------
+// Option 3, type detection by interface (more generic)
+// -----------------------------------------------------
 
 if ($col instanceof \Soluble\Datatype\Column\NumericColumnInterface) {
    // ... for example NumericColumnInterface 
    // ... includes DecimalColumn, FloatColumn, IntegerColumn
 }
 
-// 6.4 Option 4, type detection by helper functions (more generic)
-// -------------------------------------------------
+// Option 4, type detection by helper functions (more generic)
+// -----------------------------------------------------------
 
 $col->isText();     // Whether the column contains text (CHAR, VARCHAR, ENUM...)
 $col->isNumeric();  // Whether the column is numeric (INT, DECIMAL, FLOAT...)
