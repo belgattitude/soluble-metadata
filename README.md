@@ -11,12 +11,16 @@
 
 ## Introduction
 
-`soluble-metadata` is a *low level* library which extracts metadata from an sql query with extensibility, speed and portability in mind.
+`soluble-metadata` is a *low level* library *currently focusing on MySQL* which extracts metadata from an sql query with extensibility, speed and portability in mind.
+
+*Under the hood, the metadata extraction relies on the driver methods `mysqli_stmt::result_metadata()` and `PDO::getColumnMeta()`.
+Although the `soluble-metadata` API unify their usage and type detection, differences still exists for more advanced features. 
+A specific effort has been made in the documentation to distinguish possible portability issues when switching from one driver to another.*
 
 ## Use cases
 
 You can take advantage of soluble/metadata to format/render resulting query data 
-according to their type (when displaying an html table or an excel sheet for example), 
+according to their type (when rendering an html table, generating an excel sheet...), 
 for basic validation (max lengths, decimals)...
 
 ## Features
@@ -24,7 +28,7 @@ for basic validation (max lengths, decimals)...
 - Retrieve metadata information from an SQL query (datatypes,...)
 - Rely on native database driver information (does not parse the query in PHP)
 - Attempt to be portable (at least to the internal driver possibilities)
-- Thoroughly tested with different implementations (libmariadb, mysqlnd, libmysql, pdo_mysql).
+- Carefully tested with different implementations (libmariadb, mysqlnd, libmysql, pdo_mysql).
 
 ## Requirements
 
@@ -77,7 +81,7 @@ foreach($meta as $column => $definition) {
 
 ### Step 1. Initiate a metadata reader
 
-For Mysqli
+For Mysqli use the MysqlMetadataReader :
 
 ```php
 <?php
@@ -90,7 +94,7 @@ $reader = new Reader\MysqliMetadataReader($conn);
 
 ``` 
 
-For Pdo_mysql
+For Pdo_mysql use the PdoMysqlReader :
 
 ```php
 <?php
@@ -493,7 +497,7 @@ The underlying driver methods `mysqli_stmt::result_metadata()`, `PDO::getColumnM
 used respectively by the metadata readers Mysql and PdoMysql are marked as experimental 
 and subject to change on the PHP website. In practice, they haven't changed since 5.4 and
 are stable. In case of a change in the php driver, it should be very easy to add a 
-specific driver. No big deal.
+specific driver. 
 
 Sadly there is some differences between PDO_mysql and mysqli in term of features. 
 Generally the best is to use mysqli instead of pdo. PDO lacks some features like 
