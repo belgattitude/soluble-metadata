@@ -176,9 +176,11 @@ $col->isDate();     // Whther the column is a date (DATE)
 // Step 7.1: For all types
 // -----------------------
 
-echo $col->isPrimary() ? 'PK' : '';   
-echo $col->isNullable() ? 'nullable' : 'not null';
 echo $col->getOrdinalPosition(); // -> 2 (column position)
+echo $col->isNullable() ? 'nullable' : 'not null';
+echo $col->isPrimary() ? 'PK' : '';  // Many columns may have the primary flag
+                                     // The meaning of it depends on your query
+
 
 // Step 7.2: For decimal based types
 // --------------------------------
