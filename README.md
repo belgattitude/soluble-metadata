@@ -11,7 +11,7 @@
 
 ## Introduction
 
-The ultimate SQL query metadata reader.
+`soluble-metadata` is a low level library allowing to parse metadata from an sql query with speed and portability in mind.
 
 ## Use cases
 
