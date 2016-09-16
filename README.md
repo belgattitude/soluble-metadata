@@ -30,28 +30,6 @@ for basic validation (max lengths, decimals)...
 - PHP engine 5.4+, 7.0+ (HHVM does not work yet)
 - Mysqli or PDO_mysql extension enabled (Mysqli highly recommended)
 
-## Notes
-
-Currently metadata are read from the underlying database driver by executing a query 
-with a limit 0 (almost no performance penalty). This ensure your query is always 
-correctly parsed (even crazy ones) with almost no effort. 
-
-The underlying driver methods `mysqli_stmt::result_metadata()`, `PDO::getColumnMeta()` 
-used respectively by the metadata readers Mysql and PdoMysql are marked as experimental 
-and subject to change on the PHP website. In practice, they haven't changed since 5.4 and
-are stable. In case of a change in the php driver, it should be very easy to add a 
-specific driver. No big deal.
-
-Sadly there is some differences between PDO_mysql and mysqli in term of features. 
-Generally the best is to use mysqli instead of pdo. PDO lacks some features like 
-detection of autoincrement, enum, set, unsigned, grouped column and does not 
-distinguish between table/column aliases and their original names. If you are
-relying on those advanced features and willing to be portable between mysql extensions, 
-have a look to alternatives like [phpmyadmin sql-parser](https://github.com/phpmyadmin/sql-parser).
-
-Also if you are looking for a more advanced metadata reader (but limited to table - not a query),
-have a look to the [soluble-schema](https://github.com/belgattitude/soluble-schema) project.
-
 ## Documentation
 
  - [Manual](http://docs.soluble.io/soluble-metadata/manual/) in progress and [API documentation](http://docs.soluble.io/soluble-metadata/api/) available.
@@ -61,8 +39,9 @@ have a look to the [soluble-schema](https://github.com/belgattitude/soluble-sche
 Instant installation via [composer](http://getcomposer.org/).
 
 ```console
-$ php composer require soluble/metadata:^0.10
+$ php composer require soluble/metadata
 ```
+
 Most modern frameworks will include Composer out of the box, but ensure the following file is included:
 
 ```php
@@ -80,37 +59,148 @@ require 'vendor/autoload.php';
 
 use Soluble\Metadata\Reader;
 
+// Step 1. Get the connection object
+// ---------------------------------
+
 $conn = new \mysqli($hostname,$username,$password,$database);
 $conn->set_charset($charset);
 
-// Alternatively you can create a PDO_mysql connection
-// $conn = new \PDO("mysql:host=$hostname", $username, $password, [
-//            \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
-// ]);
+/* 
+  Alternatively you can create a PDO_mysql connection
+  $conn = new \PDO("mysql:host=$hostname", $username, $password, [
+            \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+  ]);
+*/
+
+// Step 2. Initiate the corresponding MetadataReader
+// -------------------------------------------------
 
 $reader = new Reader\MysqliMetadataReader($conn);
 
-$sql = "select id, name from my_table";
+// Step 3. Write a query
+// ---------------------
+
+$sql = '
+         SELECT `p`.`post_id`,
+                `p`.`title` AS `post_title` 
+                `p`.`created_at`,
+                'constant' AS `constant_column`, 
+                COUNT(`c`.*) as `nb_comments`
+                 
+            FROM `post` AS `p`
+            LEFT OUTER JOIN `comment` as `c`  
+                 ON `c`.`post_id` = `p`.`post_id`
+       ';
+
+
+// Step 4: Read the metadata
+// -------------------------
 
 $meta = $reader->getColumnsMetadata($sql);
 
-// The resulting ColumnsMetadata object look like
+// The resulting ColumnsMetadata will contains
 
 [
- ["id"] => <Column\Definition\IntegerColumn>
- ["name"] => <Column\Definition\StringColumn>
+  "post_id"     => <Soluble\Datatype\Column\Definition\IntegerColumn>,
+  "post_title"  => <Soluble\Datatype\Column\Definition\StringColumn>,
+  "created_at"  => <Soluble\Datatype\Column\Definition\DatetimeColumn>,
+  "nb_comments" => <Soluble\Datatype\Column\Definition\IntegerColumn>
 ]
 
-$col = $meta->getColumn('name');
+// Step 5: Retrieve a specific column (i.e. 'post_title')
+// ------------------------------------------------------
 
-echo $col->getOrdinalPosition();
-echo $col->getTableName();
-echo $col->getDatatype();
-echo $col->getNativeDatatype();
-echo $col->isPrimary() ? 'PK' : ''; 
+$col = $meta->getColumn('post_title');
+
+
+// Step 6: Ask the normalized datatype
+// -----------------------------------
+
+echo $col->getDatatype(); // -> 'string'  
+
+/* 
+   The normalized datatypes are defined in the 
+   Soluble\Datatype\Column\Type::TYPE_(*) and can be :
+   'string', 'integer', 'decimal', 'float', 'boolean', 
+   'datetime', 'date', 'time', 'bit', 'spatial_geometry'
+*/
+
+// Step 7: Retrieve datatype information
+// -------------------------------------
+
+// Step 7.1: For all types
+// -----------------------
+
+echo $col->isPrimary() ? 'PK' : '';   
 echo $col->isNullable() ? 'nullable' : 'not null';
-echo $col->getCharacterMaximumLength();
-//...
+echo $col->getOrdinalPosition(); // -> 2 (column position)
+
+// Step 7.2: For character based types
+// -----------------------------------
+
+echo $col->getCharacterMaximumLength();  // Length taking care of multibyte charsets (utf8...)
+
+// Step 7.3: For integer based types
+// ---------------------------------
+
+echo $col->isAutoIncrement();
+echo $col->isNumericUnsigned();
+
+// Step 7.4 For decimal based types
+// --------------------------------
+
+echo $col->getNumericPrecision(); // For DECIMAL(5,2) -> 5 is the precision
+echo $col->getNumericScale(); // For DECIMAL(5,2) -> 2 is the scale
+echo $col->isNumericUnsigned();
+
+// Step 7.5: For binary content (BLOB)
+// -----------------------------------
+
+echo $col->getCharacterOctetLength();    // Length in bytes
+
+
+// Step 8: Ask for extended information 
+// ------------------------------------
+ 
+ 
+// Step 8.1: Extra column information
+// ----------------------------------
+
+// #############################################################
+// # WARNING !!!                                               #
+// #  Methods with an asterisk shows differences between       #
+// #  PDO_mysql and mysqli implementations.                    #
+// #                                                           #
+// #  If portability is required, avoid relying on them        # 
+// #  See also differences between mysqli and pdo_mysql.       #
+// #############################################################
+
+echo $col->getAlias(); // Column alias name -> "post_title" (or column name if not aliased)
+ 
+echo $col->getName();  // Column original name -> "title". 
+                       // (*) PDO_mysql always return the alias
+
+echo $col->getTableAlias(); // Originating table alias -> "p" (or table name if not aliased)
+                            // If empty, the column is computed (constant, group,...)
+                            
+echo $col->getTableName();  // Originating table -> "post"
+                            // (*) PDO_mysql always return the table alias 
+
+echo $col->isComputed(); // Whenever there's no table linked (for GROUP, constants, expression...)
+
+echo $col->isGroup(); // Whenever the column is part of a group (MIN, MAX, AVG,...)
+                      // (*) PDO_mysql is not able to retrieve group information
+                      // (*) Mysqli: detection of group is linked to the internal driver
+                      //     Check your driver with mysqli_get_client_version().
+                      //       - mysqlnd detects:
+                      //          - COUNT, MIN, MAX
+                      //       - libmysql detects:
+                      //          - COUNT, MIN, MAX, AVG, GROUP_CONCAT
+                      //       - libmariadb detects:
+                      //          - COUNT, MIN, MAX, AVG, GROUP_CONCAT,    
+
+
+// Note also that the ColumnsMetadata can be iterated
 
 foreach($meta as $column => $definition) {
     echo $definition->getName() . ', ' . $definition->getDatatype() . PHP_EOL;
@@ -128,9 +218,10 @@ Use the `Reader\AbstractMetadataReader::getColumnsMetadata($sql)` to extract que
 <?php
 
 use Soluble\Metadata\Reader;
+use PDO;
 
-$conn = new \PDO("mysql:host=$hostname", $username, $password, [
-            \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+$conn = new PDO("mysql:host=$hostname", $username, $password, [
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
 ]);
 
 $reader = new Reader\PdoMysqlMetadataReader($conn);
@@ -141,8 +232,8 @@ $columnsMeta = $reader->getColumnsMetadata($sql);
 
 ```
 
-| Methods                      | Return        | Description                                         |
-|------------------------------|---------------|-----------------------------------------------------|
+| Methods                      | Return            | Description                                                |
+|------------------------------|-------------------|------------------------------------------------------------|
 | `getColumnsMetadata($sql)`   | `ColumnsMetadata` | Metadata information: ArrayObject with column name/alias   |
 
 
@@ -190,7 +281,7 @@ Metadata information is stored as an `Soluble\Datatype\Column\Definition\Abstrac
 | Type related methods         | Return        | Description                                         |
 |------------------------------|---------------|-----------------------------------------------------|
 | `getDataType()`              | `string`      | Column datatype (see Column\Type)                   |
-| `getNativeDataType()`        | `string`      | Return native datatype                              |
+| `getNativeDataType()`        | `string`      | Return native datatype (VARCHAR, BIGINT...)         |
 | `isText()`                   | `boolean`     | Whether the column is textual (string, blog...)     |
 | `isNumeric()`                | `boolean`     | Whether the column is numeric (decimal, int...)     |
 | `isDate()`                   | `boolean`     | Is a date type                                      |
@@ -225,7 +316,7 @@ Metadata information is stored as an `Soluble\Datatype\Column\Definition\Abstrac
 
 Here's the list of concrete implementations for `Soluble\Datatype\Column\Definition\AbstractColumnDefinition`.
 
-They can be used as an alternative way to check datatypes. For example
+They can be used as an alternative way to check column datatype. For example
 
 ```php
 use Soluble\Datatype\Column\Definition;
@@ -275,6 +366,29 @@ Currently only pdo_mysql and mysqli drivers  are supported.
 ## Contributing
 
 Contribution are welcome see [contribution guide](./CONTRIBUTING.md)
+
+## Notes
+
+Currently metadata are read from the underlying database driver by executing a query 
+with a limit 0 (almost no performance penalty). This ensure your query is always 
+correctly parsed (even crazy ones) with almost no effort. 
+
+The underlying driver methods `mysqli_stmt::result_metadata()`, `PDO::getColumnMeta()` 
+used respectively by the metadata readers Mysql and PdoMysql are marked as experimental 
+and subject to change on the PHP website. In practice, they haven't changed since 5.4 and
+are stable. In case of a change in the php driver, it should be very easy to add a 
+specific driver. No big deal.
+
+Sadly there is some differences between PDO_mysql and mysqli in term of features. 
+Generally the best is to use mysqli instead of pdo. PDO lacks some features like 
+detection of autoincrement, enum, set, unsigned, grouped column and does not 
+distinguish between table/column aliases and their original names. If you are
+relying on those advanced features and willing to be portable between mysql extensions, 
+have a look to alternatives like [phpmyadmin sql-parser](https://github.com/phpmyadmin/sql-parser).
+
+Also if you are looking for a more advanced metadata reader (but limited to table - not a query),
+have a look to the [soluble-schema](https://github.com/belgattitude/soluble-schema) project.
+
 
 ## Coding standards
 

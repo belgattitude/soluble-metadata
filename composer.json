@@ -26,7 +26,8 @@
         "soluble/datatype": "^0.10"
     },
     "require-dev": {
-        "soluble/dbwrapper": "^1.0"
+        "soluble/dbwrapper": "^1.0",
+        "phpunit/phpunit": "^4.8 || ^5.4"
     },
     "archive": {
         "exclude": ["test", "doc", ".travis.yml", ".codeclimate.yml", ".coveralls.yml", ".scrutinizer.yml", ".php_cs", ".gitignore", "phpcs.xml"]

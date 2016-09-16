@@ -149,7 +149,7 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
                         // as PHP 5.3 -> 5.6 there's a bug in the
                         // mysqlnd extension... the following assertions
                         // are wrong !!!!
-                        //$this->markTestIncomplete("Does not test exevything");
+                        //$this->markTestIncomplete("Does not test everything");
 
                         $this->assertFalse($md['avg(filemtime)']->isGroup());
                         $this->assertFalse($md['avg_time']->isGroup());
