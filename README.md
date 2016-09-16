@@ -503,7 +503,7 @@ If you want to rely on this specific feature (aliases) have a look to alternativ
 
 Also if you are looking for a more advanced metadata reader (but limited to table - not a query),
 have a look to the [soluble-schema](https://github.com/belgattitude/soluble-schema) project which share
-the same datatypes structure with more informations.
+the same datatype standards while exposing more information like foreign keys,... in a more portable way. 
 
 ## Coding standards
 
