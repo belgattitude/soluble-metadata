@@ -24,8 +24,7 @@ for basic validation (max lengths, decimals)...
 - Retrieve metadata information from an SQL query (datatypes,...)
 - Rely on native database driver information (does not parse the query in PHP)
 - Attempt to be portable (at least to the internal driver possibilities)
-- Thoroughly tested with different implementations (libmariadb, mysqlnd, libmysql, pdo).
-- MIT opensource license
+- Thoroughly tested with different implementations (libmariadb, mysqlnd, libmysql, pdo_mysql).
 
 ## Requirements
 
