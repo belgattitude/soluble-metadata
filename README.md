@@ -11,7 +11,7 @@
 
 ## Introduction
 
-`soluble-metadata` is a low level library allowing to parse metadata from an sql query with speed and portability in mind.
+`soluble-metadata` is a low level library allowing to parse metadata from an sql query with extensibility, speed and portability in mind.
 
 ## Use cases
 
