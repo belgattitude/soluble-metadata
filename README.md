@@ -79,7 +79,7 @@ foreach($meta as $column => $definition) {
 For Mysqli
 
 ```php
-
+<?php
 use Soluble\Metadata\Reader;
 
 $conn = new \mysqli($hostname,$username,$password,$database);
@@ -92,7 +92,7 @@ $reader = new Reader\MysqliMetadataReader($conn);
 For Pdo_mysql
 
 ```php
-
+<?php
 use Soluble\Metadata\Reader;
 
 $conn = new \PDO("mysql:host=$hostname", $username, $password, [
@@ -106,6 +106,7 @@ $reader = new Reader\PDOMysqlMetadataReader($conn);
 ### Step 2. Query metadata extraction
 
 ```php
+<?php
 
 //....
 
@@ -147,6 +148,9 @@ $meta = $reader->getColumnsMetadata($sql);
 
 
 ```php
+<?php
+
+// ...
 
 $meta = $reader->getColumnsMetadata($sql);
 
@@ -205,6 +209,9 @@ $col->isDate();     // Whther the column is a date (DATE)
 The following methods are supported on both mysqli and PDO_mysql drivers :
 
 ```php
+<?php
+
+// ...
 
 // For all types
 // -------------
@@ -232,6 +239,9 @@ The following methods shows differences between Mysqli and PDO_mysql drivers. Pl
 complete portability is not guaranteed !!!
   
 ```php 
+<?php
+
+// ....
 
 // For numeric types
 // -----------------
@@ -250,6 +260,9 @@ The following methods are portable
  
  
 ```php 
+<?php
+
+// ...
 
 echo $col->getAlias(); // Column alias name -> "post_title" (or column name if not aliased)
 
@@ -263,6 +276,9 @@ The following methods shows differencs between pdo_mysq and mysqli, use with
 care if portability is required !!!
 
 ```php
+<?php
+
+// ...
 
 echo $col->getTableName();  // Originating table -> "post"
                             // (*) PDO_mysql always return the table alias if aliased 
@@ -295,6 +311,9 @@ echo $col->isGroup(); // Whenever the column is part of a group (MIN, MAX, AVG,.
 Those methods are still unsupported on both mysqli and PDO_mysql implementations but kept as reference
 
 ```php
+<?php
+
+// ... 
 
 echo $col->getColumnDefault(); // Always return null
 echo $col->getCharacterMaximumLength();  // Returns $col->getCharacterOctetLength()
