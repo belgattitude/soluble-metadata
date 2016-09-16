@@ -78,6 +78,21 @@ foreach($meta as $column => $definition) {
 
 ```
 
+Will print something like :
+
+| Column name   | Type             |
+|---------------|------------------|
+| column_1      | integer          |
+| column_2      | string           |
+| column_3      | datetime         |
+| column_4      | date             |
+| column_5      | time             |
+| column_6      | float            |
+| column_7      | blob             |
+| column_8      | spatial_geometry |
+
+...
+
 ## Usage
 
 ### Step 1. Initiate a metadata reader
