@@ -235,8 +235,8 @@ echo $col->getCharacterOctetLength();  // Octet length (in multibyte context len
  
 ```
 
-The following methods shows differences between Mysqli and PDO_mysql drivers. Please use with care, 
-complete portability is not guaranteed !!!
+**The following methods shows differences between Mysqli and PDO_mysql drivers. Please use with care, 
+complete portability is not guaranteed !!!**
   
 ```php 
 <?php
@@ -272,8 +272,8 @@ echo $col->getTableAlias(); // Originating table alias -> "p" (or table name if 
                             // If empty, the column is computed (constant, group,...)
 ```
 
-The following methods shows differencs between pdo_mysq and mysqli, use with
-care if portability is required !!!
+**The following methods shows differences between pdo_mysq and mysqli, use with
+care if portability is required !!!**
 
 ```php
 <?php
