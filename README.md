@@ -54,6 +54,7 @@ require 'vendor/autoload.php';
 ## Basic example
 
 ```php
+<?php
 
 use Soluble\Metadata\Reader;
 
@@ -67,7 +68,7 @@ $sql = "select * from `my_table`";
 $meta = $reader->getColumnsMetadata($sql);
 
 foreach($meta as $column => $definition) {
-   echo $definition->getName() . ', ' . $definition->getDatatype() . PHP_EOL;
+   echo $definition->getName() . ': ' . $definition->getDatatype() . PHP_EOL;
 }  
 
 ```
