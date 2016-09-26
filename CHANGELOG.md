@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### 0.10.2 (2016-09-22)
+
+    - Added UnsupportedTypeException whenever a fied type cannot be resolved.
+
 ### 0.9.6 (2016-05-14)
 
     - Updated README.md

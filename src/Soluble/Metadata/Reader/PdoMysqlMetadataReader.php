@@ -61,12 +61,11 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
 
             $datatype = strtoupper($field['native_type']);
 
-
-            //@codeCoverageIgnoreStart
             if (!$type_map->offsetExists($datatype)) {
-                throw new Exception\UnsupportedTypeException("Error for field '$name', datatype '" . (string) $datatype . "' not yet supported by reader " . __CLASS__);
+                $nt = (string) $field['native_type'];
+                $msg = "Cannot get type for field '$name'. Mapping for native type [$nt] cannot be resolved into a valid type";
+                throw new Exception\UnsupportedTypeException($msg);
             }
-            //@codeCoverageIgnoreEnd
 
             $datatype = $type_map->offsetGet($datatype);
 
