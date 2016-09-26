@@ -56,8 +56,7 @@ class MysqliMetadataReader extends AbstractMetadataReader
 
 
             if (!$type_map->offsetExists($datatype)) {
-                $nt = (string) $field['native_type'];
-                $msg = "Cannot get type for field '$name'. Mapping for native type [$nt] cannot be resolved into a valid type";
+                $msg = "Cannot get type for field '$name'. Mapping for native type [$datatype] cannot be resolved into a valid type";
                 throw new Exception\UnsupportedTypeException($msg);
             }
 
