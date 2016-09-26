@@ -6,7 +6,6 @@ use Soluble\Metadata\ColumnsMetadata;
 use Soluble\Metadata\Exception;
 use Soluble\Metadata\Reader\Mapping\MysqliMapping;
 use Soluble\Datatype\Column;
-use Soluble\Datatype\Column\Exception\UnsupportedDatatypeException;
 
 
 class MysqliMetadataReader extends AbstractMetadataReader
@@ -57,7 +56,7 @@ class MysqliMetadataReader extends AbstractMetadataReader
 
 
             if (!$type_map->offsetExists($datatype)) {
-                throw new UnsupportedDatatypeException("Datatype '$datatype' not yet supported by " . __CLASS__);
+                throw new Exception\UnsupportedTypeException("Error for field '$name', datatype '" . (string) $datatype . "' not yet supported by reader " . __CLASS__);
             }
 
 

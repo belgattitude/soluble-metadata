@@ -3,7 +3,7 @@
 namespace Soluble\Metadata\Reader;
 
 use Soluble\Metadata\ColumnsMetadata;
-use Soluble\Db\Metadata\Column\Exception\UnsupportedDatatypeException;
+use Soluble\Metadata\Exception;
 
 abstract class AbstractMetadataReader
 {
@@ -51,7 +51,7 @@ abstract class AbstractMetadataReader
     /**
      * Read metadata information from source
      *
-     * @throws UnsupportedDatatypeException
+     * @throws Exception\UnsupportedTypeException
      * @throws Exception\AmbiguousColumnException
      *
      * @param string $sql

@@ -5,7 +5,6 @@ namespace Soluble\Metadata\Reader;
 use Soluble\Metadata\ColumnsMetadata;
 use Soluble\Metadata\Exception;
 use Soluble\Datatype\Column;
-use Soluble\Db\Metadata\Column\Exception\UnsupportedDatatypeException;
 use Soluble\Metadata\Reader\Mapping\PdoMysqlMapping;
 use PDO;
 
@@ -65,7 +64,7 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
 
             //@codeCoverageIgnoreStart
             if (!$type_map->offsetExists($datatype)) {
-                throw new UnsupportedDatatypeException("Datatype '$datatype' not yet supported by " . __CLASS__);
+                throw new Exception\UnsupportedTypeException("Error for field '$name', datatype '" . (string) $datatype . "' not yet supported by reader " . __CLASS__);
             }
             //@codeCoverageIgnoreEnd
 
