@@ -23,8 +23,6 @@ class ColumnsMetadataTest extends \PHPUnit_Framework_TestCase
         $pdo_mysql = \SolubleTestFactories::getDbConnection('pdo:mysql');
         $mysqli = \SolubleTestFactories::getDbConnection('mysqli');
 
-
-
         $this->readers = [
             'mysqli'    => new Reader\MysqliMetadataReader($mysqli),
             'pdo_mysql' => new Reader\PdoMysqlMetadataReader($pdo_mysql)

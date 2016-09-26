@@ -238,6 +238,7 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
                         mc.container_id as mcid,
                         mc.title,
                         filesize,
+                        null as test_null,
                         count(*),
                         max(filemtime),
                         min(filemtime),

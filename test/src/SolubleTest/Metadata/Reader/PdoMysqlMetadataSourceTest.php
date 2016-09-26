@@ -265,6 +265,7 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
                             mc.title,
                             filesize,
                             count(*),
+                            null as test_null,
                             max(filemtime),
                             min(filemtime),
                             group_concat(filename),

@@ -59,6 +59,10 @@ class MysqliMapping
             MYSQLI_TYPE_BIT => ['type' => Column\Type::TYPE_BIT, 'native' => 'BIT'],
             //MYSQLI_TYPE_BOOLEAN => array('type' => Column\Type::TYPE_BOOLEAN, 'native' => 'BOOLEAN'),
             MYSQLI_TYPE_GEOMETRY => ['type' => Column\Type::TYPE_SPATIAL_GEOMETRY, 'native' => null],
+
+            // This type is really annoying, it's when the select contains an aliased null constant
+            // like 'select null as test_alias'
+            MYSQLI_TYPE_NULL => ['type' => Column\Type::TYPE_NULL, 'native' => 'NULL']
         ]);
 
 

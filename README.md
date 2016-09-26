@@ -203,7 +203,8 @@ echo $col->getDatatype(); // -> 'string' (Soluble\Datatype\Column\Type::TYPE_STR
 if ($col instanceof \Soluble\Datatype\Column\IntegerColumn) {
     // ... could be also BitColumn, BlobColumn, BooleanColumn
     // ... DateColumn, DateTimeColumn, DecimalColumn, FloatColumn
-    // ... GometryColumn, IntegerColumn, StringColumn, TimeColumn
+    // ... GeometryColumn, IntegerColumn, StringColumn, TimeColumn,
+    // ... NullColumn
 }
 
 // Option 3, type detection by interface (more generic)
@@ -482,6 +483,7 @@ if ($coldef instanceof Definition\DateColumnInterface) {
 | `IntegerColumn`      | `NumericColumnInterface`  |                               |
 | `StringColumn`       | `TextColumnInterface`     |                               |
 | `TimeColumn`         |                           |                               |
+| `NullColumn`         |                           | Special case for columns aliasing 'NULL' value  |
 
 
 ## Supported readers

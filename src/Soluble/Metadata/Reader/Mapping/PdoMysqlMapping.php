@@ -42,7 +42,8 @@ class PdoMysqlMapping
             // boolean
             'BIT' => ['type' => Column\Type::TYPE_BIT, 'native' => 'BIT'],
             'BOOLEAN' => ['type' => Column\Type::TYPE_BOOLEAN, 'native' => 'BOOLEAN'],
-            'GEOMETRY' => ['type' => Column\Type::TYPE_SPATIAL_GEOMETRY, 'native' => null]
+            'GEOMETRY' => ['type' => Column\Type::TYPE_SPATIAL_GEOMETRY, 'native' => null],
+            'NULL' => ['type' => Column\Type::TYPE_NULL, 'native' => 'NULL']
         ]);
 
 
