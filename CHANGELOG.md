@@ -1,5 +1,9 @@
 # CHANGELOG
 
+### x.x.x (xxxx-xx-xx)
+
+    - Tested on PHP 7.1
+
 ### 0.10.4 (2016-09-22)
 
     - Support for null column datatype, for example
