@@ -33,8 +33,8 @@ for basic validation (max lengths, decimals)...
 
 ## Requirements
 
-- PHP engine 5.4+, 7.0+ (HHVM does not work yet)
-- Mysqli or PDO_mysql extension enabled (Mysqli recommended as it exposes more features)
+- PHP engine 5.4+, 7.0+, 7.1+ (HHVM does not work yet)
+- Mysqli or PDO_mysql extension enabled (Mysqli exposes more features)
 
 ## Documentation
 
@@ -48,7 +48,7 @@ Instant installation via [composer](http://getcomposer.org/).
 $ composer require soluble/metadata
 ```
 
-Most modern frameworks will include Composer out of the box, but ensure the following file is included:
+Most modern frameworks will include composer out of the box, but ensure the following file is included:
 
 ```php
 <?php
@@ -66,13 +66,13 @@ use Soluble\Metadata\Reader;
 $conn = new \mysqli($hostname,$username,$password,$database);
 $conn->set_charset($charset);
 
-$reader = new Reader\MysqliMetadataReader($conn);
+$metaReader = new Reader\MysqliMetadataReader($conn);
 
 $sql = "select * from `my_table`";
 
-$meta = $reader->getColumnsMetadata($sql);
+$metadatas = $metaReader->getColumnsMetadata($sql);
 
-foreach($meta as $column => $definition) {
+foreach($metadatas as $column => $definition) {
    echo $definition->getName() . ': ' . $definition->getDatatype() . PHP_EOL;
 }  
 
@@ -90,6 +90,7 @@ Will print something like :
 | column_6      | float            |
 | column_7      | blob             |
 | column_8      | spatial_geometry |
+| column_8      | null             |
 
 ...
 
@@ -257,24 +258,6 @@ echo $col->getCharacterOctetLength();  // Octet length (in multibyte context len
  
 ```
 
-**The following methods shows differences between Mysqli and PDO_mysql drivers. Please use with care, 
-complete portability is not guaranteed !!!**
-  
-```php 
-<?php
-
-// ....
-
-// For numeric types
-// -----------------
-
-echo $col->isAutoIncrement();   // Only make sense for primary keys.
-                                // (*) Unsupported with PDO_mysql
-
-echo $col->isNumericUnsigned(); // Whether the numeric value is unsigned.
-                                // (*) Unsupported with PDO_mysql
-
-``` 
 
 ### Getting column specifications.
 
@@ -325,8 +308,17 @@ echo $col->isGroup(); // Whenever the column is part of a group (MIN, MAX, AVG,.
                       //          - COUNT, MIN, MAX, AVG, GROUP_CONCAT and growing    
 
 
+// For numeric types
+// -----------------
+
+echo $col->isAutoIncrement();   // Only make sense for primary keys.
+                                // (*) Unsupported with PDO_mysql
+
+echo $col->isNumericUnsigned(); // Whether the numeric value is unsigned.
+                                // (*) Unsupported with PDO_mysql
 
 ```
+
 
 ### Unsupported methods
 
