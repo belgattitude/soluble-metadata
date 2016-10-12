@@ -21,14 +21,12 @@ for basic validation (max lengths, decimals)...
 
 ## Features
 
-- Retrieve metadata information from an SQL query (datatypes,...)
+- Extract metadata information from an SQL query (datatypes,...)
+- Common API across various driver implementations (*)
 - Rely on native database driver information (does not parse the query in PHP)
-- Attempt to be portable (at least to the internal driver possibilities)
 - Carefully tested with different implementations (libmariadb, mysqlnd, libmysql, pdo_mysql).
 
-## Limitations
-
-*Under the hood, the metadata extraction relies on the driver methods `mysqli_stmt::result_metadata()` and `PDO::getColumnMeta()`.
+*(\*) Under the hood, the metadata extraction relies on the driver methods `mysqli_stmt::result_metadata()` and `PDO::getColumnMeta()`.
 Although the `soluble-metadata` API unify their usage and type detection, differences still exists for more advanced features. 
 A specific effort has been made in the documentation to distinguish possible portability issues when switching from one driver to another.
 Keep that in mind when using it.*
@@ -496,8 +494,7 @@ Currently only pdo_mysql and mysqli drivers  are supported.
 
 ## Future ideas
 
-- Implement more drivers (pgsql...)
-- Implement a pure php reader (on top of [phpmyadmin sql-parser](https://github.com/phpmyadmin/sql-parser))
+- Implement more drivers (pgsql...), contributions welcome !!!
 
 ## Contributing
 
@@ -532,8 +529,4 @@ the same datatype standards while exposing more information like foreign keys,..
 * [PSR 2 Coding Style Guide](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 * [PSR 1 Coding Standards](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
 * [PSR 0 Autoloading standards](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md)
-
-
-
-
 
