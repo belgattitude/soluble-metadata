@@ -52,15 +52,14 @@ class MysqliMetadataReader extends AbstractMetadataReader
             $tableName = $field->orgtable;
             $schemaName = $field->db;
 
-            $datatype = $field->type;
+            $type = $field->type;
 
-            if (!$type_map->offsetExists($datatype)) {
-                $msg = "Cannot get type for field '$name'. Mapping for native type [$datatype] cannot be resolved into a valid type for driver: " . __CLASS__;
+            if (!$type_map->offsetExists($type)) {
+                $msg = "Cannot get type for field '$name'. Mapping for native type [$type] cannot be resolved into a valid type for driver: " . __CLASS__;
                 throw new Exception\UnsupportedTypeException($msg);
             }
 
-
-            $datatype = $type_map->offsetGet($datatype);
+            $datatype = $type_map->offsetGet($type);
 
             $column = Column\Type::createColumnDefinition($datatype['type'], $name, $tableName, $schemaName);
 
@@ -92,15 +91,12 @@ class MysqliMetadataReader extends AbstractMetadataReader
 
             if ($column instanceof Column\Definition\IntegerColumn) {
                 $column->setIsAutoIncrement(($field->flags & MYSQLI_AUTO_INCREMENT_FLAG) > 0);
-            }
-
-            if ($column instanceof Column\Definition\DecimalColumn) {
+            } elseif ($column instanceof Column\Definition\DecimalColumn) {
                 // salary DECIMAL(5,2)
                 // In this example, 5 is the precision and 2 is the scale.
                 // Standard SQL requires that DECIMAL(5,2) be able to store any value
                 // with five digits and two decimals, so values that can be stored in
                 // the salary column range from -999.99 to 999.99.
-
                 $column->setNumericScale($field->length - $field->decimals + 1);
                 $column->setNumericPrecision($field->decimals);
             }

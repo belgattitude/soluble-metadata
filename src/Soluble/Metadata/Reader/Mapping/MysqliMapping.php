@@ -17,12 +17,11 @@ class MysqliMapping
         /*
         // ALL the following fields are not supported yet
         // Maybe todo in a later release or choose to map them to approximative
-        // types (i.e. MYSQLI_YEAR could be a integer) ?
-          MYSQLI_TYPE_NULL
-          MYSQLI_TYPE_YEAR
-          MYSQLI_TYPE_ENUM
-          MYSQLI_TYPE_SET
-          MYSQLI_TYPE_GEOMETRY
+        // types
+
+          MYSQLI_TYPE_YEAR -> int
+          MYSQLI_TYPE_ENUM -> string
+          MYSQLI_TYPE_SET -> string
          */
 
         $mapping = new ArrayObject([

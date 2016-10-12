@@ -59,14 +59,14 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
             $name = $field['name'];
             $tableName = $field['table'];
 
-            $datatype = strtoupper($field['native_type']);
+            $type = strtoupper($field['native_type']);
 
-            if (!$type_map->offsetExists($datatype)) {
-                $msg = "Cannot get type for field '$name'. Mapping for native type [$datatype] cannot be resolved into a valid type for driver: " . __CLASS__;
+            if (!$type_map->offsetExists($type)) {
+                $msg = "Cannot get type for field '$name'. Mapping for native type [$type] cannot be resolved into a valid type for driver: " . __CLASS__;
                 throw new Exception\UnsupportedTypeException($msg);
             }
 
-            $datatype = $type_map->offsetGet($datatype);
+            $datatype = $type_map->offsetGet($type);
 
             $column = Column\Type::createColumnDefinition($datatype['type'], $name, $tableName, $schemaName = null);
             $alias = $field['name'];
