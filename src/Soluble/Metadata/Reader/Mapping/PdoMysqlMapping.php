@@ -20,12 +20,17 @@ class PdoMysqlMapping
             // BLOBS ARE CURRENTLY SENT AS TEXT
             // I DIDN'T FIND THE WAY TO MAKE THE DIFFERENCE !!!
             'BLOB' => ['type' => Column\Type::TYPE_BLOB, 'native' => 'BLOB'],
+            'TINY_BLOB' => ['type' => Column\Type::TYPE_BLOB, 'native' => 'TINY_BLOB'],
+            'MEDIUM_BLOB' => ['type' => Column\Type::TYPE_BLOB, 'native' => 'MEDIUM_BLOB'],
+            'LONG_BLOB' => ['type' => Column\Type::TYPE_BLOB, 'native' => 'LONG_BLOB'],
+
             // integer
             'TINY' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'TINYINT'],
             'SHORT' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'SMALLINT'],
             'INT24' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'MEDIUMINT'],
             'LONG' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'INTEGER'],
             'LONGLONG' => ['type' => Column\Type::TYPE_INTEGER, 'native' => 'BIGINT'],
+
             // timestamps
             'TIMESTAMP' => ['type' => Column\Type::TYPE_DATETIME, 'native' => 'TIMESTAMP'],
             'DATETIME' => ['type' => Column\Type::TYPE_DATETIME, 'native' => 'DATETIME'],
