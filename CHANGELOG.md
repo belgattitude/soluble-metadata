@@ -1,8 +1,13 @@
 # CHANGELOG
 
-### x.x.x (xxxx-xx-xx)
+### 0.10.x (xxxx-xx-xx)
+
+
+### 0.10.5 (2016-10-12)
 
     - Tested on PHP 7.1
+    - Documenting InvalidQueryException
+    - Minor perf fixes and internal code cleanup
 
 ### 0.10.4 (2016-09-22)
 
