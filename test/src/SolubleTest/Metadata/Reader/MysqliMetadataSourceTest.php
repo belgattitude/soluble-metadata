@@ -394,7 +394,7 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
         $mysqli = $this->adapter->getConnection()->getResource();
 
         foreach ($queries as $idx => $query) {
-            $sql = $this->invokeMethod($this->metadata, 'getEmptyQuery', [$query]);
+            $sql = $this->invokeMethod($this->metadata, 'getEmptiedQuery', [$query]);
 
             $stmt = $mysqli->prepare($sql);
 

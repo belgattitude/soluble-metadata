@@ -66,17 +66,14 @@ abstract class AbstractMetadataReader
      * @param string $sql query string
      * @return string
      */
-    protected function getEmptyQuery($sql)
+    protected function getEmptiedQuery($sql)
     {
         // see the reason why in Vision_Store_Adapter_ZendDbSelect::getMetatData
         //$sql = str_replace("('__innerselect'='__innerselect')", '(1=0)', $sql);
 
-
         $sql = preg_replace('/(\r\n|\r|\n|\t)+/', " ", strtolower($sql));
         $sql = trim($sql);
         $sql = preg_replace('/\s+/', ' ', $sql);
-
-
 
         $replace_regexp = "LIMIT[\s]+[\d]+((\s*,\s*\d+)|(\s+OFFSET\s+\d+)){0,1}";
 

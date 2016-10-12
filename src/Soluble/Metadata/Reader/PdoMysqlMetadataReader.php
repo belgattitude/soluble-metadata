@@ -143,7 +143,7 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
             throw new Exception\EmptyQueryException();
         }
 
-        $sql = $this->getEmptyQuery($sql);
+        $sql = $this->getEmptiedQuery($sql);
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
