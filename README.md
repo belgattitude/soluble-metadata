@@ -24,6 +24,7 @@ for basic validation (max lengths, decimals)...
 - Extract metadata information from an SQL query (datatypes,...)
 - Common API across various driver implementations.
 - Rely on native database driver information (does not parse the query in PHP)
+- Works even when the query does not return results (empty resultset).
 - Carefully tested with different implementations (libmariadb, mysqlnd, libmysql, pdo_mysql).
 
 *Under the hood, the metadata extraction relies on the driver methods `mysqli_stmt::result_metadata()` and `PDO::getColumnMeta()`.
