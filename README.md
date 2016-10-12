@@ -22,11 +22,11 @@ for basic validation (max lengths, decimals)...
 ## Features
 
 - Extract metadata information from an SQL query (datatypes,...)
-- Common API across various driver implementations (*)
+- Common API across various driver implementations.
 - Rely on native database driver information (does not parse the query in PHP)
 - Carefully tested with different implementations (libmariadb, mysqlnd, libmysql, pdo_mysql).
 
-(*) *Under the hood, the metadata extraction relies on the driver methods `mysqli_stmt::result_metadata()` and `PDO::getColumnMeta()`.
+*Under the hood, the metadata extraction relies on the driver methods `mysqli_stmt::result_metadata()` and `PDO::getColumnMeta()`.
 Although the `soluble-metadata` API unify their usage and type detection, differences still exists for more advanced features. 
 A specific effort has been made in the documentation to distinguish possible portability issues when switching from one driver to another.
 Keep that in mind when using it.*
