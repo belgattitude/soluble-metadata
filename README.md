@@ -26,7 +26,7 @@ for basic validation (max lengths, decimals)...
 - Rely on native database driver information (does not parse the query in PHP)
 - Carefully tested with different implementations (libmariadb, mysqlnd, libmysql, pdo_mysql).
 
-*(\*) Under the hood, the metadata extraction relies on the driver methods `mysqli_stmt::result_metadata()` and `PDO::getColumnMeta()`.
+(*) *Under the hood, the metadata extraction relies on the driver methods `mysqli_stmt::result_metadata()` and `PDO::getColumnMeta()`.
 Although the `soluble-metadata` API unify their usage and type detection, differences still exists for more advanced features. 
 A specific effort has been made in the documentation to distinguish possible portability issues when switching from one driver to another.
 Keep that in mind when using it.*
@@ -70,7 +70,11 @@ $metaReader = new Reader\MysqliMetadataReader($conn);
 
 $sql = "select * from `my_table`";
 
-$metadatas = $metaReader->getColumnsMetadata($sql);
+try {
+    $metadatas = $metaReader->getColumnsMetadata($sql);
+} catch (\Soluble\Metadata\Exception\InvalidQueryException $e) {
+    // ...
+}
 
 foreach($metadatas as $column => $definition) {
    echo $definition->getName() . ': ' . $definition->getDatatype() . PHP_EOL;
