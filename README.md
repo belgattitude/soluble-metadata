@@ -150,7 +150,11 @@ $sql = "
        ";
 
 
-$meta = $reader->getColumnsMetadata($sql);
+try {
+    $meta = $reader->getColumnsMetadata($sql);
+} catch (\Soluble\Metadata\Exception\InvalidQueryException $e) { 
+    //...
+}
 
 /*
   The resulting ColumnsMetadata will contain something like:
