@@ -1,13 +1,13 @@
 # soluble/metadata
 
 [![PHP Version](http://img.shields.io/badge/php-5.4+-ff69b4.svg)](https://packagist.org/packages/soluble/metadata)
-[![HHVM Status](http://hhvm.h4cc.de/badge/soluble/metadata.svg)](http://hhvm.h4cc.de/package/soluble/metadata)
 [![Build Status](https://travis-ci.org/belgattitude/soluble-metadata.svg?branch=master)](https://travis-ci.org/belgattitude/soluble-metadata)
 [![Code Coverage](https://scrutinizer-ci.com/g/belgattitude/soluble-metadata/badges/coverage.png?s=aaa552f6313a3a50145f0e87b252c84677c22aa9)](https://scrutinizer-ci.com/g/belgattitude/soluble-metadata)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/belgattitude/soluble-metadata/badges/quality-score.png?s=6f3ab91f916bf642f248e82c29857f94cb50bb33)](https://scrutinizer-ci.com/g/belgattitude/soluble-metadata)
 [![Latest Stable Version](https://poser.pugx.org/soluble/metadata/v/stable.svg)](https://packagist.org/packages/soluble/metadata)
 [![Total Downloads](https://poser.pugx.org/soluble/metadata/downloads.png)](https://packagist.org/packages/soluble/metadata)
 [![License](https://poser.pugx.org/soluble/metadata/license.png)](https://packagist.org/packages/soluble/metadata)
+[![HHVM Status](http://hhvm.h4cc.de/badge/soluble/metadata.svg)](http://hhvm.h4cc.de/package/soluble/metadata)
 
 ## Introduction
 
@@ -25,6 +25,8 @@ for basic validation (max lengths, decimals)...
 - Rely on native database driver information (does not parse the query in PHP)
 - Attempt to be portable (at least to the internal driver possibilities)
 - Carefully tested with different implementations (libmariadb, mysqlnd, libmysql, pdo_mysql).
+
+## Limitations
 
 *Under the hood, the metadata extraction relies on the driver methods `mysqli_stmt::result_metadata()` and `PDO::getColumnMeta()`.
 Although the `soluble-metadata` API unify their usage and type detection, differences still exists for more advanced features. 
