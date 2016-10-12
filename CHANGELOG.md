@@ -1,6 +1,6 @@
 # CHANGELOG
 
-### 0.10.x (xxxx-xx-xx)
+### 1.0.x (xxxx-xx-xx)
 
 
 ### 1.0.0 (2016-10-12)
