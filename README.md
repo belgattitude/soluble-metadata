@@ -150,6 +150,8 @@ $sql = "
             FROM `post` AS `p`
             LEFT OUTER JOIN `comment` as `c`  
                  ON `c`.`post_id` = `p`.`post_id`
+            GROUP BY `p`.`post_id`, `p`.`title`, 
+                     `p`.`created_at`, `constant_col`, `computed_col`     
        ";
 
 
