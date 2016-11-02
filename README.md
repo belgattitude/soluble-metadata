@@ -103,7 +103,7 @@ Will print something like :
 
 ### Step 1. Initiate a metadata reader
 
-For Mysqli use the MysqlMetadataReader :
+For **Mysqli** use the `MysqlMetadataReader` :
 
 ```php
 <?php
@@ -116,7 +116,7 @@ $reader = new Reader\MysqliMetadataReader($conn);
 
 ``` 
 
-For Pdo_mysql use the PdoMysqlReader :
+For **Pdo_mysql** use the `PdoMysqlReader` :
 
 ```php
 <?php
