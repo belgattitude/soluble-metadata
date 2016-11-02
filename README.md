@@ -145,13 +145,16 @@ $sql = "
                 `p`.`created_at`,
                 'constant' AS `constant_col`,
                 1 + 2 AS `computed_col`, 
-                COUNT(`c`.*) as `nb_comments`
+                null as `null_col`
+                COUNT(`c`.*) as `nb_comments`,
+                MAX(`c`.`created_at`) as latest_comment
                  
             FROM `post` AS `p`
             LEFT OUTER JOIN `comment` as `c`  
                  ON `c`.`post_id` = `p`.`post_id`
             GROUP BY `p`.`post_id`, `p`.`title`, 
-                     `p`.`created_at`, `constant_col`, `computed_col`     
+                     `p`.`created_at`, `constant_col`, 
+                     `computed_col`, `null_col`     
        ";
 
 
@@ -165,12 +168,15 @@ try {
   The resulting ColumnsMetadata will contain something like:
 
   [
-     "post_id"      => '<Soluble\Datatype\Column\Definition\IntegerColumn>',
-     "post_title"   => '<Soluble\Datatype\Column\Definition\StringColumn>',
-     "created_at"   => '<Soluble\Datatype\Column\Definition\DatetimeColumn>',
-     "constant_col" => '<Soluble\Datatype\Column\Definition\StringColumn>',
-     "computed_col" => '<Soluble\Datatype\Column\Definition\IntegerColumn>',
-     "nb_comments"  => '<Soluble\Datatype\Column\Definition\IntegerColumn>'
+     "post_id"        => '<Soluble\Datatype\Column\Definition\IntegerColumn>',
+     "post_title"     => '<Soluble\Datatype\Column\Definition\StringColumn>',
+     "created_at"     => '<Soluble\Datatype\Column\Definition\DatetimeColumn>',
+     "constant_col"   => '<Soluble\Datatype\Column\Definition\StringColumn>',
+     "computed_col"   => '<Soluble\Datatype\Column\Definition\IntegerColumn>',
+     "null_col"       => '<Soluble\Datatype\Column\Definition\NullColumn>',
+     "nb_comments"    => '<Soluble\Datatype\Column\Definition\IntegerColumn>',
+     "latest_comment" => '<Soluble\Datatype\Column\Definition\DateTimeColumn>'
+     
   ]
     
 */  
