@@ -7,31 +7,33 @@ use Soluble\Metadata\Exception;
 
 abstract class AbstractMetadataReader
 {
-
     /**
-     * Keep static cache in memory
-     * @var boolean
+     * Keep static cache in memory.
+     *
+     * @var bool
      */
     protected $cache_active = true;
 
     /**
+     * @param bool $active
      *
-     * @param boolean $active
      * @return AbstractMetadataReader
      */
     public function setStaticCache($active = true)
     {
         $this->cache_active = $active;
+
         return $this;
     }
 
     /**
-     * Return columns metadata from query
+     * Return columns metadata from query.
      *
      * @throws UnsupportedDatatypeException
      * @throws Exception\AmbiguousColumnException
      *
      * @param string $sql
+     *
      * @return ColumnsMetadata
      */
     public function getColumnsMetadata($sql)
@@ -42,6 +44,7 @@ abstract class AbstractMetadataReader
                 $md = $this->readColumnsMetadata($sql);
                 static::$metadata_cache[$cache_key] = $md;
             }
+
             return static::$metadata_cache[$cache_key];
         } else {
             return $this->readColumnsMetadata($sql);
@@ -49,21 +52,23 @@ abstract class AbstractMetadataReader
     }
 
     /**
-     * Read metadata information from source
+     * Read metadata information from source.
      *
      * @throws Exception\UnsupportedTypeException
      * @throws Exception\AmbiguousColumnException
      *
      * @param string $sql
+     *
      * @return ColumnsMetadata
      */
     abstract protected function readColumnsMetadata($sql);
 
     /**
      * Optimization, will add false condition to the query
-     * so the metadata loading will be faster
+     * so the metadata loading will be faster.
      *
      * @param string $sql query string
+     *
      * @return string
      */
     protected function getEmptiedQuery($sql)
@@ -71,7 +76,7 @@ abstract class AbstractMetadataReader
         // see the reason why in Vision_Store_Adapter_ZendDbSelect::getMetatData
         //$sql = str_replace("('__innerselect'='__innerselect')", '(1=0)', $sql);
 
-        $sql = preg_replace('/(\r\n|\r|\n|\t)+/', " ", strtolower($sql));
+        $sql = preg_replace('/(\r\n|\r|\n|\t)+/', ' ', strtolower($sql));
         $sql = trim($sql);
         $sql = preg_replace('/\s+/', ' ', $sql);
 
@@ -80,14 +85,15 @@ abstract class AbstractMetadataReader
         $search_regexp = "$replace_regexp";
         if (!preg_match("/$search_regexp/i", $sql)) {
             // Limit is not already present
-            $sql .= " LIMIT 0";
+            $sql .= ' LIMIT 0';
         } else {
             // replace first if offset exists, then if not
             //preg_match_all("/($search_regexp)/i", $sql, $matches, PREG_PATTERN_ORDER);
             //var_dump($matches);
 
-            $sql = preg_replace("/($replace_regexp)/i", "LIMIT 0", $sql);
+            $sql = preg_replace("/($replace_regexp)/i", 'LIMIT 0', $sql);
         }
+
         return $sql;
     }
 }

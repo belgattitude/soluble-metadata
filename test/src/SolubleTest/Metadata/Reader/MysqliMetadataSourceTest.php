@@ -8,14 +8,12 @@ use Soluble\DbWrapper\Adapter\MysqliAdapter;
 
 class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var MysqliMetadataReader
      */
     protected $metadata;
 
     /**
-     *
      * @var MysqliAdapter
      */
     protected $adapter;
@@ -41,20 +39,20 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
     public function testGetColumnsMetadataThrowsEmptyQueryException()
     {
         $this->setExpectedException('Soluble\Metadata\Exception\EmptyQueryException');
-        $sql = "";
+        $sql = '';
         $md = $this->metadata->getColumnsMetadata($sql);
     }
 
     public function testGetColumnsMetadataThrowsInvalidQueryException()
     {
         $this->setExpectedException('Soluble\Metadata\Exception\InvalidQueryException');
-        $sql = "select * from sss";
+        $sql = 'select * from sss';
         $md = $this->metadata->getColumnsMetadata($sql);
     }
 
     public function testGetColumnsMetadataNonCached()
     {
-        $sql = "select id from test_table_types";
+        $sql = 'select id from test_table_types';
         $this->metadata->setStaticCache(false);
         $md = $this->metadata->getColumnsMetadata($sql);
         $this->metadata->setStaticCache(true);
@@ -63,13 +61,13 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
     public function testGetColumnsMetadataThrowsAmbiguousColumnException()
     {
         $this->setExpectedException('Soluble\Metadata\Exception\AmbiguousColumnException');
-        $sql = "select id, test_char_10 as id from test_table_types";
+        $sql = 'select id, test_char_10 as id from test_table_types';
         $md = $this->metadata->getColumnsMetadata($sql);
     }
 
     public function testGetColumnsMetadata()
     {
-        $sql = "select * from test_table_types";
+        $sql = 'select * from test_table_types';
         $md = $this->metadata->getColumnsMetadata($sql);
         $this->assertInstanceOf('Soluble\Metadata\ColumnsMetadata', $md);
 
@@ -124,17 +122,14 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($md['test_float']->getDatatype(), Column\Type::TYPE_FLOAT);
         $this->assertEquals($md['test_float']->getNativeDatatype(), 'FLOAT');
 
-
         $this->assertEquals($md['test_tinyint']->getDatatype(), Column\Type::TYPE_INTEGER);
         $this->assertEquals($md['test_tinyint']->getNativeDatatype(), 'TINYINT');
 
         $this->assertEquals($md['test_mediumint']->getDatatype(), Column\Type::TYPE_INTEGER);
         $this->assertEquals($md['test_mediumint']->getNativeDatatype(), 'MEDIUMINT');
 
-
         $this->assertEquals($md['test_double']->getDatatype(), Column\Type::TYPE_FLOAT);
         $this->assertEquals($md['test_double']->getNativeDatatype(), 'DOUBLE');
-
 
         $this->assertEquals($md['test_smallint']->getDatatype(), Column\Type::TYPE_INTEGER);
         $this->assertEquals($md['test_smallint']->getNativeDatatype(), 'SMALLINT');
@@ -142,13 +137,11 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($md['test_date']->getDatatype(), Column\Type::TYPE_DATE);
         $this->assertEquals($md['test_date']->getNativeDatatype(), 'DATE');
 
-
         $this->assertEquals($md['test_datetime']->getDatatype(), Column\Type::TYPE_DATETIME);
         $this->assertEquals($md['test_datetime']->getNativeDatatype(), 'DATETIME');
 
         $this->assertEquals($md['test_timestamp']->getDatatype(), Column\Type::TYPE_DATETIME);
         $this->assertEquals($md['test_timestamp']->getNativeDatatype(), 'TIMESTAMP');
-
 
         $this->assertEquals($md['test_time']->getDatatype(), Column\Type::TYPE_TIME);
         $this->assertEquals($md['test_time']->getNativeDatatype(), 'TIME');
@@ -158,7 +151,6 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($md['test_tinyblob']->getDatatype(), Column\Type::TYPE_BLOB);
         $this->assertEquals($md['test_tinyblob']->getNativeDatatype(), 'BLOB');
-
 
         $this->assertEquals($md['test_mediumblob']->getDatatype(), Column\Type::TYPE_BLOB);
         $this->assertEquals($md['test_mediumblob']->getNativeDatatype(), 'BLOB');
@@ -170,10 +162,8 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(16777215, $md['test_mediumblob']->getCharacterOctetLength());
         $this->assertEquals(4294967295, $md['test_longblob']->getCharacterOctetLength());
 
-
         $this->assertEquals($md['test_enum']->getDatatype(), Column\Type::TYPE_STRING);
         $this->assertEquals('ENUM', $md['test_enum']->getNativeDatatype());
-
 
         $this->assertEquals($md['test_set']->getDatatype(), Column\Type::TYPE_STRING);
         $this->assertEquals('SET', $md['test_set']->getNativeDatatype());
@@ -183,7 +173,6 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals($md['test_bool']->getDatatype(), Column\Type::TYPE_INTEGER);
         $this->assertEquals('TINYINT', $md['test_bool']->getNativeDatatype());
-
 
         $this->assertEquals($md['test_geometry']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
         $this->assertEquals(null, $md['test_geometry']->getNativeDatatype());
@@ -212,7 +201,7 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetColumnsMetadataWithDefaults()
     {
-        $sql = "select * from test_table_with_default";
+        $sql = 'select * from test_table_with_default';
         $md = $this->metadata->getColumnsMetadata($sql);
 
         if (true) {
@@ -268,9 +257,6 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $md['test_string']->getOrdinalPosition());
         $this->assertEquals('def', $md['test_string']->getCatalog());
 
-
-
-
         $this->assertEquals(Column\Type::TYPE_DECIMAL, $md['test_calc']->getDatatype());
         $this->assertEquals(null, $md['test_calc']->getTableName());
 
@@ -289,11 +275,9 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('media', $md['container_id']->getTableName());
         $this->assertEquals('m', $md['container_id']->getTableAlias());
 
-
         $this->assertEquals(Column\Type::TYPE_INTEGER, $md['mcid']->getDatatype());
         $this->assertEquals('media_container', $md['mcid']->getTableName());
         $this->assertEquals('mc', $md['mcid']->getTableAlias());
-
 
         $this->assertEquals(Column\Type::TYPE_INTEGER, $md['max(filemtime)']->getDatatype());
         $this->assertEquals(Column\Type::TYPE_INTEGER, $md['max_time']->getDatatype());
@@ -325,13 +309,11 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($md['min(filemtime)']->isGroup());
         $this->assertTrue($md['max(filemtime)']->isGroup());
 
-
         // Various type returned by using functions
         $this->assertEquals(Column\Type::TYPE_INTEGER, $md['count_media']->getDatatype());
         $this->assertEquals(Column\Type::TYPE_INTEGER, $md['max_time']->getDatatype());
         $this->assertEquals(Column\Type::TYPE_INTEGER, $md['min_time']->getDatatype());
         $this->assertEquals(Column\Type::TYPE_DECIMAL, $md['avg_time']->getDatatype());
-
 
         // WARNING BUGS IN MYSQL (should be true)
 
@@ -340,14 +322,12 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
         if (preg_match('/mysqlnd/', strtolower($client_info))) {
             $mysqli_client = 'mysqlnd';
         } elseif (preg_match('/mariadb/', strtolower($client_info))) {
-            $mysqli_client = "libmariadb";
+            $mysqli_client = 'libmariadb';
         } else {
-            $mysqli_client = "libmysql";
+            $mysqli_client = 'libmysql';
         }
 
-
         switch ($mysqli_client) {
-
             case 'mysqlnd':
                 // as PHP 5.3 -> 5.6 there's a bug in the
                 // mysqlnd extension... the following assertions
@@ -358,7 +338,6 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
                 $this->assertFalse($md['avg_time']->isGroup());
                 $this->assertFalse($md['files']->isGroup());
                 $this->assertFalse($md['group_concat(filename)']->isGroup());
-
 
                 break;
             case 'libmariadb':
@@ -383,9 +362,9 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
 
             'select media_id from media',
             'select media_id from media limit 1 offset 2',
-            "SELECT * from product limit 10",
-            "select * from product limit 0  offset 10",
-            "select * from product limit 0, 10",
+            'SELECT * from product limit 10',
+            'select * from product limit 0  offset 10',
+            'select * from product limit 0, 10',
             'select 1 limit 10',
             'select media_id from media
                  LimiT   10',
@@ -407,7 +386,7 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $stmt->store_result();
             $num_rows = $stmt->num_rows;
 
-            $this->assertTrue(is_int($num_rows));
+            $this->assertInternalType('int', $num_rows);
             $this->assertEquals(0, $num_rows, "Emptied query $idx : $sql ");
             $stmt->close();
         }
@@ -416,11 +395,11 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
     /**
      * Call protected/private method of a class.
      *
-     * @param object $object    Instantiated object that we will run method on.
+     * @param object $object     instantiated object that we will run method on
      * @param string $methodName Method name to call
-     * @param array  $parameters Array of parameters to pass into method.
+     * @param array  $parameters array of parameters to pass into method
      *
-     * @return mixed Method return.
+     * @return mixed method return
      */
     public function invokeMethod($object, $methodName, array $parameters = [])
     {

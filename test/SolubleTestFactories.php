@@ -2,7 +2,6 @@
 
 class SolubleTestFactories
 {
-
     /**
      * @return string
      */
@@ -12,17 +11,18 @@ class SolubleTestFactories
         if (!preg_match('/^\//', $cache_dir)) {
             $cache_dir = dirname(__FILE__) . DIRECTORY_SEPARATOR . $cache_dir;
         }
+
         return $cache_dir;
     }
 
     /**
-     *
-     * @param string $type
+     * @param string     $type
      * @param array|null $config
-     * @param string $charset
+     * @param string     $charset
+     *
      * @return PDO|Mysqli|mixed
      */
-    public static function getDbConnection($type, $config = null, $charset = "UTF8")
+    public static function getDbConnection($type, $config = null, $charset = 'UTF8')
     {
         if ($config === null) {
             $config = self::getDbConfiguration($type);
@@ -42,11 +42,11 @@ class SolubleTestFactories
                     $conn = new PDO("mysql:host=$hostname;dbname=$database", $username, $password, $options);
                 }
                 break;
-            case 'mysqli' :
+            case 'mysqli':
                 $conn = new \mysqli($hostname, $username, $password, $database);
                 $conn->set_charset($charset);
                 break;
-            case 'capsule5-mysqli' :
+            case 'capsule5-mysqli':
 
                 $params = \SolubleTestFactories::getDbConfiguration('mysqli');
                 $capsule = new \Illuminate\Database\Capsule\Manager();
@@ -65,7 +65,7 @@ class SolubleTestFactories
 
                 break;
 
-            case 'doctrine2-mysqli' :
+            case 'doctrine2-mysqli':
                 $params = \SolubleTestFactories::getDbConfiguration('mysqli');
                 $connectionParams = [
                     'dbname' => $params['database'],
@@ -83,7 +83,7 @@ class SolubleTestFactories
                 $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $c, $e);
 
                 break;
-            case 'zend-db2-mysqli' :
+            case 'zend-db2-mysqli':
                 $params = \SolubleTestFactories::getDbConfiguration('mysqli');
                 $params = array_merge($params, ['driver' => 'Mysqli', 'charset' => $charset]);
                 $conn = new \Zend\Db\Adapter\Adapter($params);
@@ -91,12 +91,13 @@ class SolubleTestFactories
             default:
                 throw new \Exception(__METHOD__ . " Unsupported driver type ($type)");
         }
+
         return $conn;
     }
 
     /**
-     *
      * @param string $type
+     *
      * @return array
      */
     public static function getDbConfiguration($type)
@@ -106,7 +107,7 @@ class SolubleTestFactories
             case 'zend-db2-mysqli':
             case 'doctrine2-mysqli':
             case 'capsule5-mysqli':
-            case 'pdo:mysql' :
+            case 'pdo:mysql':
                 $config = [
                     'hostname' => $_SERVER['MYSQL_HOSTNAME'],
                     'username' => $_SERVER['MYSQL_USERNAME'],
@@ -117,6 +118,7 @@ class SolubleTestFactories
             default:
                 throw new \Exception("Database type unsupported in test configuration ($type)");
         }
+
         return $config;
     }
 
@@ -125,12 +127,13 @@ class SolubleTestFactories
         $name = false;
         switch ($type) {
             case 'pdo:mysql':
-            case 'mysqli' :
+            case 'mysqli':
                 $name = $_SERVER['MYSQL_DATABASE'];
                 break;
             default:
                 throw new \Exception(__METHOD__ . " Unsupported driver type ($type)");
         }
+
         return $name;
     }
 }

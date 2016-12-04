@@ -5,6 +5,7 @@ composer.lock
 .project
 .settings/
 .*.sw*
+.*.cache
 .*.un~
 phpunit.xml
 /vendor

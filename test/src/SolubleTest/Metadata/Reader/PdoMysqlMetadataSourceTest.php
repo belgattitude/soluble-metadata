@@ -7,18 +7,16 @@ use Soluble\Datatype\Column;
 use Soluble\DbWrapper\Adapter\PdoMysqlAdapter;
 
 /**
- * PDO_MySQL in PHP 5.3 does not return column names
+ * PDO_MySQL in PHP 5.3 does not return column names.
  */
 class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var PdoMysqlMetadataReader
      */
     protected $metadata;
 
     /**
-     *
      * @var PdoMysqlAdapter
      */
     protected $adapter;
@@ -34,7 +32,6 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     *
      * @return \Soluble\Metadata\Reader\PdoMysqlMetadataReader
      */
     public function getReader($conn)
@@ -70,7 +67,7 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
     public function testGetColumnsMetadata()
     {
         if (version_compare(PHP_VERSION, '5.4.0', '>')) {
-            $sql = "select * from test_table_types";
+            $sql = 'select * from test_table_types';
 
             $conn = $this->adapter->getConnection()->getResource();
             $metadata = $this->getReader($conn);
@@ -90,7 +87,6 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
             // IN PDO We cannot tell if numeric unsigned or not
             $this->assertEquals(null, $md['id']->isNumericUnsigned());
             $this->assertEquals(null, $md['id']->getNumericUnsigned());
-
 
             $this->assertEquals(Column\Type::TYPE_STRING, $md['test_varchar_255']->getDatatype());
             $this->assertEquals('VARCHAR', $md['test_varchar_255']->getNativeDatatype());
@@ -114,7 +110,6 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($md['test_varbinary_10']->getDatatype(), Column\Type::TYPE_STRING);
             $this->assertEquals($md['test_varbinary_10']->getNativeDatatype(), 'VARCHAR');
 
-
             $this->assertEquals($md['test_int_unsigned']->getDatatype(), Column\Type::TYPE_INTEGER);
             // Cannot tell in PDO
             //$this->assertTrue($md['test_int_unsigned']->isNumericUnsigned());
@@ -131,10 +126,8 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $this->assertFalse($md['test_decimal_10_3']->getNumericUnsigned());
             $this->assertFalse($md['test_decimal_10_3']->isNumericUnsigned());
 
-
             $this->assertEquals($md['test_float']->getDatatype(), Column\Type::TYPE_FLOAT);
             $this->assertEquals($md['test_float']->getNativeDatatype(), 'FLOAT');
-
 
             $this->assertEquals($md['test_tinyint']->getDatatype(), Column\Type::TYPE_INTEGER);
             $this->assertEquals($md['test_tinyint']->getNativeDatatype(), 'TINYINT');
@@ -142,10 +135,8 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($md['test_mediumint']->getDatatype(), Column\Type::TYPE_INTEGER);
             $this->assertEquals($md['test_mediumint']->getNativeDatatype(), 'MEDIUMINT');
 
-
             $this->assertEquals($md['test_double']->getDatatype(), Column\Type::TYPE_FLOAT);
             $this->assertEquals($md['test_double']->getNativeDatatype(), 'DOUBLE');
-
 
             $this->assertEquals($md['test_smallint']->getDatatype(), Column\Type::TYPE_INTEGER);
             $this->assertEquals($md['test_smallint']->getNativeDatatype(), 'SMALLINT');
@@ -153,13 +144,11 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($md['test_date']->getDatatype(), Column\Type::TYPE_DATE);
             $this->assertEquals($md['test_date']->getNativeDatatype(), 'DATE');
 
-
             $this->assertEquals($md['test_datetime']->getDatatype(), Column\Type::TYPE_DATETIME);
             $this->assertEquals($md['test_datetime']->getNativeDatatype(), 'DATETIME');
 
             $this->assertEquals($md['test_timestamp']->getDatatype(), Column\Type::TYPE_DATETIME);
             $this->assertEquals($md['test_timestamp']->getNativeDatatype(), 'TIMESTAMP');
-
 
             $this->assertEquals($md['test_time']->getDatatype(), Column\Type::TYPE_TIME);
             $this->assertEquals($md['test_time']->getNativeDatatype(), 'TIME');
@@ -169,8 +158,6 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
 
             $this->assertEquals($md['test_tinyblob']->getDatatype(), Column\Type::TYPE_BLOB);
             $this->assertEquals($md['test_tinyblob']->getNativeDatatype(), 'BLOB');
-
-
 
             $this->assertEquals($md['test_mediumblob']->getDatatype(), Column\Type::TYPE_BLOB);
             $this->assertEquals($md['test_mediumblob']->getNativeDatatype(), 'BLOB');
@@ -182,11 +169,8 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(16777215, $md['test_mediumblob']->getCharacterOctetLength());
             $this->assertEquals(4294967295, $md['test_longblob']->getCharacterOctetLength());
 
-
-
             $this->assertEquals($md['test_enum']->getDatatype(), Column\Type::TYPE_STRING);
             $this->assertEquals($md['test_enum']->getNativeDatatype(), 'CHAR');
-
 
             $this->assertEquals($md['test_set']->getDatatype(), Column\Type::TYPE_STRING);
             $this->assertEquals($md['test_set']->getNativeDatatype(), 'CHAR');
@@ -229,7 +213,7 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
     {
         if (version_compare(PHP_VERSION, '5.4.0', '>')) {
             $this->setExpectedException('Soluble\Metadata\Exception\AmbiguousColumnException');
-            $sql = "select id, test_char_10 as id from test_table_types";
+            $sql = 'select id, test_char_10 as id from test_table_types';
             $conn = $this->adapter->getConnection()->getResource();
             $metadata = $this->getReader($conn);
             $md = $metadata->getColumnsMetadata($sql);
@@ -242,7 +226,7 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
     {
         if (version_compare(PHP_VERSION, '5.4.0', '>')) {
             $this->setExpectedException('Soluble\Metadata\Exception\EmptyQueryException');
-            $sql = "";
+            $sql = '';
             $conn = $this->adapter->getConnection()->getResource();
             $metadata = $this->getReader($conn);
 
@@ -297,7 +281,6 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals(1, $md['test_string']->getOrdinalPosition());
             // PDO-NOT-POSSIBLE: $this->assertEquals('def', $md['test_string']->getCatalog());
 
-
             $this->assertEquals(Column\Type::TYPE_DECIMAL, $md['test_calc']->getDatatype());
             $this->assertEquals(null, $md['test_calc']->getTableName());
 
@@ -317,16 +300,13 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
             // INSTEAD USE
             $this->assertEquals(null, $md['filesize']->getSchemaName());
 
-
             $this->assertEquals(Column\Type::TYPE_INTEGER, $md['container_id']->getDatatype());
             // PDO-NOT-POSSIBLE: $this->assertEquals('media', $md['container_id']->getTableName());
             $this->assertEquals('m', $md['container_id']->getTableAlias());
 
-
             $this->assertEquals(Column\Type::TYPE_INTEGER, $md['mcid']->getDatatype());
             // PDO-NOT-POSSIBLE: $this->assertEquals('media_container', $md['mcid']->getTableName());
             $this->assertEquals('mc', $md['mcid']->getTableAlias());
-
 
             $this->assertEquals(Column\Type::TYPE_INTEGER, $md['max(filemtime)']->getDatatype());
             $this->assertEquals(Column\Type::TYPE_INTEGER, $md['max_time']->getDatatype());
@@ -370,7 +350,6 @@ class PdoMysqlMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('Only valid for PHP 5.4+ version');
         }
     }
-
 
     /**
      * Tears down the fixture, for example, closes a network connection.

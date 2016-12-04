@@ -5,10 +5,8 @@ namespace SolubleTest\Metadata;
 use Soluble\Metadata\Reader;
 use Soluble\Datatype\Column;
 
-
 class ColumnsMetadataTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var array
      */
@@ -24,7 +22,7 @@ class ColumnsMetadataTest extends \PHPUnit_Framework_TestCase
         $mysqli = \SolubleTestFactories::getDbConnection('mysqli');
 
         $this->readers = [
-            'mysqli'    => new Reader\MysqliMetadataReader($mysqli),
+            'mysqli' => new Reader\MysqliMetadataReader($mysqli),
             'pdo_mysql' => new Reader\PdoMysqlMetadataReader($pdo_mysql)
         ];
     }
@@ -39,7 +37,7 @@ class ColumnsMetadataTest extends \PHPUnit_Framework_TestCase
 
     public function testIterableColumns()
     {
-        $sql = "select * from test_table_types";
+        $sql = 'select * from test_table_types';
         foreach ($this->readers as $reader_type => $reader) {
             $md = $reader->getColumnsMetadata($sql);
             foreach ($md as $column) {
@@ -50,7 +48,7 @@ class ColumnsMetadataTest extends \PHPUnit_Framework_TestCase
 
     public function testGetColumn()
     {
-        $sql = "select * from test_table_types";
+        $sql = 'select * from test_table_types';
         foreach ($this->readers as $reader_type => $reader) {
             $md = $reader->getColumnsMetadata($sql);
             $id_column = $md->getColumn('id');

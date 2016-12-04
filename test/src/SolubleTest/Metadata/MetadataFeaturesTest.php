@@ -7,7 +7,6 @@ use Soluble\Datatype\Column;
 
 class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @var array
      */
@@ -42,16 +41,15 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
 
     public function testGetColumsMetadataMultipleTableFunctions()
     {
-
         // WARNING BUGS IN MYSQL (should be true)
         $client_info = mysqli_get_client_info();
         $client_version = mysqli_get_client_version();
         if (preg_match('/mysqlnd/', strtolower($client_info))) {
             $mysqli_client = 'mysqlnd';
         } elseif (preg_match('/mariadb/', strtolower($client_info))) {
-            $mysqli_client = "libmariadb";
+            $mysqli_client = 'libmariadb';
         } else {
-            $mysqli_client = "libmysql";
+            $mysqli_client = 'libmysql';
         }
 
         echo "Warning, test was made on client '$mysqli_client', may differs when using mysqlnd, libmariadb, libmysql";
@@ -87,8 +85,8 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
         foreach ($this->readers as $reader_type => $reader) {
             $md = $reader->getColumnsMetadata($sql);
 
-            $this->assertEquals(null, $md['test_string']->getTableName());
-            $this->assertEquals(null, $md['test_string']->getTableAlias());
+            $this->assertNull($md['test_string']->getTableName());
+            $this->assertNull($md['test_string']->getTableAlias());
             $this->assertEquals(1, $md['test_string']->getOrdinalPosition());
 
             $this->assertEquals(Column\Type::TYPE_DECIMAL, $md['test_calc']->getDatatype());
@@ -102,16 +100,13 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
 
             $this->assertEquals('m', $md['filesize']->getTableAlias());
 
-
             $this->assertEquals(null, $md['test_string']->getSchemaName());
 
             $this->assertEquals(Column\Type::TYPE_INTEGER, $md['container_id']->getDatatype());
             $this->assertEquals('m', $md['container_id']->getTableAlias());
 
-
             $this->assertEquals(Column\Type::TYPE_INTEGER, $md['mcid']->getDatatype());
             $this->assertEquals('mc', $md['mcid']->getTableAlias());
-
 
             $this->assertEquals(Column\Type::TYPE_INTEGER, $md['max(filemtime)']->getDatatype());
             $this->assertEquals(Column\Type::TYPE_INTEGER, $md['max_time']->getDatatype());
@@ -134,8 +129,6 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals('min_time', $md['min_time']->getName());
             $this->assertEquals('min_time', $md['min_time']->getAlias());
 
-
-
             // Various type returned by using functions
             $this->assertEquals(Column\Type::TYPE_INTEGER, $md['count_media']->getDatatype());
             $this->assertEquals(Column\Type::TYPE_INTEGER, $md['max_time']->getDatatype());
@@ -144,7 +137,6 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
 
             if (preg_match('/mysql/', $reader_type)) {
                 switch ($mysqli_client) {
-
                     case 'mysqlnd':
                         // as PHP 5.3 -> 5.6 there's a bug in the
                         // mysqlnd extension... the following assertions
@@ -155,7 +147,6 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
                         $this->assertFalse($md['avg_time']->isGroup());
                         $this->assertFalse($md['files']->isGroup());
                         $this->assertFalse($md['group_concat(filename)']->isGroup());
-
 
                         break;
                     case 'libmariadb':
@@ -171,7 +162,7 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
                 }
             }
             switch ($reader_type) {
-                    case 'pdo_mysql' :
+                    case 'pdo_mysql':
                         // In PDO the table name is always the alias
                         $this->assertEquals('m', $md['filesize']->getTableName());
                         $this->assertEquals('m', $md['container_id']->getTableName());
@@ -179,7 +170,6 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
 
                         // Aliased columns
                         $this->assertEquals('mcid', $md['mcid']->getName());
-
 
                         // TEST if column is part of a group
                         $this->assertEquals(false, $md['count_media']->isGroup());
@@ -189,10 +179,8 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
                         $this->assertEquals(false, $md['min(filemtime)']->isGroup());
                         $this->assertEquals(false, $md['max(filemtime)']->isGroup());
 
-
                         // In PDO the schema name is always null
                         $this->assertEquals(null, $md['filesize']->getSchemaName());
-
 
                         break;
                     case 'mysqli':
@@ -211,7 +199,6 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
                         $this->assertTrue($md['min(filemtime)']->isGroup());
                         $this->assertTrue($md['max(filemtime)']->isGroup());
 
-
                         $this->assertEquals(\SolubleTestFactories::getDatabaseName('mysqli'), $md['filesize']->getSchemaName());
 
                         break;
@@ -219,17 +206,15 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-
     public function testGetColumnsMetadataWithDefaults()
     {
-        $sql = "select * from test_table_with_default";
+        $sql = 'select * from test_table_with_default';
         foreach ($this->readers as $reader_type => $reader) {
             $md = $reader->getColumnsMetadata($sql);
 
-
-            if ($undocumented_way=true) {
+            if ($undocumented_way = true) {
                 // IN PHP 5.5 / 7.0 always return null (?)
-                // The documented way would be to return the values 
+                // The documented way would be to return the values
                 // in the else
                 $this->assertEquals(null, $md['default_5']->getColumnDefault(), "failed for reader $reader_type");
                 $this->assertEquals(null, $md['default_cool']->getColumnDefault(), "failed for reader $reader_type");
@@ -242,11 +227,9 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-
-
     public function testGetColumnsMetadataFeatures()
     {
-        $sql = "select * from test_table_types";
+        $sql = 'select * from test_table_types';
         foreach ($this->readers as $reader_type => $reader) {
             $md = $reader->getColumnsMetadata($sql);
 
@@ -264,7 +247,6 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($md['test_varchar_255']->getNativeDatatype(), 'VARCHAR');
             $this->assertEquals($md['test_char_10']->getDatatype(), Column\Type::TYPE_STRING);
 
-
             // This does not work (cause utf8 store in multibyte)
             // @todo utf8 support in getCharacterMaximumLength
             //  Divide by 3
@@ -279,12 +261,10 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
 
             $this->assertEquals($md['test_binary_3']->getDatatype(), Column\Type::TYPE_STRING);
 
-
             $this->assertEquals($md['test_varbinary_10']->getDatatype(), Column\Type::TYPE_STRING);
             $this->assertEquals($md['test_varbinary_10']->getNativeDatatype(), 'VARCHAR');
 
             $this->assertEquals($md['test_int_unsigned']->getDatatype(), Column\Type::TYPE_INTEGER);
-
 
             $this->assertEquals($md['test_bigint']->getDatatype(), Column\Type::TYPE_INTEGER);
 
@@ -300,17 +280,14 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($md['test_float']->getDatatype(), Column\Type::TYPE_FLOAT);
             $this->assertEquals($md['test_float']->getNativeDatatype(), 'FLOAT');
 
-
             $this->assertEquals($md['test_tinyint']->getDatatype(), Column\Type::TYPE_INTEGER);
             $this->assertEquals($md['test_tinyint']->getNativeDatatype(), 'TINYINT');
 
             $this->assertEquals($md['test_mediumint']->getDatatype(), Column\Type::TYPE_INTEGER);
             $this->assertEquals($md['test_mediumint']->getNativeDatatype(), 'MEDIUMINT');
 
-
             $this->assertEquals($md['test_double']->getDatatype(), Column\Type::TYPE_FLOAT);
             $this->assertEquals($md['test_double']->getNativeDatatype(), 'DOUBLE');
-
 
             $this->assertEquals($md['test_smallint']->getDatatype(), Column\Type::TYPE_INTEGER);
             $this->assertEquals($md['test_smallint']->getNativeDatatype(), 'SMALLINT');
@@ -318,13 +295,11 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($md['test_date']->getDatatype(), Column\Type::TYPE_DATE);
             $this->assertEquals($md['test_date']->getNativeDatatype(), 'DATE');
 
-
             $this->assertEquals($md['test_datetime']->getDatatype(), Column\Type::TYPE_DATETIME);
             $this->assertEquals($md['test_datetime']->getNativeDatatype(), 'DATETIME');
 
             $this->assertEquals($md['test_timestamp']->getDatatype(), Column\Type::TYPE_DATETIME);
             $this->assertEquals($md['test_timestamp']->getNativeDatatype(), 'TIMESTAMP');
-
 
             $this->assertEquals($md['test_time']->getDatatype(), Column\Type::TYPE_TIME);
             $this->assertEquals($md['test_time']->getNativeDatatype(), 'TIME');
@@ -334,7 +309,6 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
 
             $this->assertEquals($md['test_tinyblob']->getDatatype(), Column\Type::TYPE_BLOB);
             $this->assertEquals($md['test_tinyblob']->getNativeDatatype(), 'BLOB');
-
 
             $this->assertEquals($md['test_mediumblob']->getDatatype(), Column\Type::TYPE_BLOB);
             $this->assertEquals($md['test_mediumblob']->getNativeDatatype(), 'BLOB');
@@ -380,10 +354,9 @@ class MetadataFeaturesTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($md['test_geometrycollection']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
             $this->assertEquals(null, $md['test_geometrycollection']->getNativeDatatype());
 
-
             if (preg_match('/mysql/', $reader_type)) {
                 switch ($reader_type) {
-                    case 'pdo_mysql' :
+                    case 'pdo_mysql':
                         // Native datatype with PDO differs from mysqli (CHAR is returned instead of varchar)
                         $this->assertEquals($md['test_char_10']->getNativeDatatype(), 'CHAR');
                         $this->assertEquals($md['test_binary_3']->getNativeDatatype(), 'CHAR');

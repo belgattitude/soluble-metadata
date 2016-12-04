@@ -7,9 +7,7 @@ use ArrayObject;
 
 class MysqliMapping
 {
-
     /**
-     *
      * @return ArrayObject
      */
     public static function getDatatypeMapping()
@@ -63,7 +61,6 @@ class MysqliMapping
             // like 'select null as test_alias'
             MYSQLI_TYPE_NULL => ['type' => Column\Type::TYPE_NULL, 'native' => 'NULL']
         ]);
-
 
         return $mapping;
     }

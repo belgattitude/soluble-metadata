@@ -10,27 +10,24 @@ use PDO;
 
 class PdoMysqlMetadataReader extends AbstractMetadataReader
 {
-
     /**
      * @var PDO
      */
     protected $pdo;
 
     /**
-     *
-     * @var boolean
+     * @var bool
      */
     protected $cache_active = true;
 
     /**
-     *
-     * @var Array
+     * @var array
      */
     protected static $metadata_cache = [];
 
     /**
-     *
      * @param PDO $pdo
+     *
      * @throws Exception\UnsupportedFeatureException
      * @throws Exception\UnsupportedDriverException
      */
@@ -44,7 +41,6 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
     }
 
     /**
-     *
      * {@inheritdoc}
      */
     protected function readColumnsMetadata($sql)
@@ -53,7 +49,6 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
         $fields = $this->readFields($sql);
 
         $type_map = PdoMysqlMapping::getDatatypeMapping();
-
 
         foreach ($fields as $idx => $field) {
             $name = $field['name'];
@@ -70,7 +65,6 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
 
             $column = Column\Type::createColumnDefinition($datatype['type'], $name, $tableName, $schemaName = null);
             $alias = $field['name'];
-
 
             $column->setAlias($alias);
             $column->setTableAlias($field['table']);
@@ -131,10 +125,12 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
     }
 
     /**
-     * Read fields from pdo source
+     * Read fields from pdo source.
      *
      * @throws Exception\ConnectionException
+     *
      * @param string $sql
+     *
      * @return array
      */
     protected function readFields($sql)
@@ -149,13 +145,14 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
         $stmt->execute();
         $column_count = $stmt->columnCount();
         $metaFields = [];
-        for ($i = 0; $i < $column_count; $i++) {
+        for ($i = 0; $i < $column_count; ++$i) {
             $meta = $stmt->getColumnMeta($i);
             $metaFields[$i] = $meta;
         }
 
         $stmt->closeCursor();
         unset($stmt);
+
         return $metaFields;
     }
 }

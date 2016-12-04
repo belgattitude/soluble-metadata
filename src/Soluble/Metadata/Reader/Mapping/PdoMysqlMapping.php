@@ -7,9 +7,7 @@ use ArrayObject;
 
 class PdoMysqlMapping
 {
-
     /**
-     *
      * @return ArrayObject
      */
     public static function getDatatypeMapping()
@@ -50,7 +48,6 @@ class PdoMysqlMapping
             'GEOMETRY' => ['type' => Column\Type::TYPE_SPATIAL_GEOMETRY, 'native' => null],
             'NULL' => ['type' => Column\Type::TYPE_NULL, 'native' => 'NULL']
         ]);
-
 
         return $mapping;
     }

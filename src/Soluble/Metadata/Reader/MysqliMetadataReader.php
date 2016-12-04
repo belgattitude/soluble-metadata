@@ -7,29 +7,24 @@ use Soluble\Metadata\Exception;
 use Soluble\Metadata\Reader\Mapping\MysqliMapping;
 use Soluble\Datatype\Column;
 
-
 class MysqliMetadataReader extends AbstractMetadataReader
 {
-
     /**
      * @var \Mysqli
      */
     protected $mysqli;
 
     /**
-     *
-     * @var boolean
+     * @var bool
      */
     protected $cache_active = true;
 
     /**
-     *
-     * @var Array
+     * @var array
      */
     protected static $metadata_cache = [];
 
     /**
-     *
      * @param \Mysqli $mysqli
      */
     public function __construct(\Mysqli $mysqli)
@@ -38,7 +33,6 @@ class MysqliMetadataReader extends AbstractMetadataReader
     }
 
     /**
-     *
      * {@inheritdoc}
      */
     protected function readColumnsMetadata($sql)
@@ -125,7 +119,6 @@ class MysqliMetadataReader extends AbstractMetadataReader
                 }
             }
 
-
             $metadata->offsetSet($alias, $column);
         }
 
@@ -133,15 +126,16 @@ class MysqliMetadataReader extends AbstractMetadataReader
     }
 
     /**
-     *
      * @param string $sql
+     *
      * @throws Exception\ConnectionException
+     *
      * @return array
      */
     protected function readFields($sql)
     {
         if (trim($sql) == '') {
-            throw new Exception\EmptyQueryException(__METHOD__ . ": Error cannot handle empty queries");
+            throw new Exception\EmptyQueryException(__METHOD__ . ': Error cannot handle empty queries');
         }
 
         $sql = $this->getEmptiedQuery($sql);
@@ -157,6 +151,7 @@ class MysqliMetadataReader extends AbstractMetadataReader
         $metaFields = $result->fetch_fields();
         $result->close();
         $stmt->close();
+
         return $metaFields;
     }
 }
