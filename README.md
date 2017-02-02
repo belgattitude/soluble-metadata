@@ -115,7 +115,7 @@ Will print something like :
 | column_5      | date             | Y    |        |           |       | DATE          |
 | column_6      | time             | Y    |        |           |       | TIME          |
 | column_7      | float            | N    |        |           |       | FLOAT         |
-| column_8      | blob             | Y    |        |           |       | TINYBLOB      |
+| column_8      | blob             | Y    | 16777215 |           |       | MEDIUMBLOB    |
 | column_9      | spatial_geometry | Y    |        |           |       | null *(N/A)*  |
 | column_10     | null             | Y    |        |           |       | null *(N/A)*  |
 
