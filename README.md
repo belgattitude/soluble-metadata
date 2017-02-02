@@ -27,15 +27,15 @@ for basic validation (max lengths, decimals)...
 - Works even when the query does not return results (empty resultset).
 - Carefully tested with different implementations (libmariadb, mysqlnd, libmysql, pdo_mysql).
 
-*Under the hood, the metadata extraction relies on the driver methods `mysqli_stmt::result_metadata()` and `PDO::getColumnMeta()`.
-Although the `soluble-metadata` API unify their usage and type detection, differences still exists for more advanced features. 
-A specific effort has been made in the documentation to distinguish possible portability issues when switching from one driver to another.
-Keep that in mind when using it.*
+> Under the hood, the metadata extraction relies on the driver methods `mysqli_stmt::result_metadata()` and `PDO::getColumnMeta()`.
+> Although the `soluble-metadata` API unify their usage and type detection, differences still exists for more advanced features. 
+> A specific effort has been made in the documentation to distinguish possible portability issues when switching from one driver to another.
+> Keep that in mind when using it.
 
 ## Requirements
 
-- PHP engine 5.4+, 7.0+, 7.1+ (HHVM does not work yet)
-- Mysqli or PDO_mysql extension enabled (Mysqli exposes more features)
+- PHP engine 5.4+, 7.0+, 7.1+ *(HHVM does not work yet)*
+- Mysqli or PDO_mysql extension enabled *(Mysqli exposes more features)*
 
 ## Documentation
 
@@ -63,6 +63,8 @@ require 'vendor/autoload.php';
 <?php
 
 use Soluble\Metadata\Reader;
+use Soluble\Datatype\Column\Type as DataType;
+
 
 $conn = new \mysqli($hostname,$username,$password,$database);
 $conn->set_charset($charset);
@@ -72,30 +74,50 @@ $metaReader = new Reader\MysqliMetadataReader($conn);
 $sql = "select * from `my_table`";
 
 try {
-    $metadatas = $metaReader->getColumnsMetadata($sql);
+    $md = $metaReader->getColumnsMetadata($sql);
 } catch (\Soluble\Metadata\Exception\InvalidQueryException $e) {
     // ...
 }
 
-foreach($metadatas as $column => $definition) {
-   echo $definition->getName() . ': ' . $definition->getDatatype() . PHP_EOL;
+foreach($md as $column_name => $col_def) {
+   
+   $datatype = $col_def->getDatatype();
+   
+   echo $column_name . "\t" . $datatype . "\t";
+   
+   echo ($col_def->isNullable() ? 'Y' : 'N') . '\t';
+   
+   switch ($datatype) {
+       case DataType::TYPE_STRING:  // equivalent to 'string'
+           echo $col_def->getCharacterOctetLength() . "\t";
+           break;
+       case DataType::TYPE_DECIMAL:
+           echo $col->getNumericPrecision() . "\t";  // For DECIMAL(5,2) -> precision = 5 
+           echo $col->getNumericScale() . "\t";      // For DECIMAL(5,2) -> scale = 2
+           break;
+           
+       // ...see the doc for more possibilitities
+   }
+   
+   echo $col_def->getNativeType() . PHP_EOL;
 }  
 
 ```
 
 Will print something like :
 
-| Column name   | Type             |
-|---------------|------------------|
-| column_1      | integer          |
-| column_2      | string           |
-| column_3      | datetime         |
-| column_4      | date             |
-| column_5      | time             |
-| column_6      | float            |
-| column_7      | blob             |
-| column_8      | spatial_geometry |
-| column_8      | null             |
+| Column name   | Type             | Null | Length | Precision | Scale | Native        |
+|---------------|------------------|-----+|-------+|----------+|------+|---------------|
+| column_1      | integer          | N    |        |           |       | BIGINT        |
+| column_2      | string           | N    | 255    |           |       | VARCHAR       |
+| column_3      | decimal          | Y    |        | 5         | 2     | DECIMAL       |
+| column_4      | datetime         | Y    |        |           |       | DATETIME      |
+| column_5      | date             | Y    |        |           |       | DATE          |
+| column_6      | time             | Y    |        |           |       | TIME          |
+| column_7      | float            | N    |        |           |       | FLOAT         |
+| column_8      | blob             | Y    |        |           |       | TINYBLOB      |
+| column_9      | spatial_geometry | Y    |        |           |       | null *(N/A)*  |
+| column_10     | null             | Y    |        |           |       | null *(N/A)*  |
 
 ...
 
@@ -246,7 +268,7 @@ $col->isDate();     // Whther the column is a date (DATE)
 
 ### Step 4: Getting datatype extra information  
 
-The following methods are supported on both mysqli and PDO_mysql drivers :
+The following methods are supported and portable between `mysqli` and `PDO_mysql` drivers:
 
 ```php
 <?php
@@ -278,7 +300,7 @@ echo $col->getCharacterOctetLength();  // Octet length (in multibyte context len
 
 ### Getting column specifications.
 
-The following methods are portable  
+The following methods are also portable.  
  
  
 ```php 
@@ -294,8 +316,8 @@ echo $col->getTableAlias(); // Originating table alias -> "p" (or table name if 
                             // If empty, the column is computed (constant, group,...)
 ```
 
-**The following methods shows differences between pdo_mysq and mysqli, use with
-care if portability is required !!!**
+> **The methods used in the example below gives different results with `pdo_mysql` and `mysqli` drivers.
+> Use them with care if portability is required !!!**
 
 ```php
 <?php
@@ -333,7 +355,6 @@ echo $col->isAutoIncrement();   // Only make sense for primary keys.
 
 echo $col->isNumericUnsigned(); // Whether the numeric value is unsigned.
                                 // (*) Unsupported with PDO_mysql
-
 ```
 
 
