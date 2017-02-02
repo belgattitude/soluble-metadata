@@ -7,8 +7,6 @@
 [![License](https://poser.pugx.org/soluble/metadata/license.png)](https://packagist.org/packages/soluble/metadata)
 [![HHVM Status](http://hhvm.h4cc.de/badge/soluble/metadata.svg)](http://hhvm.h4cc.de/package/soluble/metadata)
 
-## Introduction
-
 `soluble-metadata` is a *low level* library *currently focusing on MySQL* which extracts metadata from an sql query with extensibility, speed and portability in mind.
 
 ## Use cases
