@@ -124,34 +124,34 @@ Could print something like :
 
 ### Step 1. Initiate a metadata reader
 
-For **Mysqli** use the `MysqlMetadataReader` :
+- For **Mysqli**: send the existing mysqli connection to the `MysqlMetadataReader` :
 
-```php
-<?php
-use Soluble\Metadata\Reader;
+    ```php
+    <?php
+    use Soluble\Metadata\Reader;
+    
+    $conn = new \mysqli($hostname,$username,$password,$database);
+    $conn->set_charset($charset);
+    
+    $reader = new Reader\MysqliMetadataReader($conn);
+    
+    ``` 
 
-$conn = new \mysqli($hostname,$username,$password,$database);
-$conn->set_charset($charset);
+- For **Pdo_mysql**: send the existing pdo_mysql connection to the `PdoMysqlReader` :
 
-$reader = new Reader\MysqliMetadataReader($conn);
+    ```php
+    <?php
+    use Soluble\Metadata\Reader;
+    
+    $conn = new \PDO("mysql:host=$hostname", $username, $password, [
+                \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+    ]);
+    
+    $reader = new Reader\PDOMysqlMetadataReader($conn);
+    
+    ```
 
-``` 
-
-For **Pdo_mysql** use the `PdoMysqlReader` :
-
-```php
-<?php
-use Soluble\Metadata\Reader;
-
-$conn = new \PDO("mysql:host=$hostname", $username, $password, [
-            \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
-]);
-
-$reader = new Reader\PDOMysqlMetadataReader($conn);
-
-```
-
-### Step 2. Query metadata extraction
+### Step 2. Extract metadata from an SQL query
 
 ```php
 <?php
@@ -226,7 +226,7 @@ $col = $meta->getColumn('post_title');
 // Option 1, type detection by datatype name
 // ------------------------------------------
 
-echo $col->getDatatype(); // -> 'string' (Soluble\Datatype\Column\Type::TYPE_STRING)  
+echo $col->getDatatype(); // -> 'string' (equivalent to Soluble\Datatype\Column\Type::TYPE_STRING)  
 
 /* 
    The normalized datatypes are defined in the 
