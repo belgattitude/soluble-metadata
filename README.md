@@ -104,7 +104,7 @@ foreach($md as $column_name => $col_def) {
 
 ```
 
-Will print something like :
+Could print something like :
 
 | Column name   | Type             | Null | Length | Precision | Scale | Native        |
 |---------------|------------------|-----:|-------:|----------:|------:|---------------|
