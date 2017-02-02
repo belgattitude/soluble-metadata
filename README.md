@@ -91,7 +91,11 @@ foreach($md as $column_name => $col_def) {
        case DataType::TYPE_STRING:  // equivalent to 'string'
            echo $col_def->getCharacterOctetLength() . "\t";
            break;
+       case DataType::TYPE_INTEGER:
+           echo ($col_def->isNumericUnsigned() ? 'Y' : 'N') . "\t";
+           break;
        case DataType::TYPE_DECIMAL:
+           echo ($col_def->isNumericUnsigned() ? 'Y' : 'N') . "\t";
            echo $col->getNumericPrecision() . "\t";  // For DECIMAL(5,2) -> precision = 5 
            echo $col->getNumericScale() . "\t";      // For DECIMAL(5,2) -> scale = 2
            break;
@@ -106,18 +110,18 @@ foreach($md as $column_name => $col_def) {
 
 Could print something like :
 
-| Column name   | Type             | Null | Length | Precision | Scale | Native        |
-|---------------|------------------|-----:|-------:|----------:|------:|---------------|
-| column_1      | integer          | N    |        |           |       | BIGINT        |
-| column_2      | string           | N    | 255    |           |       | VARCHAR       |
-| column_3      | decimal          | Y    |        | 5         | 2     | DECIMAL       |
-| column_4      | datetime         | Y    |        |           |       | DATETIME      |
-| column_5      | date             | Y    |        |           |       | DATE          |
-| column_6      | time             | Y    |        |           |       | TIME          |
-| column_7      | float            | N    |        |           |       | FLOAT         |
-| column_8      | blob             | Y    | 16777215 |           |       | MEDIUMBLOB    |
-| column_9      | spatial_geometry | Y    |        |           |       | null *(N/A)*  |
-| column_10     | null             | Y    |        |           |       | null *(N/A)*  |
+| Column name   | Type             | Null | Unsigned | Length | Precision | Scale | Native        |
+|---------------|------------------|-----:|---------:|-------:|----------:|------:|---------------|
+| column_1      | integer          | N    | Y        |        |           |       | BIGINT        |
+| column_2      | string           | N    |          | 255    |           |       | VARCHAR       |
+| column_3      | decimal          | Y    | N        |        | 5         | 2     | DECIMAL       |
+| column_4      | datetime         | Y    |          |        |           |       | DATETIME      |
+| column_5      | date             | Y    |          |        |           |       | DATE          |
+| column_6      | time             | Y    |          |        |           |       | TIME          |
+| column_7      | float            | N    |          |        |           |       | FLOAT         |
+| column_8      | blob             | Y    |          | 16777215 |           |       | MEDIUMBLOB    |
+| column_9      | spatial_geometry | Y    |          |        |           |       | null *(N/A)*  |
+| column_10     | null             | Y    |          |        |           |       | null *(N/A)*  |
 
 ...
 
@@ -283,12 +287,14 @@ echo $col->isNullable() ? 'nullable' : 'not null';
 echo $col->isPrimary() ? 'PK' : '';  // Many columns may have the primary flag
                                      // The meaning of it depends on your query
 
+// For integer and decimal types
+echo $col->isNumericUnsigned();   // Whether the numeric value is unsigned.
+
 // For decimal based types
 // -----------------------
 
 echo $col->getNumericPrecision(); // For DECIMAL(5,2) -> 5 is the precision
 echo $col->getNumericScale();     // For DECIMAL(5,2) -> 2 is the scale
-echo $col->isNumericUnsigned();   // Whether the numeric value is unsigned.
 
 // For character/blob based types
 // ------------------------------
