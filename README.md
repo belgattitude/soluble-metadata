@@ -107,7 +107,7 @@ foreach($md as $column_name => $col_def) {
 Will print something like :
 
 | Column name   | Type             | Null | Length | Precision | Scale | Native        |
-|---------------|------------------|-----+|-------+|----------+|------+|---------------|
+|---------------|------------------|-----:|-------:|----------:|------:|---------------|
 | column_1      | integer          | N    |        |           |       | BIGINT        |
 | column_2      | string           | N    | 255    |           |       | VARCHAR       |
 | column_3      | decimal          | Y    |        | 5         | 2     | DECIMAL       |
