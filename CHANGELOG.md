@@ -5,6 +5,9 @@
 ### New feature
     - New helper method `getTableMetadata(string $table)` to automatically get metadata from a table. 
 
+### Fix
+    - `InvalidQueryException` was not thrown by the pdo mysql driver. 
+
 ## 1.0.2 (2017-08-12)
 
 ### Improvements
