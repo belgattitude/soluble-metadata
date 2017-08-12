@@ -16,16 +16,6 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
     protected $pdo;
 
     /**
-     * @var bool
-     */
-    protected $cache_active = true;
-
-    /**
-     * @var array
-     */
-    protected static $metadata_cache = [];
-
-    /**
      * @param PDO $pdo
      *
      * @throws Exception\UnsupportedFeatureException
@@ -34,7 +24,7 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
     public function __construct(PDO $pdo)
     {
         $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
-        if (strtolower($driver) != 'mysql') {
+        if (strtolower($driver) !== 'mysql') {
             throw new Exception\UnsupportedDriverException(__CLASS__ . " supports only pdo_mysql driver, '$driver' given.");
         }
         $this->pdo = $pdo;
@@ -42,6 +32,9 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \Soluble\Metadata\Exception\ConnectionException
+     * @throws \Soluble\Metadata\Exception\EmptyQueryException
      */
     protected function readColumnsMetadata($sql)
     {
@@ -71,8 +64,8 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
             //$column->setCatalog($field->catalog);
             $column->setOrdinalPosition($idx + 1);
             $column->setDataType($datatype['type']);
-            $column->setIsNullable(!in_array('not_null', $field['flags']));
-            $column->setIsPrimary(in_array('primary_key', $field['flags']));
+            $column->setIsNullable(!in_array('not_null', $field['flags'], true));
+            $column->setIsPrimary(in_array('primary_key', $field['flags'], true));
             //$column->setColumnDefault($field->def);
             $column->setNativeDataType($datatype['native']);
 
@@ -109,7 +102,7 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
                 $prev_column = $metadata->offsetGet($alias);
                 $prev_def = $prev_column->toArray();
                 $curr_def = $column->toArray();
-                if ($prev_def['dataType'] != $curr_def['dataType'] || $prev_def['nativeDataType'] != $curr_def['nativeDataType']) {
+                if ($prev_def['dataType'] !== $curr_def['dataType'] || $prev_def['nativeDataType'] !== $curr_def['nativeDataType']) {
                     throw new Exception\AmbiguousColumnException("Cannot get column metadata, non unique column found '$alias' in query with different definitions.");
                 }
 
@@ -132,11 +125,13 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
      * @param string $sql
      *
      * @return array
+     *
+     * @throws \Soluble\Metadata\Exception\EmptyQueryException
      */
     protected function readFields($sql)
     {
-        if (trim($sql) == '') {
-            throw new Exception\EmptyQueryException();
+        if (trim($sql) === '') {
+            throw new Exception\EmptyQueryException('Cannot read fields for an empty query');
         }
 
         $sql = $this->getEmptiedQuery($sql);

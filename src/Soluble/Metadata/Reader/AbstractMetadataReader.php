@@ -15,6 +15,11 @@ abstract class AbstractMetadataReader
     protected $cache_active = true;
 
     /**
+     * @var array
+     */
+    protected static $metadata_cache = [];
+
+    /**
      * @param bool $active
      *
      * @return AbstractMetadataReader
@@ -29,7 +34,7 @@ abstract class AbstractMetadataReader
     /**
      * Return columns metadata from query.
      *
-     * @throws UnsupportedDatatypeException
+     * @throws Exception\UnsupportedTypeException
      * @throws Exception\AmbiguousColumnException
      *
      * @param string $sql
@@ -46,9 +51,9 @@ abstract class AbstractMetadataReader
             }
 
             return static::$metadata_cache[$cache_key];
-        } else {
-            return $this->readColumnsMetadata($sql);
         }
+
+        return $this->readColumnsMetadata($sql);
     }
 
     /**
@@ -73,7 +78,7 @@ abstract class AbstractMetadataReader
      */
     protected function getEmptiedQuery($sql)
     {
-        // see the reason why in Vision_Store_Adapter_ZendDbSelect::getMetatData
+        // see the reason why in Vision_Store_Adapter_ZendDbSelect::getMetaData
         //$sql = str_replace("('__innerselect'='__innerselect')", '(1=0)', $sql);
 
         $sql = preg_replace('/(\r\n|\r|\n|\t)+/', ' ', strtolower($sql));
