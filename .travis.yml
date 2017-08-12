@@ -30,9 +30,12 @@ before_script:
   - mysql -e "CONNECT phpunit_soluble_schema_db; SHOW TABLES;" -u root  
   - travis_retry composer self-update
   - travis_retry composer --prefer-source --dev install
-script: 
-  - ./vendor/bin/phpunit -v
+
+script:
+  - ./vendor/bin/phpunit -v --coverage-clover=coverage.xml
+  - ./vendor/bin/php-cs-fixer --diff --dry-run -v fix
 
 after_script:
   - if [[ $SEND_COVERAGE == true ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
-  - if [[ $SEND_COVERAGE == true ]]; then php ocular.phar code-coverage:upload --format=php-clover test/build/logs/clover.xml; fi
+  - if [[ $SEND_COVERAGE == true ]]; then php ocular.phar code-coverage:upload --format=php-clover coverage.xml; fi
+  - if [[ $SEND_COVERAGE == true ]]; then bash <(curl -s https://codecov.io/bash); fi
