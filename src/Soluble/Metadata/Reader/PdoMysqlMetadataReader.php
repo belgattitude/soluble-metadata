@@ -112,9 +112,11 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
                 }
 
                 // If the the previous definition, was a prev_def
+                /*
                 if ($prev_def['isPrimary']) {
                     $column = $prev_column;
                 }
+                */
             }
             $metadata->offsetSet($alias, $column);
         }
