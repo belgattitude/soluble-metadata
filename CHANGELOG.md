@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### 1.0.2 (2017-08-12)
+
+    - More strict comparison checks
+    - Some cs-fixes
+
 ### 1.0.1 (2016-10-12)
 
     - Added detection on TINY_BLOB, LONG_BLOB, MEDIUM_BLOB for PDO_mysql

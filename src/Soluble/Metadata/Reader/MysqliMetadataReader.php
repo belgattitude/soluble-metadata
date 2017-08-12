@@ -15,6 +15,11 @@ class MysqliMetadataReader extends AbstractMetadataReader
     protected $mysqli;
 
     /**
+     * @var array
+     */
+    protected static $metadata_cache = [];
+
+    /**
      * @param \Mysqli $mysqli
      */
     public function __construct(\Mysqli $mysqli)

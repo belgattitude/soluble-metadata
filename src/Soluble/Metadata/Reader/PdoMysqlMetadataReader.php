@@ -16,6 +16,11 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
     protected $pdo;
 
     /**
+     * @var array
+     */
+    protected static $metadata_cache = [];
+
+    /**
      * @param PDO $pdo
      *
      * @throws Exception\UnsupportedFeatureException
