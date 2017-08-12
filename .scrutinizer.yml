@@ -5,7 +5,7 @@ filter:
     excluded_paths: [test/*, vendor/*, config/*, bin/*, doc/*]
 tools:
     external_code_coverage:
-        timeout: 30
+        timeout: 120
     php_cpd:
         excluded_dirs: [vendor, test, bin, doc, config]
     php_pdepend:
