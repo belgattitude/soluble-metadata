@@ -138,7 +138,7 @@ class MysqliMetadataReader extends AbstractMetadataReader
     protected function readFields($sql)
     {
         if (trim($sql) === '') {
-            throw new Exception\EmptyQueryException(__METHOD__ . ': Error cannot handle empty queries');
+            throw new Exception\EmptyQueryException('Cannot read fields for an empty query');
         }
 
         $sql = $this->getEmptiedQuery($sql);
@@ -146,7 +146,9 @@ class MysqliMetadataReader extends AbstractMetadataReader
 
         if (!$stmt) {
             $message = $this->mysqli->error;
-            throw new Exception\InvalidQueryException(__METHOD__ . ": Error sql is not correct : $message");
+            throw new Exception\InvalidQueryException(
+                sprintf('Invalid query: %s (%s)', $sql, $message)
+            );
         }
         $stmt->execute();
 

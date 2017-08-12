@@ -40,6 +40,7 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
      *
      * @throws \Soluble\Metadata\Exception\ConnectionException
      * @throws \Soluble\Metadata\Exception\EmptyQueryException
+     * @throws \Soluble\Metadata\Exception\InvalidQueryException
      */
     protected function readColumnsMetadata($sql)
     {
@@ -134,6 +135,7 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
      * @return array
      *
      * @throws \Soluble\Metadata\Exception\EmptyQueryException
+     * @throws \Soluble\Metadata\Exception\InvalidQueryException
      */
     protected function readFields($sql)
     {
@@ -144,7 +146,12 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
         $sql = $this->getEmptiedQuery($sql);
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
+        if ($stmt->execute() !== true) {
+            throw new Exception\InvalidQueryException(
+                sprintf('Invalid query: %s', $sql)
+            );
+        }
+
         $column_count = $stmt->columnCount();
         $metaFields = [];
         for ($i = 0; $i < $column_count; ++$i) {

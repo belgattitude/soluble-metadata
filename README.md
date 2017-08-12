@@ -179,7 +179,7 @@ $sql = "
        ";
 
 
-try {
+try {    
     $meta = $reader->getColumnsMetadata($sql);
 } catch (\Soluble\Metadata\Exception\InvalidQueryException $e) { 
     //...
@@ -203,6 +203,9 @@ try {
 */  
 
 ```
+
+> Alternatively, when you want to get the metadata from a table you can use
+> the helper method `$reader->getTableMetadata($table)`. 
 
 ### Step 3: Getting column type (4 options)
 

@@ -2,6 +2,8 @@
 
 namespace SolubleTest\Metadata;
 
+use Soluble\Metadata\Exception\InvalidQueryException;
+use Soluble\Metadata\Exception\TableNotFoundException;
 use Soluble\Metadata\Reader;
 use Soluble\Datatype\Column;
 
@@ -60,6 +62,54 @@ class ColumnsMetadataTest extends \PHPUnit_Framework_TestCase
                 $this->assertFalse(true, "Get column on '$reader_type' should throw an exception.");
             } catch (\Soluble\Metadata\Exception\UnexistentColumnException $ex) {
                 // do nothing
+            }
+        }
+    }
+
+    public function testGetColumnThrowsInvalidQueryException()
+    {
+        $sql = 'select*FROM';
+        foreach ($this->readers as $reader_type => $reader) {
+            try {
+                $md = $reader->getColumnsMetadata($sql);
+                $this->assertFalse(false, 'An exception should be thrown. InvalidQueryException');
+            } catch (InvalidQueryException $e) {
+                $this->assertTrue(true);
+            } catch (\Exception $e) {
+                $this->assertFalse(false, 'InvalidQueryException should be thrown');
+            }
+        }
+    }
+
+    public function testGetTableMetadata()
+    {
+        $table = 'test_table_types';
+        foreach ($this->readers as $reader_type => $reader) {
+            $md = $reader->getTableMetadata($table);
+            $id_column = $md->getColumn('id');
+            $this->assertInstanceOf('Soluble\Datatype\Column\Definition\AbstractColumnDefinition', $id_column);
+            $this->assertInstanceOf('Soluble\Datatype\Column\Definition\IntegerColumn', $id_column);
+            $this->assertEquals($md['id'], $id_column);
+            try {
+                $md->getColumn('NOTACOLUMN');
+                $this->assertFalse(true, "Get column on '$reader_type' should throw an exception.");
+            } catch (\Soluble\Metadata\Exception\UnexistentColumnException $ex) {
+                // do nothing
+            }
+        }
+    }
+
+    public function testGetTableMetadataThrowsTableNotFoundException()
+    {
+        $table = 'table_not_existssss';
+        foreach ($this->readers as $reader_type => $reader) {
+            try {
+                $md = $reader->getTableMetadata($table);
+                $this->assertFalse(false, 'An exception should be thrown. TableNotFoundException');
+            } catch (TableNotFoundException $e) {
+                $this->assertTrue(true);
+            } catch (\Exception $e) {
+                $this->assertFalse(false, 'TableNotFoundException must be thrown');
             }
         }
     }

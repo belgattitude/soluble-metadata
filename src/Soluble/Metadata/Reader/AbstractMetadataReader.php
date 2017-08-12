@@ -36,6 +36,7 @@ abstract class AbstractMetadataReader
      *
      * @throws Exception\UnsupportedTypeException
      * @throws Exception\AmbiguousColumnException
+     * @throws Exception\InvalidQueryException
      *
      * @param string $sql
      *
@@ -57,10 +58,37 @@ abstract class AbstractMetadataReader
     }
 
     /**
+     * Return columns metadata from a table.
+     *
+     * @throws Exception\UnsupportedTypeException
+     * @throws Exception\AmbiguousColumnException
+     * @throws Exception\TableNotFoundException
+     *
+     * @param string $table
+     *
+     * @return ColumnsMetadata
+     */
+    public function getTableMetadata($table)
+    {
+        try {
+            $metadata = $this->getColumnsMetadata(sprintf('select * from %s', $table));
+        } catch (Exception\InvalidQueryException $e) {
+            throw new Exception\TableNotFoundException(sprintf(
+                'Table "%s" does not exists (%s).',
+                $table,
+                $e->getMessage()
+            ));
+        }
+
+        return $metadata;
+    }
+
+    /**
      * Read metadata information from source.
      *
      * @throws Exception\UnsupportedTypeException
      * @throws Exception\AmbiguousColumnException
+     * @throws \Soluble\Metadata\Exception\InvalidQueryException
      *
      * @param string $sql
      *

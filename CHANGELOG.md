@@ -1,21 +1,32 @@
 # CHANGELOG
 
-### 1.0.2 (2017-08-12)
+## 1.1.0 (2017-08-12)
+
+### New feature
+    - New helper method `getTableMetadata(string $table)` to automatically get metadata from a table. 
+
+## 1.0.2 (2017-08-12)
+
+### Improvements
 
     - More strict comparison checks
     - Some cs-fixes
 
-### 1.0.1 (2016-10-12)
+## 1.0.1 (2016-10-12)
+
+### Improvements
 
     - Added detection on TINY_BLOB, LONG_BLOB, MEDIUM_BLOB for PDO_mysql
 
-### 1.0.0 (2016-10-12)
+## 1.0.0 (2016-10-12)
+
+### Improvements
 
     - Tested on PHP 7.1
     - Documenting InvalidQueryException
     - Minor perf fixes and internal code cleanup
 
-### 0.10.4 (2016-09-22)
+## 0.10.4 (2016-09-22)
 
     - Support for null column datatype, for example
     
