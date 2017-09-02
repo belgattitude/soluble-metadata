@@ -45,6 +45,7 @@ before_script:
   - mkdir -p test/logs
   - mkdir -p tests/tmp/cache 
   - mkdir -p build/logs
+  - if [ "$MYSQL_VERSION" == "5.7" ]; then bash ./.travis/install-mysql-5.7.sh; fi;
   - mysql -e "DROP DATABASE IF EXISTS phpunit_soluble_schema_db;" -u root
   - mysql -e "CREATE DATABASE phpunit_soluble_schema_db;" -u root
   - zcat test/data/mysql/schema.sql.gz | mysql -u root phpunit_soluble_schema_db
@@ -56,10 +57,10 @@ before_script:
           "$MARIADB_VERSION" == "10.2" ||
           "$MARIADB_VERSION" == "10.1" ||
           "$MARIADB_VERSION" == "10.0" ]]; then
+       mysql -u travis -e "select version()"; mysql -u travis -e "select version()";
        mysql -u travis -e "select version()";
     fi;
-  - travis_retry composer self-update
-  - travis_retry composer install
+  - composer install --ignore-platform-reqs
 
 script:
   - ./vendor/bin/phpunit -v --coverage-clover=coverage.xml

@@ -1,6 +1,6 @@
 parameters:
 	fileExtensions:
 		- php
-	reportUnmatchedIgnoredErrors: false
-	#ignoreErrors:
-	#	- '#Call to an undefined method Soluble\\Japha\\Interfaces\\JavaObject::#'
+	reportUnmatchedIgnoredErrors: true
+	ignoreErrors:
+		- '#Array has 2 duplicate keys with value 1 \(MYSQLI_TYPE_TINY, MYSQLI_TYPE_TINY\)#'

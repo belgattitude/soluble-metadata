@@ -28,11 +28,13 @@
     "require-dev": {
         "phpunit/phpunit": "^4.8 || ^5.4",
         "friendsofphp/php-cs-fixer": "^2.0.0",
-        "soluble/dbwrapper": "^1.3.0"
+        "soluble/dbwrapper": "^1.3.0",
+        "phpstan/phpstan": "^0.8.4"
     },
     "scripts": {
         "check": [
-            "@cs-check"
+            "@cs-check",
+            "@phpstan"
         ],
         "fix": [
             "@cs-fix"
@@ -44,6 +46,6 @@
     },
 
     "archive": {
-        "exclude": ["phpstan.neon", "test", "doc", ".travis.yml", ".codeclimate.yml", ".coveralls.yml", ".scrutinizer.yml", ".php_cs", ".gitignore", "phpcs.xml"]
+        "exclude": ["phpstan.neon", "test", "doc", ".travis", ".travis.yml", ".codeclimate.yml", ".coveralls.yml", ".scrutinizer.yml", ".php_cs", ".gitignore", "phpcs.xml"]
     }
 }
