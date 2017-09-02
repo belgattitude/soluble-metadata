@@ -1,4 +1,5 @@
 language: php
+dist: trusty
 
 php:  
   - 5.4
@@ -6,19 +7,40 @@ php:
   - 7.0
   - 7.1
   - nightly
-  - hhvm
   
 matrix:
-    include:
-        - php: 5.6
-          env: SEND_COVERAGE=true
-    allow_failures:
-        - php: hhvm
-        - php: nightly
+  fast_finish: true
+  include:
+    - php: 7.1
+      env: SEND_COVERAGE=true MYSQL_VERSION=5.6
+    - php: 7.1
+      env: MARIADB_VERSION=10.2
+      addons:
+        mariadb: '10.2'
+    - php: 7.1
+      env: MARIADB_VERSION=10.1
+      addons:
+        mariadb: '10.1'
+    - php: 7.1
+      env: MARIADB_VERSION=10.0
+      addons:
+        mariadb: '10.0'
+    - php: 7.0
+      env: MYSQL_VERSION=5.6
+    - php: 5.6
+      env: MYSQL_VERSION=5.6
+    - php: 5.5
+      env: MYSQL_VERSION=5.6
+    - php: 5.4
+      env: MYSQL_VERSION=5.6
+    - php: nightly
+      env: MYSQL_VERSION=5.6
+  allow_failures:
+    - php: nightly
           
 env:
-    global:
-        - SEND_COVERAGE=false
+  global:
+    - SEND_COVERAGE=false
 
 before_script:
   - mkdir -p test/logs
@@ -29,9 +51,10 @@ before_script:
   - zcat test/data/mysql/schema.sql.gz | mysql -u root phpunit_soluble_schema_db
   - zcat test/data/mysql/data.sql.gz | mysql -u root phpunit_soluble_schema_db
   - mysql -e "SHOW DATABASES;" -u root
-  - mysql -e "CONNECT phpunit_soluble_schema_db; SHOW TABLES;" -u root  
+  - mysql -e "CONNECT phpunit_soluble_schema_db; SHOW TABLES;" -u root
+  - mysql -u travis -e "select version()"; fi;
   - travis_retry composer self-update
-  - travis_retry composer --prefer-source --dev install
+  - travis_retry composer install
 
 script:
   - ./vendor/bin/phpunit -v --coverage-clover=coverage.xml
