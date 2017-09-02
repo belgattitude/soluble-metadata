@@ -7,6 +7,10 @@ matrix:
     - php: 7.1
       env: SEND_COVERAGE=true MYSQL_VERSION=5.6
     - php: 7.1
+      env: MYSQL_VERSION=5.5
+      addons:
+        mariadb: '5.5'
+    - php: 7.1
       env: MARIADB_VERSION=10.2
       addons:
         mariadb: '10.2'
@@ -47,10 +51,10 @@ before_script:
   - mysql -e "CONNECT phpunit_soluble_schema_db; SHOW TABLES;" -u root
   - if [[ "$MYSQL_VERSION" == "5.7" ||
           "$MYSQL_VERSION" == "5.6" ||
+          "$MYSQL_VERSION" == "5.5" ||
           "$MARIADB_VERSION" == "10.2" ||
           "$MARIADB_VERSION" == "10.1" ||
           "$MARIADB_VERSION" == "10.0" ]]; then
-       mysql -u travis -e "select version()";
        mysql -u travis -e "select version()";
     fi;
   - travis_retry composer self-update
