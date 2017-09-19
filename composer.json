@@ -40,10 +40,10 @@
         "test": "vendor/bin/phpunit",
         "cs-check": "vendor/bin/php-cs-fixer --diff --dry-run -v fix",
         "cs-fix": "vendor/bin/php-cs-fixer -v fix",
-        "phpstan": "phpstan analyse -l 6 -c phpstan.neon src"
+        "phpstan": "phpstan analyse -l max -c phpstan.neon src"
     },
 
     "archive": {
-        "exclude": ["phpstan.neon", "test", "doc", ".travis", ".travis.yml", ".codeclimate.yml", ".coveralls.yml", ".scrutinizer.yml", ".php_cs", ".gitignore", "phpcs.xml"]
+        "exclude": [".travis", "phpstan.neon", "test", "doc", ".travis", ".travis.yml", ".codeclimate.yml", ".coveralls.yml", ".scrutinizer.yml", ".php_cs", ".gitignore", "phpcs.xml"]
     }
 }
