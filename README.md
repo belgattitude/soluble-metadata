@@ -1,3 +1,4 @@
+[![PHP Version](http://img.shields.io/badge/php-7.1+-ff69b4.svg)](https://packagist.org/packages/soluble/metadata)
 [![PHP Version](http://img.shields.io/badge/php-5.4+-ff69b4.svg)](https://packagist.org/packages/soluble/metadata)
 [![Build Status](https://travis-ci.org/belgattitude/soluble-metadata.svg?branch=master)](https://travis-ci.org/belgattitude/soluble-metadata)
 [![codecov](https://codecov.io/gh/belgattitude/soluble-metadata/branch/master/graph/badge.svg)](https://codecov.io/gh/belgattitude/soluble-metadata)
@@ -29,7 +30,7 @@ for basic validation (max lengths, decimals)...
 
 ## Requirements
 
-- PHP engine 5.4+, 7.0+, 7.1+ *(HHVM does not work yet)*
+- PHP engine 7.1+ (v1.2.0), 7.0+ and 5.4 (v1.0.0) 
 - Mysqli or PDO_mysql extension enabled *(Mysqli exposes more features)*
 
 ## Documentation
