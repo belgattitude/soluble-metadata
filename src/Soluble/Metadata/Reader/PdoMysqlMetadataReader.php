@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Soluble\Metadata\Reader;
 
 use Soluble\Metadata\ColumnsMetadata;
@@ -42,7 +44,7 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
      * @throws \Soluble\Metadata\Exception\EmptyQueryException
      * @throws \Soluble\Metadata\Exception\InvalidQueryException
      */
-    protected function readColumnsMetadata($sql)
+    protected function readColumnsMetadata(string $sql): ColumnsMetadata
     {
         $metadata = new ColumnsMetadata();
         $fields = $this->readFields($sql);
@@ -129,15 +131,10 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
      * Read fields from pdo source.
      *
      * @throws Exception\ConnectionException
-     *
-     * @param string $sql
-     *
-     * @return array
-     *
      * @throws \Soluble\Metadata\Exception\EmptyQueryException
      * @throws \Soluble\Metadata\Exception\InvalidQueryException
      */
-    protected function readFields($sql)
+    protected function readFields(string $sql): array
     {
         if (trim($sql) === '') {
             throw new Exception\EmptyQueryException('Cannot read fields for an empty query');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Soluble\Metadata\Reader\Mapping;
 
 use Soluble\Datatype\Column;
@@ -7,16 +9,12 @@ use ArrayObject;
 
 class MysqliMapping
 {
-    /**
-     * @return ArrayObject
-     */
-    public static function getDatatypeMapping()
+    public static function getDatatypeMapping(): ArrayObject
     {
         /*
         // ALL the following fields are not supported yet
         // Maybe todo in a later release or choose to map them to approximative
         // types
-
           MYSQLI_TYPE_YEAR -> int
           MYSQLI_TYPE_ENUM -> string
           MYSQLI_TYPE_SET -> string

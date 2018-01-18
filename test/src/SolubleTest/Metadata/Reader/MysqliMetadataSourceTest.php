@@ -2,11 +2,16 @@
 
 namespace SolubleTest\Metadata\Reader;
 
+use Soluble\Metadata\ColumnsMetadata;
+use Soluble\Metadata\Exception\AmbiguousColumnException;
+use Soluble\Metadata\Exception\EmptyQueryException;
+use Soluble\Metadata\Exception\InvalidQueryException;
 use Soluble\Metadata\Reader\MysqliMetadataReader;
 use Soluble\Datatype\Column;
 use Soluble\DbWrapper\Adapter\MysqliAdapter;
+use PHPUnit\Framework\TestCase;
 
-class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
+class MysqliMetadataSourceTest extends TestCase
 {
     /**
      * @var MysqliMetadataReader
@@ -38,16 +43,16 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
 
     public function testGetColumnsMetadataThrowsEmptyQueryException()
     {
-        $this->setExpectedException('Soluble\Metadata\Exception\EmptyQueryException');
+        self::expectException(EmptyQueryException::class);
         $sql = '';
-        $md = $this->metadata->getColumnsMetadata($sql);
+        $this->metadata->getColumnsMetadata($sql);
     }
 
     public function testGetColumnsMetadataThrowsInvalidQueryException()
     {
-        $this->setExpectedException('Soluble\Metadata\Exception\InvalidQueryException');
+        self::expectException(InvalidQueryException::class);
         $sql = 'select * from sss';
-        $md = $this->metadata->getColumnsMetadata($sql);
+        $this->metadata->getColumnsMetadata($sql);
     }
 
     public function testGetColumnsMetadataNonCached()
@@ -56,11 +61,12 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
         $this->metadata->setStaticCache(false);
         $md = $this->metadata->getColumnsMetadata($sql);
         $this->metadata->setStaticCache(true);
+        self::assertInstanceOf(ColumnsMetadata::class, $md);
     }
 
     public function testGetColumnsMetadataThrowsAmbiguousColumnException()
     {
-        $this->setExpectedException('Soluble\Metadata\Exception\AmbiguousColumnException');
+        self::expectException(AmbiguousColumnException::class);
         $sql = 'select id, test_char_10 as id from test_table_types';
         $md = $this->metadata->getColumnsMetadata($sql);
     }
@@ -69,134 +75,134 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
     {
         $sql = 'select * from test_table_types';
         $md = $this->metadata->getColumnsMetadata($sql);
-        $this->assertInstanceOf('Soluble\Metadata\ColumnsMetadata', $md);
+        self::assertInstanceOf(ColumnsMetadata::class, $md);
 
-        $this->assertEquals($md['id']->isPrimary(), true);
-        $this->assertEquals($md['id']->getDatatype(), Column\Type::TYPE_INTEGER);
-        $this->assertEquals($md['id']->getTableName(), 'test_table_types');
-        $this->assertEquals($md['id']->isNullable(), false);
-        $this->assertEquals($md['id']->getTableAlias(), 'test_table_types');
-        $this->assertEquals($md['id']->getOrdinalPosition(), 1);
-        $this->assertEquals($md['id']->getCatalog(), 'def');
-        $this->assertEquals($md['id']->isAutoIncrement(), true);
-        $this->assertEquals(true, $md['id']->isNumericUnsigned());
-        $this->assertEquals(true, $md['id']->getNumericUnsigned());
+        self::assertEquals($md['id']->isPrimary(), true);
+        self::assertEquals($md['id']->getDatatype(), Column\Type::TYPE_INTEGER);
+        self::assertEquals($md['id']->getTableName(), 'test_table_types');
+        self::assertEquals($md['id']->isNullable(), false);
+        self::assertEquals($md['id']->getTableAlias(), 'test_table_types');
+        self::assertEquals($md['id']->getOrdinalPosition(), 1);
+        self::assertEquals($md['id']->getCatalog(), 'def');
+        self::assertEquals($md['id']->isAutoIncrement(), true);
+        self::assertEquals(true, $md['id']->isNumericUnsigned());
+        self::assertEquals(true, $md['id']->getNumericUnsigned());
 
-        $this->assertEquals($md['test_varchar_255']->getDatatype(), Column\Type::TYPE_STRING);
-        $this->assertEquals($md['test_varchar_255']->getNativeDatatype(), 'VARCHAR');
-        $this->assertEquals($md['test_char_10']->getDatatype(), Column\Type::TYPE_STRING);
-        $this->assertEquals($md['test_char_10']->getNativeDatatype(), 'VARCHAR');
+        self::assertEquals($md['test_varchar_255']->getDatatype(), Column\Type::TYPE_STRING);
+        self::assertEquals($md['test_varchar_255']->getNativeDatatype(), 'VARCHAR');
+        self::assertEquals($md['test_char_10']->getDatatype(), Column\Type::TYPE_STRING);
+        self::assertEquals($md['test_char_10']->getNativeDatatype(), 'VARCHAR');
 
         // This does not work (cause utf8 store in multibyte)
         // @todo utf8 support in getCharacterMaximumLength
         //  Divide by 3
-        // Sould be $this->assertEquals(10, $md['test_char_10']->getCharacterMaximumLength());
+        // Sould be self::assertEquals(10, $md['test_char_10']->getCharacterMaximumLength());
         // But returned
-        $this->assertEquals(30, $md['test_char_10']->getCharacterMaximumLength());
+        self::assertEquals(30, $md['test_char_10']->getCharacterMaximumLength());
 
-        $this->assertGreaterThanOrEqual(10, $md['test_char_10']->getCharacterMaximumLength());
+        self::assertGreaterThanOrEqual(10, $md['test_char_10']->getCharacterMaximumLength());
 
-        $this->assertEquals($md['test_text_2000']->getDatatype(), Column\Type::TYPE_BLOB);
-        $this->assertEquals($md['test_text_2000']->getNativeDatatype(), 'BLOB');
+        self::assertEquals($md['test_text_2000']->getDatatype(), Column\Type::TYPE_BLOB);
+        self::assertEquals($md['test_text_2000']->getNativeDatatype(), 'BLOB');
 
-        $this->assertEquals($md['test_binary_3']->getDatatype(), Column\Type::TYPE_STRING);
-        $this->assertEquals($md['test_binary_3']->getNativeDatatype(), 'VARCHAR');
+        self::assertEquals($md['test_binary_3']->getDatatype(), Column\Type::TYPE_STRING);
+        self::assertEquals($md['test_binary_3']->getNativeDatatype(), 'VARCHAR');
 
-        $this->assertEquals($md['test_varbinary_10']->getDatatype(), Column\Type::TYPE_STRING);
-        $this->assertEquals($md['test_varbinary_10']->getNativeDatatype(), 'VARCHAR');
+        self::assertEquals($md['test_varbinary_10']->getDatatype(), Column\Type::TYPE_STRING);
+        self::assertEquals($md['test_varbinary_10']->getNativeDatatype(), 'VARCHAR');
 
-        $this->assertEquals($md['test_int_unsigned']->getDatatype(), Column\Type::TYPE_INTEGER);
-        $this->assertTrue($md['test_int_unsigned']->isNumericUnsigned());
+        self::assertEquals($md['test_int_unsigned']->getDatatype(), Column\Type::TYPE_INTEGER);
+        self::assertTrue($md['test_int_unsigned']->isNumericUnsigned());
 
-        $this->assertEquals($md['test_bigint']->getDatatype(), Column\Type::TYPE_INTEGER);
-        $this->assertFalse($md['test_bigint']->isNumericUnsigned());
-        $this->assertEquals($md['test_bigint']->getNativeDatatype(), 'BIGINT');
+        self::assertEquals($md['test_bigint']->getDatatype(), Column\Type::TYPE_INTEGER);
+        self::assertFalse($md['test_bigint']->isNumericUnsigned());
+        self::assertEquals($md['test_bigint']->getNativeDatatype(), 'BIGINT');
 
-        $this->assertEquals($md['test_decimal_10_3']->getDatatype(), Column\Type::TYPE_DECIMAL);
-        $this->assertEquals($md['test_decimal_10_3']->getNativeDatatype(), 'DECIMAL');
-        $this->assertEquals(10, $md['test_decimal_10_3']->getNumericScale());
-        $this->assertEquals(3, $md['test_decimal_10_3']->getNumericPrecision());
-        $this->assertFalse($md['test_decimal_10_3']->getNumericUnsigned());
-        $this->assertFalse($md['test_decimal_10_3']->isNumericUnsigned());
+        self::assertEquals($md['test_decimal_10_3']->getDatatype(), Column\Type::TYPE_DECIMAL);
+        self::assertEquals($md['test_decimal_10_3']->getNativeDatatype(), 'DECIMAL');
+        self::assertEquals(10, $md['test_decimal_10_3']->getNumericScale());
+        self::assertEquals(3, $md['test_decimal_10_3']->getNumericPrecision());
+        self::assertFalse($md['test_decimal_10_3']->getNumericUnsigned());
+        self::assertFalse($md['test_decimal_10_3']->isNumericUnsigned());
 
-        $this->assertEquals($md['test_float']->getDatatype(), Column\Type::TYPE_FLOAT);
-        $this->assertEquals($md['test_float']->getNativeDatatype(), 'FLOAT');
+        self::assertEquals($md['test_float']->getDatatype(), Column\Type::TYPE_FLOAT);
+        self::assertEquals($md['test_float']->getNativeDatatype(), 'FLOAT');
 
-        $this->assertEquals($md['test_tinyint']->getDatatype(), Column\Type::TYPE_INTEGER);
-        $this->assertEquals($md['test_tinyint']->getNativeDatatype(), 'TINYINT');
+        self::assertEquals($md['test_tinyint']->getDatatype(), Column\Type::TYPE_INTEGER);
+        self::assertEquals($md['test_tinyint']->getNativeDatatype(), 'TINYINT');
 
-        $this->assertEquals($md['test_mediumint']->getDatatype(), Column\Type::TYPE_INTEGER);
-        $this->assertEquals($md['test_mediumint']->getNativeDatatype(), 'MEDIUMINT');
+        self::assertEquals($md['test_mediumint']->getDatatype(), Column\Type::TYPE_INTEGER);
+        self::assertEquals($md['test_mediumint']->getNativeDatatype(), 'MEDIUMINT');
 
-        $this->assertEquals($md['test_double']->getDatatype(), Column\Type::TYPE_FLOAT);
-        $this->assertEquals($md['test_double']->getNativeDatatype(), 'DOUBLE');
+        self::assertEquals($md['test_double']->getDatatype(), Column\Type::TYPE_FLOAT);
+        self::assertEquals($md['test_double']->getNativeDatatype(), 'DOUBLE');
 
-        $this->assertEquals($md['test_smallint']->getDatatype(), Column\Type::TYPE_INTEGER);
-        $this->assertEquals($md['test_smallint']->getNativeDatatype(), 'SMALLINT');
+        self::assertEquals($md['test_smallint']->getDatatype(), Column\Type::TYPE_INTEGER);
+        self::assertEquals($md['test_smallint']->getNativeDatatype(), 'SMALLINT');
 
-        $this->assertEquals($md['test_date']->getDatatype(), Column\Type::TYPE_DATE);
-        $this->assertEquals($md['test_date']->getNativeDatatype(), 'DATE');
+        self::assertEquals($md['test_date']->getDatatype(), Column\Type::TYPE_DATE);
+        self::assertEquals($md['test_date']->getNativeDatatype(), 'DATE');
 
-        $this->assertEquals($md['test_datetime']->getDatatype(), Column\Type::TYPE_DATETIME);
-        $this->assertEquals($md['test_datetime']->getNativeDatatype(), 'DATETIME');
+        self::assertEquals($md['test_datetime']->getDatatype(), Column\Type::TYPE_DATETIME);
+        self::assertEquals($md['test_datetime']->getNativeDatatype(), 'DATETIME');
 
-        $this->assertEquals($md['test_timestamp']->getDatatype(), Column\Type::TYPE_DATETIME);
-        $this->assertEquals($md['test_timestamp']->getNativeDatatype(), 'TIMESTAMP');
+        self::assertEquals($md['test_timestamp']->getDatatype(), Column\Type::TYPE_DATETIME);
+        self::assertEquals($md['test_timestamp']->getNativeDatatype(), 'TIMESTAMP');
 
-        $this->assertEquals($md['test_time']->getDatatype(), Column\Type::TYPE_TIME);
-        $this->assertEquals($md['test_time']->getNativeDatatype(), 'TIME');
+        self::assertEquals($md['test_time']->getDatatype(), Column\Type::TYPE_TIME);
+        self::assertEquals($md['test_time']->getNativeDatatype(), 'TIME');
 
-        $this->assertEquals($md['test_blob']->getDatatype(), Column\Type::TYPE_BLOB);
-        $this->assertEquals($md['test_blob']->getNativeDatatype(), 'BLOB');
+        self::assertEquals($md['test_blob']->getDatatype(), Column\Type::TYPE_BLOB);
+        self::assertEquals($md['test_blob']->getNativeDatatype(), 'BLOB');
 
-        $this->assertEquals($md['test_tinyblob']->getDatatype(), Column\Type::TYPE_BLOB);
-        $this->assertEquals($md['test_tinyblob']->getNativeDatatype(), 'BLOB');
+        self::assertEquals($md['test_tinyblob']->getDatatype(), Column\Type::TYPE_BLOB);
+        self::assertEquals($md['test_tinyblob']->getNativeDatatype(), 'BLOB');
 
-        $this->assertEquals($md['test_mediumblob']->getDatatype(), Column\Type::TYPE_BLOB);
-        $this->assertEquals($md['test_mediumblob']->getNativeDatatype(), 'BLOB');
+        self::assertEquals($md['test_mediumblob']->getDatatype(), Column\Type::TYPE_BLOB);
+        self::assertEquals($md['test_mediumblob']->getNativeDatatype(), 'BLOB');
 
-        $this->assertEquals($md['test_longblob']->getDatatype(), Column\Type::TYPE_BLOB);
-        $this->assertEquals($md['test_longblob']->getNativeDatatype(), 'BLOB');
+        self::assertEquals($md['test_longblob']->getDatatype(), Column\Type::TYPE_BLOB);
+        self::assertEquals($md['test_longblob']->getNativeDatatype(), 'BLOB');
 
-        $this->assertEquals(255, $md['test_tinyblob']->getCharacterOctetLength());
-        $this->assertEquals(16777215, $md['test_mediumblob']->getCharacterOctetLength());
-        $this->assertEquals(4294967295, $md['test_longblob']->getCharacterOctetLength());
+        self::assertEquals(255, $md['test_tinyblob']->getCharacterOctetLength());
+        self::assertEquals(16777215, $md['test_mediumblob']->getCharacterOctetLength());
+        self::assertEquals(4294967295, $md['test_longblob']->getCharacterOctetLength());
 
-        $this->assertEquals($md['test_enum']->getDatatype(), Column\Type::TYPE_STRING);
-        $this->assertEquals('ENUM', $md['test_enum']->getNativeDatatype());
+        self::assertEquals($md['test_enum']->getDatatype(), Column\Type::TYPE_STRING);
+        self::assertEquals('ENUM', $md['test_enum']->getNativeDatatype());
 
-        $this->assertEquals($md['test_set']->getDatatype(), Column\Type::TYPE_STRING);
-        $this->assertEquals('SET', $md['test_set']->getNativeDatatype());
+        self::assertEquals($md['test_set']->getDatatype(), Column\Type::TYPE_STRING);
+        self::assertEquals('SET', $md['test_set']->getNativeDatatype());
 
-        $this->assertEquals($md['test_bit']->getDatatype(), Column\Type::TYPE_BIT);
-        $this->assertEquals('BIT', $md['test_bit']->getNativeDatatype());
+        self::assertEquals($md['test_bit']->getDatatype(), Column\Type::TYPE_BIT);
+        self::assertEquals('BIT', $md['test_bit']->getNativeDatatype());
 
-        $this->assertEquals($md['test_bool']->getDatatype(), Column\Type::TYPE_INTEGER);
-        $this->assertEquals('TINYINT', $md['test_bool']->getNativeDatatype());
+        self::assertEquals($md['test_bool']->getDatatype(), Column\Type::TYPE_INTEGER);
+        self::assertEquals('TINYINT', $md['test_bool']->getNativeDatatype());
 
-        $this->assertEquals($md['test_geometry']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        $this->assertEquals(null, $md['test_geometry']->getNativeDatatype());
+        self::assertEquals($md['test_geometry']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
+        self::assertEquals(null, $md['test_geometry']->getNativeDatatype());
 
-        $this->assertEquals($md['test_point']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        $this->assertEquals(null, $md['test_point']->getNativeDatatype());
+        self::assertEquals($md['test_point']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
+        self::assertEquals(null, $md['test_point']->getNativeDatatype());
 
-        $this->assertEquals($md['test_linestring']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        $this->assertEquals(null, $md['test_linestring']->getNativeDatatype());
+        self::assertEquals($md['test_linestring']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
+        self::assertEquals(null, $md['test_linestring']->getNativeDatatype());
 
-        $this->assertEquals($md['test_polygon']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        $this->assertEquals(null, $md['test_polygon']->getNativeDatatype());
+        self::assertEquals($md['test_polygon']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
+        self::assertEquals(null, $md['test_polygon']->getNativeDatatype());
 
-        $this->assertEquals($md['test_multipolygon']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        $this->assertEquals(null, $md['test_multipolygon']->getNativeDatatype());
+        self::assertEquals($md['test_multipolygon']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
+        self::assertEquals(null, $md['test_multipolygon']->getNativeDatatype());
 
-        $this->assertEquals($md['test_multipoint']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        $this->assertEquals(null, $md['test_multipoint']->getNativeDatatype());
+        self::assertEquals($md['test_multipoint']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
+        self::assertEquals(null, $md['test_multipoint']->getNativeDatatype());
 
-        $this->assertEquals($md['test_multilinestring']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        $this->assertEquals(null, $md['test_multilinestring']->getNativeDatatype());
+        self::assertEquals($md['test_multilinestring']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
+        self::assertEquals(null, $md['test_multilinestring']->getNativeDatatype());
 
-        $this->assertEquals($md['test_geometrycollection']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        $this->assertEquals(null, $md['test_geometrycollection']->getNativeDatatype());
+        self::assertEquals($md['test_geometrycollection']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
+        self::assertEquals(null, $md['test_geometrycollection']->getNativeDatatype());
     }
 
     public function testGetColumnsMetadataWithDefaults()
@@ -206,13 +212,13 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
 
         if (true) {
             // IN PHP 5.5 always return null (?)
-            $this->assertEquals(null, $md['default_5']->getColumnDefault());
-            $this->assertEquals(null, $md['default_cool']->getColumnDefault());
-            $this->assertEquals(null, $md['default_yes']->getColumnDefault());
+            self::assertEquals(null, $md['default_5']->getColumnDefault());
+            self::assertEquals(null, $md['default_cool']->getColumnDefault());
+            self::assertEquals(null, $md['default_yes']->getColumnDefault());
         } else {
-            $this->assertEquals(5, $md['default_5']->getColumnDefault());
-            $this->assertEquals('cool', $md['default_cool']->getColumnDefault());
-            $this->assertEquals('yes', $md['default_yes']->getColumnDefault());
+            self::assertEquals(5, $md['default_5']->getColumnDefault());
+            self::assertEquals('cool', $md['default_cool']->getColumnDefault());
+            self::assertEquals('yes', $md['default_yes']->getColumnDefault());
         }
     }
 
@@ -249,71 +255,71 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
 
         $md = $this->metadata->getColumnsMetadata($sql);
 
-        $this->assertEquals(false, $md['test_string']->isPrimary());
-        $this->assertEquals(Column\Type::TYPE_STRING, $md['test_string']->getDatatype());
-        $this->assertEquals(null, $md['test_string']->getTableName());
-        $this->assertEquals(false, $md['test_string']->isNullable());
-        $this->assertEquals(null, $md['test_string']->getTableAlias());
-        $this->assertEquals(1, $md['test_string']->getOrdinalPosition());
-        $this->assertEquals('def', $md['test_string']->getCatalog());
+        self::assertEquals(false, $md['test_string']->isPrimary());
+        self::assertEquals(Column\Type::TYPE_STRING, $md['test_string']->getDatatype());
+        self::assertEquals(null, $md['test_string']->getTableName());
+        self::assertEquals(false, $md['test_string']->isNullable());
+        self::assertEquals(null, $md['test_string']->getTableAlias());
+        self::assertEquals(1, $md['test_string']->getOrdinalPosition());
+        self::assertEquals('def', $md['test_string']->getCatalog());
 
-        $this->assertEquals(Column\Type::TYPE_DECIMAL, $md['test_calc']->getDatatype());
-        $this->assertEquals(null, $md['test_calc']->getTableName());
+        self::assertEquals(Column\Type::TYPE_DECIMAL, $md['test_calc']->getDatatype());
+        self::assertEquals(null, $md['test_calc']->getTableName());
 
-        $this->assertEquals(Column\Type::TYPE_INTEGER, $md['test_calc_2']->getDatatype());
-        $this->assertEquals(false, $md['test_calc_2']->isAutoIncrement());
-        $this->assertEquals(null, $md['test_calc_2']->getTableName());
+        self::assertEquals(Column\Type::TYPE_INTEGER, $md['test_calc_2']->getDatatype());
+        self::assertEquals(false, $md['test_calc_2']->isAutoIncrement());
+        self::assertEquals(null, $md['test_calc_2']->getTableName());
 
-        $this->assertEquals(Column\Type::TYPE_INTEGER, $md['filesize']->getDatatype());
-        $this->assertEquals('media', $md['filesize']->getTableName());
-        $this->assertEquals('m', $md['filesize']->getTableAlias());
+        self::assertEquals(Column\Type::TYPE_INTEGER, $md['filesize']->getDatatype());
+        self::assertEquals('media', $md['filesize']->getTableName());
+        self::assertEquals('m', $md['filesize']->getTableAlias());
 
-        $this->assertEquals(null, $md['test_string']->getSchemaName());
-        $this->assertEquals($this->adapter->getConnection()->getCurrentSchema(), $md['filesize']->getSchemaName());
+        self::assertEquals(null, $md['test_string']->getSchemaName());
+        self::assertEquals($this->adapter->getConnection()->getCurrentSchema(), $md['filesize']->getSchemaName());
 
-        $this->assertEquals(Column\Type::TYPE_INTEGER, $md['container_id']->getDatatype());
-        $this->assertEquals('media', $md['container_id']->getTableName());
-        $this->assertEquals('m', $md['container_id']->getTableAlias());
+        self::assertEquals(Column\Type::TYPE_INTEGER, $md['container_id']->getDatatype());
+        self::assertEquals('media', $md['container_id']->getTableName());
+        self::assertEquals('m', $md['container_id']->getTableAlias());
 
-        $this->assertEquals(Column\Type::TYPE_INTEGER, $md['mcid']->getDatatype());
-        $this->assertEquals('media_container', $md['mcid']->getTableName());
-        $this->assertEquals('mc', $md['mcid']->getTableAlias());
+        self::assertEquals(Column\Type::TYPE_INTEGER, $md['mcid']->getDatatype());
+        self::assertEquals('media_container', $md['mcid']->getTableName());
+        self::assertEquals('mc', $md['mcid']->getTableAlias());
 
-        $this->assertEquals(Column\Type::TYPE_INTEGER, $md['max(filemtime)']->getDatatype());
-        $this->assertEquals(Column\Type::TYPE_INTEGER, $md['max_time']->getDatatype());
-        $this->assertEquals('INTEGER', $md['max_time']->getNativeDatatype());
+        self::assertEquals(Column\Type::TYPE_INTEGER, $md['max(filemtime)']->getDatatype());
+        self::assertEquals(Column\Type::TYPE_INTEGER, $md['max_time']->getDatatype());
+        self::assertEquals('INTEGER', $md['max_time']->getNativeDatatype());
 
         // Testing computed
-        $this->assertTrue($md['min_time']->isComputed());
-        $this->assertTrue($md['max_time']->isComputed());
-        $this->assertTrue($md['avg_time']->isComputed());
-        $this->assertTrue($md['files']->isComputed());
-        $this->assertTrue($md['test_string']->isComputed());
-        $this->assertTrue($md['test_float']->isComputed());
-        $this->assertTrue($md['test_calc']->isComputed());
-        $this->assertTrue($md['test_calc_2']->isComputed());
-        $this->assertFalse($md['container_id']->isComputed());
+        self::assertTrue($md['min_time']->isComputed());
+        self::assertTrue($md['max_time']->isComputed());
+        self::assertTrue($md['avg_time']->isComputed());
+        self::assertTrue($md['files']->isComputed());
+        self::assertTrue($md['test_string']->isComputed());
+        self::assertTrue($md['test_float']->isComputed());
+        self::assertTrue($md['test_calc']->isComputed());
+        self::assertTrue($md['test_calc_2']->isComputed());
+        self::assertFalse($md['container_id']->isComputed());
 
         // TESTING Aliased
 
-        $this->assertEquals('mcid', $md['mcid']->getAlias());
-        $this->assertEquals('container_id', $md['mcid']->getName());
-        $this->assertEquals('min_time', $md['min_time']->getName());
-        $this->assertEquals('min_time', $md['min_time']->getAlias());
+        self::assertEquals('mcid', $md['mcid']->getAlias());
+        self::assertEquals('container_id', $md['mcid']->getName());
+        self::assertEquals('min_time', $md['min_time']->getName());
+        self::assertEquals('min_time', $md['min_time']->getAlias());
 
         // TEST if column is part of a group
-        $this->assertTrue($md['count_media']->isGroup());
-        $this->assertTrue($md['min_time']->isGroup());
+        self::assertTrue($md['count_media']->isGroup());
+        self::assertTrue($md['min_time']->isGroup());
 
-        $this->assertTrue($md['max_time']->isGroup());
-        $this->assertTrue($md['min(filemtime)']->isGroup());
-        $this->assertTrue($md['max(filemtime)']->isGroup());
+        self::assertTrue($md['max_time']->isGroup());
+        self::assertTrue($md['min(filemtime)']->isGroup());
+        self::assertTrue($md['max(filemtime)']->isGroup());
 
         // Various type returned by using functions
-        $this->assertEquals(Column\Type::TYPE_INTEGER, $md['count_media']->getDatatype());
-        $this->assertEquals(Column\Type::TYPE_INTEGER, $md['max_time']->getDatatype());
-        $this->assertEquals(Column\Type::TYPE_INTEGER, $md['min_time']->getDatatype());
-        $this->assertEquals(Column\Type::TYPE_DECIMAL, $md['avg_time']->getDatatype());
+        self::assertEquals(Column\Type::TYPE_INTEGER, $md['count_media']->getDatatype());
+        self::assertEquals(Column\Type::TYPE_INTEGER, $md['max_time']->getDatatype());
+        self::assertEquals(Column\Type::TYPE_INTEGER, $md['min_time']->getDatatype());
+        self::assertEquals(Column\Type::TYPE_DECIMAL, $md['avg_time']->getDatatype());
 
         // WARNING BUGS IN MYSQL (should be true)
 
@@ -334,22 +340,22 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
                 // are wrong !!!!
                 //$this->markTestIncomplete("Does not test exevything");
 
-                $this->assertFalse($md['avg(filemtime)']->isGroup());
-                $this->assertFalse($md['avg_time']->isGroup());
-                $this->assertFalse($md['files']->isGroup());
-                $this->assertFalse($md['group_concat(filename)']->isGroup());
+                self::assertFalse($md['avg(filemtime)']->isGroup());
+                self::assertFalse($md['avg_time']->isGroup());
+                self::assertFalse($md['files']->isGroup());
+                self::assertFalse($md['group_concat(filename)']->isGroup());
 
                 break;
             case 'libmariadb':
             case 'libmysql':
             default:
                 //$this->markTestIncomplete("Does not test exevything");
-                $this->assertTrue($md['avg(filemtime)']->isGroup());
-                $this->assertTrue($md['avg_time']->isGroup());
+                self::assertTrue($md['avg(filemtime)']->isGroup());
+                self::assertTrue($md['avg_time']->isGroup());
 
                 // see those cases
-                $this->assertFalse($md['files']->isGroup());
-                $this->assertFalse($md['group_concat(filename)']->isGroup());
+                self::assertFalse($md['files']->isGroup());
+                self::assertFalse($md['group_concat(filename)']->isGroup());
         }
 
         $this->markTestIncomplete("Warning, test was made on client '$mysqli_client', may differs when using mysqlnd, libmariadb, libmysql");
@@ -386,8 +392,8 @@ class MysqliMetadataSourceTest extends \PHPUnit_Framework_TestCase
             $stmt->store_result();
             $num_rows = $stmt->num_rows;
 
-            $this->assertInternalType('int', $num_rows);
-            $this->assertEquals(0, $num_rows, "Emptied query $idx : $sql ");
+            self::assertInternalType('int', $num_rows);
+            self::assertEquals(0, $num_rows, "Emptied query $idx : $sql ");
             $stmt->close();
         }
     }

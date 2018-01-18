@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Soluble\Metadata\Reader;
 
 use Soluble\Metadata\ColumnsMetadata;
@@ -10,7 +12,7 @@ use Soluble\Datatype\Column;
 class MysqliMetadataReader extends AbstractMetadataReader
 {
     /**
-     * @var \Mysqli
+     * @var \mysqli
      */
     protected $mysqli;
 
@@ -20,9 +22,9 @@ class MysqliMetadataReader extends AbstractMetadataReader
     protected static $metadata_cache = [];
 
     /**
-     * @param \Mysqli $mysqli
+     * @param \mysqli $mysqli
      */
-    public function __construct(\Mysqli $mysqli)
+    public function __construct(\mysqli $mysqli)
     {
         $this->mysqli = $mysqli;
     }
@@ -34,7 +36,7 @@ class MysqliMetadataReader extends AbstractMetadataReader
      * @throws \Soluble\Metadata\Exception\EmptyQueryException
      * @throws \Soluble\Metadata\Exception\InvalidQueryException
      */
-    protected function readColumnsMetadata($sql)
+    protected function readColumnsMetadata(string $sql): ColumnsMetadata
     {
         $metadata = new ColumnsMetadata();
         $fields = $this->readFields($sql);
@@ -126,16 +128,11 @@ class MysqliMetadataReader extends AbstractMetadataReader
     }
 
     /**
-     * @param string $sql
-     *
      * @throws Exception\ConnectionException
-     *
-     * @return array
-     *
      * @throws \Soluble\Metadata\Exception\EmptyQueryException
      * @throws \Soluble\Metadata\Exception\InvalidQueryException
      */
-    protected function readFields($sql)
+    protected function readFields(string $sql): array
     {
         if (trim($sql) === '') {
             throw new Exception\EmptyQueryException('Cannot read fields for an empty query');

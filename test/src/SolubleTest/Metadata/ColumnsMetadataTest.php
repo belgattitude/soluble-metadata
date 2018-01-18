@@ -2,12 +2,15 @@
 
 namespace SolubleTest\Metadata;
 
+use Soluble\Datatype\Column\Definition\AbstractColumnDefinition;
+use Soluble\Datatype\Column\Definition\IntegerColumn;
 use Soluble\Metadata\Exception\InvalidQueryException;
 use Soluble\Metadata\Exception\TableNotFoundException;
 use Soluble\Metadata\Reader;
 use Soluble\Datatype\Column;
+use PHPUnit\Framework\TestCase;
 
-class ColumnsMetadataTest extends \PHPUnit_Framework_TestCase
+class ColumnsMetadataTest extends TestCase
 {
     /**
      * @var array
@@ -43,7 +46,7 @@ class ColumnsMetadataTest extends \PHPUnit_Framework_TestCase
         foreach ($this->readers as $reader_type => $reader) {
             $md = $reader->getColumnsMetadata($sql);
             foreach ($md as $column) {
-                $this->assertInstanceOf('Soluble\Datatype\Column\Definition\AbstractColumnDefinition', $column);
+                self::assertInstanceOf(AbstractColumnDefinition::class, $column);
             }
         }
     }
@@ -54,12 +57,12 @@ class ColumnsMetadataTest extends \PHPUnit_Framework_TestCase
         foreach ($this->readers as $reader_type => $reader) {
             $md = $reader->getColumnsMetadata($sql);
             $id_column = $md->getColumn('id');
-            $this->assertInstanceOf('Soluble\Datatype\Column\Definition\AbstractColumnDefinition', $id_column);
-            $this->assertInstanceOf('Soluble\Datatype\Column\Definition\IntegerColumn', $id_column);
-            $this->assertEquals($md['id'], $id_column);
+            self::assertInstanceOf(AbstractColumnDefinition::class, $id_column);
+            self::assertInstanceOf(IntegerColumn::class, $id_column);
+            self::assertEquals($md['id'], $id_column);
             try {
                 $md->getColumn('NOTACOLUMN');
-                $this->assertFalse(true, "Get column on '$reader_type' should throw an exception.");
+                self::assertFalse(true, "Get column on '$reader_type' should throw an exception.");
             } catch (\Soluble\Metadata\Exception\UnexistentColumnException $ex) {
                 // do nothing
             }
@@ -72,11 +75,11 @@ class ColumnsMetadataTest extends \PHPUnit_Framework_TestCase
         foreach ($this->readers as $reader_type => $reader) {
             try {
                 $md = $reader->getColumnsMetadata($sql);
-                $this->assertFalse(false, 'An exception should be thrown. InvalidQueryException');
+                self::assertFalse(false, 'An exception should be thrown. InvalidQueryException');
             } catch (InvalidQueryException $e) {
-                $this->assertTrue(true);
+                self::assertTrue(true);
             } catch (\Exception $e) {
-                $this->assertFalse(false, 'InvalidQueryException should be thrown');
+                self::assertFalse(false, 'InvalidQueryException should be thrown');
             }
         }
     }
@@ -87,12 +90,12 @@ class ColumnsMetadataTest extends \PHPUnit_Framework_TestCase
         foreach ($this->readers as $reader_type => $reader) {
             $md = $reader->getTableMetadata($table);
             $id_column = $md->getColumn('id');
-            $this->assertInstanceOf('Soluble\Datatype\Column\Definition\AbstractColumnDefinition', $id_column);
-            $this->assertInstanceOf('Soluble\Datatype\Column\Definition\IntegerColumn', $id_column);
-            $this->assertEquals($md['id'], $id_column);
+            self::assertInstanceOf(AbstractColumnDefinition::class, $id_column);
+            self::assertInstanceOf(IntegerColumn::class, $id_column);
+            self::assertEquals($md['id'], $id_column);
             try {
                 $md->getColumn('NOTACOLUMN');
-                $this->assertFalse(true, "Get column on '$reader_type' should throw an exception.");
+                self::assertFalse(true, "Get column on '$reader_type' should throw an exception.");
             } catch (\Soluble\Metadata\Exception\UnexistentColumnException $ex) {
                 // do nothing
             }
@@ -105,11 +108,11 @@ class ColumnsMetadataTest extends \PHPUnit_Framework_TestCase
         foreach ($this->readers as $reader_type => $reader) {
             try {
                 $md = $reader->getTableMetadata($table);
-                $this->assertFalse(false, 'An exception should be thrown. TableNotFoundException');
+                self::assertFalse(false, 'An exception should be thrown. TableNotFoundException');
             } catch (TableNotFoundException $e) {
-                $this->assertTrue(true);
+                self::assertTrue(true);
             } catch (\Exception $e) {
-                $this->assertFalse(false, 'TableNotFoundException must be thrown');
+                self::assertFalse(false, 'TableNotFoundException must be thrown');
             }
         }
     }

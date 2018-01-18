@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Soluble\Metadata\Reader;
 
 use Soluble\Metadata\ColumnsMetadata;
@@ -24,7 +26,7 @@ abstract class AbstractMetadataReader
      *
      * @return AbstractMetadataReader
      */
-    public function setStaticCache($active = true)
+    public function setStaticCache(bool $active = true)
     {
         $this->cache_active = $active;
 
@@ -37,12 +39,8 @@ abstract class AbstractMetadataReader
      * @throws Exception\UnsupportedTypeException
      * @throws Exception\AmbiguousColumnException
      * @throws Exception\InvalidQueryException
-     *
-     * @param string $sql
-     *
-     * @return ColumnsMetadata
      */
-    public function getColumnsMetadata($sql)
+    public function getColumnsMetadata(string $sql): ColumnsMetadata
     {
         if ($this->cache_active) {
             $cache_key = md5($sql);
@@ -63,12 +61,8 @@ abstract class AbstractMetadataReader
      * @throws Exception\UnsupportedTypeException
      * @throws Exception\AmbiguousColumnException
      * @throws Exception\TableNotFoundException
-     *
-     * @param string $table
-     *
-     * @return ColumnsMetadata
      */
-    public function getTableMetadata($table)
+    public function getTableMetadata(string $table): ColumnsMetadata
     {
         try {
             $metadata = $this->getColumnsMetadata(sprintf('select * from %s', $table));
@@ -89,22 +83,14 @@ abstract class AbstractMetadataReader
      * @throws Exception\UnsupportedTypeException
      * @throws Exception\AmbiguousColumnException
      * @throws \Soluble\Metadata\Exception\InvalidQueryException
-     *
-     * @param string $sql
-     *
-     * @return ColumnsMetadata
      */
-    abstract protected function readColumnsMetadata($sql);
+    abstract protected function readColumnsMetadata(string $sql): ColumnsMetadata;
 
     /**
      * Optimization, will add false condition to the query
      * so the metadata loading will be faster.
-     *
-     * @param string $sql query string
-     *
-     * @return string
      */
-    protected function getEmptiedQuery($sql)
+    protected function getEmptiedQuery(string $sql): string
     {
         // see the reason why in Vision_Store_Adapter_ZendDbSelect::getMetaData
         //$sql = str_replace("('__innerselect'='__innerselect')", '(1=0)', $sql);

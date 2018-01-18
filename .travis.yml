@@ -6,7 +6,7 @@ matrix:
   fast_finish: true
   include:
     - php: 7.2
-      env: MYSQL_VERSION=5.6 CS_FIX=false
+      env: MYSQL_VERSION=5.6 CS_FIX=true PHPSTAN=true
     - php: 7.1
       env: SEND_COVERAGE=true MYSQL_VERSION=5.6
     - php: 7.1
@@ -33,7 +33,7 @@ matrix:
     - php: 5.4
       env: MYSQL_VERSION=5.6
     - php: nightly
-      env: MYSQL_VERSION=5.6 CS_FIX=false
+      env: MYSQL_VERSION=5.6
   allow_failures:
     - php: nightly
     - php: 7.2
@@ -41,7 +41,8 @@ matrix:
 env:
   global:
     - SEND_COVERAGE=false
-    - CS_FIX=true
+    - CS_FIX=false
+    - PHPSTAN=false
 
 before_script:
   - mkdir -p test/logs
@@ -62,7 +63,9 @@ before_script:
 
 script:
   - ./vendor/bin/phpunit -v --coverage-clover=coverage.xml
-  - if  [[ $CS_FIX == true ]]; then ./vendor/bin/php-cs-fixer --diff --dry-run -v fix; fi;
+  - if [[ $CS_FIX == true ]]; then ./vendor/bin/php-cs-fixer --diff --dry-run -v fix; fi;
+  - if [[ $PHPSTAN == true ]]; then composer phpstan; fi;
+
 
 after_script:
   - if [[ $SEND_COVERAGE == true ]]; then wget https://scrutinizer-ci.com/ocular.phar; fi
