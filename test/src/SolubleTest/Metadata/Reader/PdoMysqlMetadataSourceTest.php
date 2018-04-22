@@ -67,7 +67,7 @@ class PdoMysqlMetadataSourceTest extends TestCase
         self::assertEquals('test_table_types', $md['id']->getTableAlias());
         self::assertEquals(1, $md['id']->getOrdinalPosition());
         self::assertNull($md['id']->getCatalog());
-        self::assertNull($md['id']->isAutoIncrement());
+        self::assertFalse($md['id']->isAutoIncrement());
 
         // IN PDO We cannot tell if numeric unsigned or not
         self::assertNull($md['id']->isNumericUnsigned());

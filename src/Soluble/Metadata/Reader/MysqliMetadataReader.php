@@ -6,6 +6,7 @@ namespace Soluble\Metadata\Reader;
 
 use Soluble\Metadata\ColumnsMetadata;
 use Soluble\Metadata\Exception;
+use Soluble\Metadata\Reader\Capability\ReaderCapabilityInterface;
 use Soluble\Metadata\Reader\Mapping\MysqliMapping;
 use Soluble\Datatype\Column;
 
@@ -27,6 +28,22 @@ class MysqliMetadataReader extends AbstractMetadataReader
     public function __construct(\mysqli $mysqli)
     {
         $this->mysqli = $mysqli;
+        $this->setupCapabilities();
+    }
+
+    protected function setupCapabilities(): void
+    {
+        $caps = [
+            ReaderCapabilityInterface::DETECT_GROUP_FUNCTION,
+            ReaderCapabilityInterface::DETECT_PRIMARY_KEY,
+            ReaderCapabilityInterface::DETECT_NUMERIC_UNSIGNED,
+            ReaderCapabilityInterface::DETECT_AUTOINCREMENT,
+            //ReaderCapabilityInterface::DETECT_COLUMN_DEFAULT,
+            //ReaderCapabilityInterface::DETECT_CHAR_MAX_LENGTH,
+        ];
+        foreach ($caps as $cap) {
+            $this->addCapability($cap);
+        }
     }
 
     /**

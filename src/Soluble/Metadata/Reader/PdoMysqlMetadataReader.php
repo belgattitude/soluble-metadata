@@ -7,6 +7,7 @@ namespace Soluble\Metadata\Reader;
 use Soluble\Metadata\ColumnsMetadata;
 use Soluble\Metadata\Exception;
 use Soluble\Datatype\Column;
+use Soluble\Metadata\Reader\Capability\ReaderCapabilityInterface;
 use Soluble\Metadata\Reader\Mapping\PdoMysqlMapping;
 use PDO;
 
@@ -35,6 +36,22 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
             throw new Exception\UnsupportedDriverException(__CLASS__ . " supports only pdo_mysql driver, '$driver' given.");
         }
         $this->pdo = $pdo;
+        $this->setupCapabilities();
+    }
+
+    protected function setupCapabilities(): void
+    {
+        $caps = [
+            ReaderCapabilityInterface::DETECT_PRIMARY_KEY,
+            //ReaderCapabilityInterface::DETECT_GROUP_FUNCTION,
+            //ReaderCapabilityInterface::DETECT_NUMERIC_UNSIGNED,
+            //ReaderCapabilityInterface::DETECT_AUTOINCREMENT,
+            //ReaderCapabilityInterface::DETECT_COLUMN_DEFAULT,
+            //ReaderCapabilityInterface::DETECT_CHAR_MAX_LENGTH,
+        ];
+        foreach ($caps as $cap) {
+            $this->addCapability($cap);
+        }
     }
 
     /**
@@ -81,11 +98,14 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
               if ($column instanceof Column\Definition\NumericColumnInterface) {
               $column->setNumericUnsigned(($field->flags & MYSQLI_UNSIGNED_FLAG) > 0);
               }
+*/
+            if ($column instanceof Column\Definition\IntegerColumn) {
+                // PDO does not support detection of autoincrement.
+                // Always false
 
-              if ($column instanceof Column\Definition\IntegerColumn) {
-              $column->setIsAutoIncrement(($field->flags & MYSQLI_AUTO_INCREMENT_FLAG) > 0);
-              }
-             */
+                $column->setIsAutoIncrement(false);
+            }
+
             if ($column instanceof Column\Definition\DecimalColumn) {
                 // salary DECIMAL(5,2)
                 // In this example, 5 is the precision and 2 is the scale.

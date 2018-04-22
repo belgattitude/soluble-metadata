@@ -28,7 +28,7 @@ before_script:
   - zcat test/data/mysql/data.sql.gz | mysql -u root phpunit_soluble_schema_db
   - mysql -e "SHOW DATABASES;" -u root
   - mysql -e "CONNECT phpunit_soluble_schema_db; SHOW TABLES;" -u root
-  - composer install
+  - composer install --no-interaction --ignore-platform-reqs
 
 script:
   - ./vendor/bin/phpunit -v --coverage-clover=coverage.xml

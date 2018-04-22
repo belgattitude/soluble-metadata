@@ -7,7 +7,7 @@ namespace Soluble\Metadata\Reader;
 use Soluble\Metadata\ColumnsMetadata;
 use Soluble\Metadata\Exception;
 
-abstract class AbstractMetadataReader
+abstract class AbstractMetadataReader implements MetadataReaderInterface
 {
     /**
      * Keep static cache in memory.
@@ -20,6 +20,11 @@ abstract class AbstractMetadataReader
      * @var array
      */
     protected static $metadata_cache = [];
+
+    /**
+     * @var string[]
+     */
+    protected $capabilities = [];
 
     /**
      * @param bool $active
@@ -114,5 +119,17 @@ abstract class AbstractMetadataReader
         }
 
         return $sql;
+    }
+
+    public function addCapability(string $name): void
+    {
+        if (!in_array($name, $this->capabilities, true)) {
+            $this->capabilities[] = $name;
+        }
+    }
+
+    public function hasCapability(string $name): bool
+    {
+        return in_array($name, $this->capabilities, true);
     }
 }

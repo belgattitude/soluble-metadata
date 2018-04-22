@@ -3,13 +3,14 @@
 namespace SolubleTest\Metadata;
 
 use Soluble\Metadata\Reader;
+use Soluble\Metadata\Reader\Capability\ReaderCapabilityInterface;
 use Soluble\Datatype\Column;
 use PHPUnit\Framework\TestCase;
 
 class MetadataFeaturesTest extends TestCase
 {
     /**
-     * @var array
+     * @var \Soluble\Metadata\Reader\AbstractMetaDataReader[]
      */
     protected $readers;
 
@@ -90,7 +91,9 @@ class MetadataFeaturesTest extends TestCase
             self::assertNull($md['test_calc']->getTableName());
 
             self::assertEquals(Column\Type::TYPE_INTEGER, $md['test_calc_2']->getDatatype());
+
             self::assertFalse($md['test_calc_2']->isAutoIncrement());
+
             self::assertNull($md['test_calc_2']->getTableName());
 
             self::assertEquals(Column\Type::TYPE_INTEGER, $md['filesize']->getDatatype());
@@ -209,14 +212,7 @@ class MetadataFeaturesTest extends TestCase
         foreach ($this->readers as $reader_type => $reader) {
             $md = $reader->getColumnsMetadata($sql);
 
-            if ($undocumented_way = true) {
-                // IN PHP 5.5 / 7.0 always return null (?)
-                // The documented way would be to return the values
-                // in the else
-                self::assertNull($md['default_5']->getColumnDefault(), "failed for reader $reader_type");
-                self::assertNull($md['default_cool']->getColumnDefault(), "failed for reader $reader_type");
-                self::assertNull($md['default_yes']->getColumnDefault(), "failed for reader $reader_type");
-            } else {
+            if ($reader->hasCapability(ReaderCapabilityInterface::DETECT_COLUMN_DEFAULT)) {
                 self::assertEquals(5, $md['default_5']->getColumnDefault(), "failed for reader $reader_type");
                 self::assertEquals('cool', $md['default_cool']->getColumnDefault(), "failed for reader $reader_type");
                 self::assertEquals('yes', $md['default_yes']->getColumnDefault(), "failed for reader $reader_type");
@@ -371,7 +367,7 @@ class MetadataFeaturesTest extends TestCase
                         self::assertNull($md['test_bigint']->isNumericUnsigned());
 
                         // PDO does not know if column is autoincrement
-                        self::assertNull($md['id']->isAutoIncrement());
+                        self::assertFalse($md['id']->isAutoIncrement());
 
                         break;
                     case 'mysqli':

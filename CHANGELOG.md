@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.3.0 (2018-05-22) CapabilityInterface 
+
+### Added
+
+- `ReaderCapabilityInterface` to detect specific support for readers
+
 ## 1.2.0 (2018-01-18) PHP 7.1 - no BC break 
 
 ### Changed

@@ -211,10 +211,9 @@ class MysqliMetadataSourceTest extends TestCase
         $md = $this->metadata->getColumnsMetadata($sql);
 
         if (true) {
-            // IN PHP 5.5 always return null (?)
-            self::assertNull($md['default_5']->getColumnDefault());
-            self::assertNull($md['default_cool']->getColumnDefault());
-            self::assertNull($md['default_yes']->getColumnDefault());
+            self::assertEmpty($md['default_5']->getColumnDefault());
+            self::assertEmpty($md['default_cool']->getColumnDefault());
+            self::assertEmpty($md['default_yes']->getColumnDefault());
         } else {
             self::assertEquals(5, $md['default_5']->getColumnDefault());
             self::assertEquals('cool', $md['default_cool']->getColumnDefault());
