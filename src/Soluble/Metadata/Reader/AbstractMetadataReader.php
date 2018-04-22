@@ -132,4 +132,9 @@ abstract class AbstractMetadataReader implements MetadataReaderInterface
     {
         return in_array($name, $this->capabilities, true);
     }
+
+    public function getCapabilities(): array
+    {
+        return $this->capabilities;
+    }
 }

@@ -22,4 +22,9 @@ interface ReaderCapabilityInterface
     public function addCapability(string $name): void;
 
     public function hasCapability(string $name): bool;
+
+    /**
+     * @return string[]
+     */
+    public function getCapabilities(): array;
 }

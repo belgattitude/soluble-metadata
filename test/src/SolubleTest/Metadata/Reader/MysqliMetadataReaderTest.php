@@ -11,7 +11,7 @@ use Soluble\Datatype\Column;
 use Soluble\DbWrapper\Adapter\MysqliAdapter;
 use PHPUnit\Framework\TestCase;
 
-class MysqliMetadataSourceTest extends TestCase
+class MysqliMetadataReaderTest extends TestCase
 {
     /**
      * @var MysqliMetadataReader

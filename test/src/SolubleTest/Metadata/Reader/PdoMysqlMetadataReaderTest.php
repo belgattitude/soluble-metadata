@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * PDO_MySQL in PHP 5.3 does not return column names.
  */
-class PdoMysqlMetadataSourceTest extends TestCase
+class PdoMysqlMetadataReaderTest extends TestCase
 {
     /**
      * @var PdoMysqlMetadataReader

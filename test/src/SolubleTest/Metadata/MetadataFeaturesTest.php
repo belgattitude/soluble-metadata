@@ -37,6 +37,17 @@ class MetadataFeaturesTest extends TestCase
     {
     }
 
+    public function testCapabilities()
+    {
+        foreach ($this->readers as $reader) {
+            $caps = $reader->getCapabilities();
+            foreach ($caps as $cap) {
+                self::assertTrue($reader->hasCapability($cap));
+            }
+            self::assertFalse($reader->hasCapability('not_a_cap'));
+        }
+    }
+
     public function testGetColumsMetadataMultipleTableFunctions()
     {
         // WARNING BUGS IN MYSQL (should be true)
