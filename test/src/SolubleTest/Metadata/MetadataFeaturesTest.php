@@ -87,17 +87,17 @@ class MetadataFeaturesTest extends TestCase
             self::assertEquals(1, $md['test_string']->getOrdinalPosition());
 
             self::assertEquals(Column\Type::TYPE_DECIMAL, $md['test_calc']->getDatatype());
-            self::assertEquals(null, $md['test_calc']->getTableName());
+            self::assertNull($md['test_calc']->getTableName());
 
             self::assertEquals(Column\Type::TYPE_INTEGER, $md['test_calc_2']->getDatatype());
-            self::assertEquals(false, $md['test_calc_2']->isAutoIncrement());
-            self::assertEquals(null, $md['test_calc_2']->getTableName());
+            self::assertFalse($md['test_calc_2']->isAutoIncrement());
+            self::assertNull($md['test_calc_2']->getTableName());
 
             self::assertEquals(Column\Type::TYPE_INTEGER, $md['filesize']->getDatatype());
 
             self::assertEquals('m', $md['filesize']->getTableAlias());
 
-            self::assertEquals(null, $md['test_string']->getSchemaName());
+            self::assertNull($md['test_string']->getSchemaName());
 
             self::assertEquals(Column\Type::TYPE_INTEGER, $md['container_id']->getDatatype());
             self::assertEquals('m', $md['container_id']->getTableAlias());
@@ -169,15 +169,15 @@ class MetadataFeaturesTest extends TestCase
                         self::assertEquals('mcid', $md['mcid']->getName());
 
                         // TEST if column is part of a group
-                        self::assertEquals(false, $md['count_media']->isGroup());
-                        self::assertEquals(false, $md['min_time']->isGroup());
+                        self::assertFalse($md['count_media']->isGroup());
+                        self::assertFalse($md['min_time']->isGroup());
 
-                        self::assertEquals(false, $md['max_time']->isGroup());
-                        self::assertEquals(false, $md['min(filemtime)']->isGroup());
-                        self::assertEquals(false, $md['max(filemtime)']->isGroup());
+                        self::assertFalse($md['max_time']->isGroup());
+                        self::assertFalse($md['min(filemtime)']->isGroup());
+                        self::assertFalse($md['max(filemtime)']->isGroup());
 
                         // In PDO the schema name is always null
-                        self::assertEquals(null, $md['filesize']->getSchemaName());
+                        self::assertNull($md['filesize']->getSchemaName());
 
                         break;
                     case 'mysqli':
@@ -213,9 +213,9 @@ class MetadataFeaturesTest extends TestCase
                 // IN PHP 5.5 / 7.0 always return null (?)
                 // The documented way would be to return the values
                 // in the else
-                self::assertEquals(null, $md['default_5']->getColumnDefault(), "failed for reader $reader_type");
-                self::assertEquals(null, $md['default_cool']->getColumnDefault(), "failed for reader $reader_type");
-                self::assertEquals(null, $md['default_yes']->getColumnDefault(), "failed for reader $reader_type");
+                self::assertNull($md['default_5']->getColumnDefault(), "failed for reader $reader_type");
+                self::assertNull($md['default_cool']->getColumnDefault(), "failed for reader $reader_type");
+                self::assertNull($md['default_yes']->getColumnDefault(), "failed for reader $reader_type");
             } else {
                 self::assertEquals(5, $md['default_5']->getColumnDefault(), "failed for reader $reader_type");
                 self::assertEquals('cool', $md['default_cool']->getColumnDefault(), "failed for reader $reader_type");
@@ -233,10 +233,10 @@ class MetadataFeaturesTest extends TestCase
             self::assertInstanceOf('Soluble\Metadata\ColumnsMetadata', $md);
             self::assertInstanceOf('ArrayObject', $md);
 
-            self::assertEquals(true, $md['id']->isPrimary());
+            self::assertTrue($md['id']->isPrimary());
             self::assertEquals(Column\Type::TYPE_INTEGER, $md['id']->getDatatype());
             self::assertEquals('test_table_types', $md['id']->getTableName());
-            self::assertEquals(false, $md['id']->isNullable());
+            self::assertFalse($md['id']->isNullable());
             self::assertEquals('test_table_types', $md['id']->getTableAlias());
             self::assertEquals(1, $md['id']->getOrdinalPosition());
 
@@ -328,28 +328,28 @@ class MetadataFeaturesTest extends TestCase
             self::assertEquals('TINYINT', $md['test_bool']->getNativeDatatype());
 
             self::assertEquals($md['test_geometry']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-            self::assertEquals(null, $md['test_geometry']->getNativeDatatype());
+            self::assertNull($md['test_geometry']->getNativeDatatype());
 
             self::assertEquals($md['test_point']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-            self::assertEquals(null, $md['test_point']->getNativeDatatype());
+            self::assertNull($md['test_point']->getNativeDatatype());
 
             self::assertEquals($md['test_linestring']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-            self::assertEquals(null, $md['test_linestring']->getNativeDatatype());
+            self::assertNull($md['test_linestring']->getNativeDatatype());
 
             self::assertEquals($md['test_polygon']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-            self::assertEquals(null, $md['test_polygon']->getNativeDatatype());
+            self::assertNull($md['test_polygon']->getNativeDatatype());
 
             self::assertEquals($md['test_multipolygon']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-            self::assertEquals(null, $md['test_multipolygon']->getNativeDatatype());
+            self::assertNull($md['test_multipolygon']->getNativeDatatype());
 
             self::assertEquals($md['test_multipoint']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-            self::assertEquals(null, $md['test_multipoint']->getNativeDatatype());
+            self::assertNull($md['test_multipoint']->getNativeDatatype());
 
             self::assertEquals($md['test_multilinestring']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-            self::assertEquals(null, $md['test_multilinestring']->getNativeDatatype());
+            self::assertNull($md['test_multilinestring']->getNativeDatatype());
 
             self::assertEquals($md['test_geometrycollection']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-            self::assertEquals(null, $md['test_geometrycollection']->getNativeDatatype());
+            self::assertNull($md['test_geometrycollection']->getNativeDatatype());
 
             if (preg_match('/mysql/', $reader_type)) {
                 switch ($reader_type) {
@@ -365,13 +365,13 @@ class MetadataFeaturesTest extends TestCase
                         // PDO does not retrieve 'def' like mysqli, instead retrieve null
                         self::assertEquals($md['id']->getCatalog(), null);
                         // PDO does not retrieve signed, unsigned
-                        self::assertEquals(null, $md['id']->isNumericUnsigned());
-                        self::assertEquals(null, $md['id']->getNumericUnsigned());
-                        self::assertEquals(null, $md['test_int_unsigned']->isNumericUnsigned());
-                        self::assertEquals(null, $md['test_bigint']->isNumericUnsigned());
+                        self::assertNull($md['id']->isNumericUnsigned());
+                        self::assertNull($md['id']->getNumericUnsigned());
+                        self::assertNull($md['test_int_unsigned']->isNumericUnsigned());
+                        self::assertNull($md['test_bigint']->isNumericUnsigned());
 
                         // PDO does not know if column is autoincrement
-                        self::assertEquals(null, $md['id']->isAutoIncrement());
+                        self::assertNull($md['id']->isAutoIncrement());
 
                         break;
                     case 'mysqli':
@@ -387,13 +387,13 @@ class MetadataFeaturesTest extends TestCase
                         self::assertEquals($md['id']->getCatalog(), 'def');
 
                         // SIGNED
-                        self::assertEquals(true, $md['id']->isNumericUnsigned());
-                        self::assertEquals(true, $md['id']->getNumericUnsigned());
-                        self::assertEquals(true, $md['test_int_unsigned']->isNumericUnsigned());
-                        self::assertEquals(false, $md['test_bigint']->isNumericUnsigned());
+                        self::assertTrue($md['id']->isNumericUnsigned());
+                        self::assertTrue($md['id']->getNumericUnsigned());
+                        self::assertTrue($md['test_int_unsigned']->isNumericUnsigned());
+                        self::assertFalse($md['test_bigint']->isNumericUnsigned());
 
                         // AUTOINC
-                        self::assertEquals(true, $md['id']->isAutoIncrement());
+                        self::assertTrue($md['id']->isAutoIncrement());
 
                         break;
                 }

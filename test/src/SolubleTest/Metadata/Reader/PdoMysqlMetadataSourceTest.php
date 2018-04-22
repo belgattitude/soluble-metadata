@@ -63,15 +63,15 @@ class PdoMysqlMetadataSourceTest extends TestCase
         self::assertTrue($md['id']->isPrimary());
         self::assertEquals(Column\Type::TYPE_INTEGER, $md['id']->getDatatype());
         self::assertEquals('test_table_types', $md['id']->getTableName());
-        self::assertEquals(false, $md['id']->isNullable());
+        self::assertFalse($md['id']->isNullable());
         self::assertEquals('test_table_types', $md['id']->getTableAlias());
         self::assertEquals(1, $md['id']->getOrdinalPosition());
-        self::assertEquals(null, $md['id']->getCatalog());
-        self::assertEquals(null, $md['id']->isAutoIncrement());
+        self::assertNull($md['id']->getCatalog());
+        self::assertNull($md['id']->isAutoIncrement());
 
         // IN PDO We cannot tell if numeric unsigned or not
-        self::assertEquals(null, $md['id']->isNumericUnsigned());
-        self::assertEquals(null, $md['id']->getNumericUnsigned());
+        self::assertNull($md['id']->isNumericUnsigned());
+        self::assertNull($md['id']->getNumericUnsigned());
 
         self::assertEquals(Column\Type::TYPE_STRING, $md['test_varchar_255']->getDatatype());
         self::assertEquals('VARCHAR', $md['test_varchar_255']->getNativeDatatype());
@@ -167,28 +167,28 @@ class PdoMysqlMetadataSourceTest extends TestCase
         self::assertEquals('TINYINT', $md['test_bool']->getNativeDatatype());
 
         self::assertEquals($md['test_geometry']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        self::assertEquals(null, $md['test_geometry']->getNativeDatatype());
+        self::assertNull($md['test_geometry']->getNativeDatatype());
 
         self::assertEquals($md['test_point']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        self::assertEquals(null, $md['test_point']->getNativeDatatype());
+        self::assertNull($md['test_point']->getNativeDatatype());
 
         self::assertEquals($md['test_linestring']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        self::assertEquals(null, $md['test_linestring']->getNativeDatatype());
+        self::assertNull($md['test_linestring']->getNativeDatatype());
 
         self::assertEquals($md['test_polygon']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        self::assertEquals(null, $md['test_polygon']->getNativeDatatype());
+        self::assertNull($md['test_polygon']->getNativeDatatype());
 
         self::assertEquals($md['test_multipolygon']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        self::assertEquals(null, $md['test_multipolygon']->getNativeDatatype());
+        self::assertNull($md['test_multipolygon']->getNativeDatatype());
 
         self::assertEquals($md['test_multipoint']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        self::assertEquals(null, $md['test_multipoint']->getNativeDatatype());
+        self::assertNull($md['test_multipoint']->getNativeDatatype());
 
         self::assertEquals($md['test_multilinestring']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        self::assertEquals(null, $md['test_multilinestring']->getNativeDatatype());
+        self::assertNull($md['test_multilinestring']->getNativeDatatype());
 
         self::assertEquals($md['test_geometrycollection']->getDatatype(), Column\Type::TYPE_SPATIAL_GEOMETRY);
-        self::assertEquals(null, $md['test_geometrycollection']->getNativeDatatype());
+        self::assertNull($md['test_geometrycollection']->getNativeDatatype());
     }
 
     public function testGetColumnsMetadataThrowsAmbiguousColumnException()
@@ -246,20 +246,20 @@ class PdoMysqlMetadataSourceTest extends TestCase
 
         $md = $metadata->getColumnsMetadata($sql);
 
-        self::assertEquals(false, $md['test_string']->isPrimary());
+        self::assertFalse($md['test_string']->isPrimary());
         self::assertEquals(Column\Type::TYPE_STRING, $md['test_string']->getDatatype());
-        self::assertEquals(null, $md['test_string']->getTableName());
-        self::assertEquals(false, $md['test_string']->isNullable());
-        self::assertEquals(null, $md['test_string']->getTableAlias());
+        self::assertNull($md['test_string']->getTableName());
+        self::assertFalse($md['test_string']->isNullable());
+        self::assertNull($md['test_string']->getTableAlias());
         self::assertEquals(1, $md['test_string']->getOrdinalPosition());
         // PDO-NOT-POSSIBLE: self::assertEquals('def', $md['test_string']->getCatalog());
 
         self::assertEquals(Column\Type::TYPE_DECIMAL, $md['test_calc']->getDatatype());
-        self::assertEquals(null, $md['test_calc']->getTableName());
+        self::assertNull($md['test_calc']->getTableName());
 
         self::assertEquals(Column\Type::TYPE_INTEGER, $md['test_calc_2']->getDatatype());
-        self::assertEquals(false, $md['test_calc_2']->isAutoIncrement());
-        self::assertEquals(null, $md['test_calc_2']->getTableName());
+        self::assertFalse($md['test_calc_2']->isAutoIncrement());
+        self::assertNull($md['test_calc_2']->getTableName());
 
         self::assertEquals(Column\Type::TYPE_INTEGER, $md['filesize']->getDatatype());
         // PDO-NOT-POSSIBLE: self::assertEquals('media', $md['filesize']->getTableName());
@@ -268,10 +268,10 @@ class PdoMysqlMetadataSourceTest extends TestCase
 
         self::assertEquals('m', $md['filesize']->getTableAlias());
 
-        self::assertEquals(null, $md['test_string']->getSchemaName());
+        self::assertNull($md['test_string']->getSchemaName());
         // PDO-NOT-POSSIBLE: self::assertEquals($this->adapter->getCurrentSchema(), $md['filesize']->getSchemaName());
         // INSTEAD USE
-        self::assertEquals(null, $md['filesize']->getSchemaName());
+        self::assertNull($md['filesize']->getSchemaName());
 
         self::assertEquals(Column\Type::TYPE_INTEGER, $md['container_id']->getDatatype());
         // PDO-NOT-POSSIBLE: self::assertEquals('media', $md['container_id']->getTableName());
