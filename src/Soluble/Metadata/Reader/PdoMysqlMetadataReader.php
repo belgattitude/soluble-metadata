@@ -115,7 +115,7 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
 
                 $column->setNumericUnsigned(false);
                 $column->setNumericPrecision($field['precision']);
-                $column->setNumericScale($field['len'] - $field['precision'] + 1);
+                $column->setNumericScale((int) ($field['len'] - $field['precision'] + 1));
             }
 
             if ($column instanceof Column\Definition\StringColumn) {
@@ -149,6 +149,8 @@ class PdoMysqlMetadataReader extends AbstractMetadataReader
 
     /**
      * Read fields from pdo source.
+     *
+     * @return array<int, array>
      *
      * @throws Exception\ConnectionException
      * @throws \Soluble\Metadata\Exception\EmptyQueryException
