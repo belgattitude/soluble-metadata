@@ -107,7 +107,7 @@ abstract class AbstractMetadataReader implements MetadataReaderInterface
         $replace_regexp = "LIMIT[\s]+[\d]+((\s*,\s*\d+)|(\s+OFFSET\s+\d+)){0,1}";
 
         $search_regexp = "$replace_regexp";
-        if (!preg_match("/$search_regexp/i", $sql)) {
+        if (preg_match("/$search_regexp/i", $sql) < 1) {
             // Limit is not already present
             $sql .= ' LIMIT 0';
         } else {
