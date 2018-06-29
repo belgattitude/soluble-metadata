@@ -1,7 +1,6 @@
 # CHANGELOG
 
-
-## 1.3.1 (2018-06-29) CapabilityInterface 
+## 1.3.1 (2018-06-29) Few PHPStan issues 
 
 ### Fixed
 
