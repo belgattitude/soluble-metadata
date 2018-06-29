@@ -80,7 +80,7 @@ class MysqliMetadataReader extends AbstractMetadataReader
             $column->setCatalog($field->catalog);
             $column->setOrdinalPosition($idx + 1);
             $column->setDataType($datatype['type']);
-            $column->setIsNullable(!($field->flags & MYSQLI_NOT_NULL_FLAG) > 0 && ($field->orgtable !== '' || $field->orgtable !== null));
+            $column->setIsNullable(!(($field->flags & MYSQLI_NOT_NULL_FLAG) > 0) && ($field->orgtable !== '' || $field->orgtable !== null));
             $column->setIsPrimary(($field->flags & MYSQLI_PRI_KEY_FLAG) > 0);
 
             $column->setColumnDefault($field->def);
@@ -109,7 +109,7 @@ class MysqliMetadataReader extends AbstractMetadataReader
                 // Standard SQL requires that DECIMAL(5,2) be able to store any value
                 // with five digits and two decimals, so values that can be stored in
                 // the salary column range from -999.99 to 999.99.
-                $column->setNumericScale($field->length - $field->decimals + 1);
+                $column->setNumericScale((int) ($field->length - $field->decimals + 1));
                 $column->setNumericPrecision($field->decimals);
             }
 
@@ -148,6 +148,8 @@ class MysqliMetadataReader extends AbstractMetadataReader
      * @throws Exception\ConnectionException
      * @throws \Soluble\Metadata\Exception\EmptyQueryException
      * @throws \Soluble\Metadata\Exception\InvalidQueryException
+     *
+     * @return array<int, mixed>
      */
     protected function readFields(string $sql): array
     {
@@ -158,7 +160,7 @@ class MysqliMetadataReader extends AbstractMetadataReader
         $sql = $this->getEmptiedQuery($sql);
         $stmt = $this->mysqli->prepare($sql);
 
-        if (!$stmt) {
+        if ($stmt === false) {
             $message = $this->mysqli->error;
             throw new Exception\InvalidQueryException(
                 sprintf('Invalid query: %s (%s)', $sql, $message)
@@ -167,7 +169,23 @@ class MysqliMetadataReader extends AbstractMetadataReader
         $stmt->execute();
 
         $result = $stmt->result_metadata();
+        if ($result === false) {
+            $message = $this->mysqli->error;
+            throw new Exception\InvalidQueryException(
+                sprintf('Cannot get metadata: %s (%s)', $sql, $message)
+            );
+        }
+
         $metaFields = $result->fetch_fields();
+
+        if ($metaFields === false) {
+            $result->close();
+            $message = $this->mysqli->error;
+            throw new Exception\InvalidQueryException(
+                sprintf('Cannot fetch metadata fields: %s (%s)', $sql, $message)
+            );
+        }
+
         $result->close();
         $stmt->close();
 
