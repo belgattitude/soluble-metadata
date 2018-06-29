@@ -1,5 +1,17 @@
 # CHANGELOG
 
+
+## 1.3.1 (2018-06-29) CapabilityInterface 
+
+### Fixed
+
+- Minor error cases discovered thx phpstan 0.10
+
+### Updated 
+
+- Q&A update to phpstan 0.10
+
+
 ## 1.3.0 (2018-05-22) CapabilityInterface 
 
 ### Added
@@ -62,4 +74,3 @@
     - Added method `getColumn($name)` on `ColumnsMetadata`.
     - More tests for differences between pdo_mysql and mysqli
 
-  
