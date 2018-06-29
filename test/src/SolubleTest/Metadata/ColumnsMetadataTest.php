@@ -7,7 +7,6 @@ use Soluble\Datatype\Column\Definition\IntegerColumn;
 use Soluble\Metadata\Exception\InvalidQueryException;
 use Soluble\Metadata\Exception\TableNotFoundException;
 use Soluble\Metadata\Reader;
-use Soluble\Datatype\Column;
 use PHPUnit\Framework\TestCase;
 
 class ColumnsMetadataTest extends TestCase
