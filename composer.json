@@ -26,11 +26,11 @@
         "soluble/datatype": "^0.11.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.1.4",
+        "phpunit/phpunit": "^7.3",
         "phpstan/phpstan": "^0.10",
         "phpstan/phpstan-phpunit": "^0.10",
         "phpstan/phpstan-strict-rules": "^0.10",
-        "friendsofphp/php-cs-fixer": "^2.11.1",
+        "friendsofphp/php-cs-fixer": "^2.13",
         "soluble/dbwrapper": "^1.3.2"
     },
     "scripts": {
