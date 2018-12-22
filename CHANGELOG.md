@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.3.2 (2018-06-29) Few PHPStan issues 
+## 1.3.2 (2018-12-22) Few PHPStan issues 
 
 ### Fixed
 
