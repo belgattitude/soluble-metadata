@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 1.3.2 (2018-06-29) Few PHPStan issues 
+
+### Fixed
+
+- Minor type fixes thanks to phpstan 
+
+### Updated 
+
+- Q&A PHP7.3 support
+
+
 ## 1.3.1 (2018-06-29) Few PHPStan issues 
 
 ### Fixed
