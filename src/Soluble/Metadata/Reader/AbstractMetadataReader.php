@@ -101,8 +101,8 @@ abstract class AbstractMetadataReader implements MetadataReaderInterface
         //$sql = str_replace("('__innerselect'='__innerselect')", '(1=0)', $sql);
 
         $sql = preg_replace('/(\r\n|\r|\n|\t)+/', ' ', strtolower($sql));
-        $sql = trim($sql);
-        $sql = preg_replace('/\s+/', ' ', $sql);
+        $sql = trim($sql ?: '');
+        $sql = preg_replace('/\s+/', ' ', $sql) ?: '';
 
         $replace_regexp = "LIMIT[\s]+[\d]+((\s*,\s*\d+)|(\s+OFFSET\s+\d+)){0,1}";
 
@@ -115,7 +115,7 @@ abstract class AbstractMetadataReader implements MetadataReaderInterface
             //preg_match_all("/($search_regexp)/i", $sql, $matches, PREG_PATTERN_ORDER);
             //var_dump($matches);
 
-            $sql = preg_replace("/($replace_regexp)/i", 'LIMIT 0', $sql);
+            $sql = preg_replace("/($replace_regexp)/i", 'LIMIT 0', $sql) ?: '';
         }
 
         return $sql;
