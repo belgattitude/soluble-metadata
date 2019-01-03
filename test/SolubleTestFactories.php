@@ -48,7 +48,7 @@ class SolubleTestFactories
                 break;
             case 'capsule5-mysqli':
 
-                $params = \SolubleTestFactories::getDbConfiguration('mysqli');
+                $params = self::getDbConfiguration('mysqli');
                 $capsule = new \Illuminate\Database\Capsule\Manager();
                 $capsule->addConnection([
                     'driver' => 'mysql',
@@ -66,7 +66,7 @@ class SolubleTestFactories
                 break;
 
             case 'doctrine2-mysqli':
-                $params = \SolubleTestFactories::getDbConfiguration('mysqli');
+                $params = self::getDbConfiguration('mysqli');
                 $connectionParams = [
                     'dbname' => $params['database'],
                     'user' => $params['username'],
@@ -84,7 +84,7 @@ class SolubleTestFactories
 
                 break;
             case 'zend-db2-mysqli':
-                $params = \SolubleTestFactories::getDbConfiguration('mysqli');
+                $params = self::getDbConfiguration('mysqli');
                 $params = array_merge($params, ['driver' => 'Mysqli', 'charset' => $charset]);
                 $conn = new \Zend\Db\Adapter\Adapter($params);
                 break;
