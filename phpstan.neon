@@ -7,4 +7,6 @@ parameters:
 		- php
 	reportUnmatchedIgnoredErrors: true
 	ignoreErrors:
-		- '#Array has 2 duplicate keys with value 1 \(MYSQLI_TYPE_CHAR, MYSQLI_TYPE_TINY\)#'
+		- message: '#Array has 2 duplicate keys with value 1 \(MYSQLI_TYPE_CHAR, MYSQLI_TYPE_TINY\)#'
+		  path: src/Soluble/Metadata/Reader/Mapping/MysqliMapping.php
+
