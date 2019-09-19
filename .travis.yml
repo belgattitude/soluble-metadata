@@ -9,9 +9,11 @@ matrix:
       env: CS_FIX=true PHPSTAN=true SEND_COVERAGE=true
     - php: 7.3
     - php: 7.1
+    - php: 7.4snapshot
     - php: nightly
   allow_failures:
     - php: nightly
+    - php: 7.4snapshot
 
 env:
   global:
@@ -21,7 +23,7 @@ env:
 
 before_script:
   - mkdir -p test/logs
-  - mkdir -p tests/tmp/cache 
+  - mkdir -p tests/tmp/cache
   - mkdir -p build/logs
   - mysql -e "DROP DATABASE IF EXISTS phpunit_soluble_schema_db;" -u root
   - mysql -e "CREATE DATABASE phpunit_soluble_schema_db;" -u root
